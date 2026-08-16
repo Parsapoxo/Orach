@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Orach</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a25;--surface:#1e1e2e;--surface2:#252538;
+  --border:#2a2a40;--border2:#353550;--accent:#e8c96d;--accent2:#c9a94a;
+  --text:#f0f0f5;--text2:#9090a8;--text3:#5a5a72;
+  --red:#e05555;--green:#55c088;--blue:#5588e0;
+  --radius:10px;--radius-lg:16px;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+h1,h2,h3{font-family:'Bebas Neue',sans-serif;letter-spacing:0.04em;line-height:1.1}
+button{cursor:pointer;font-family:'DM Sans',sans-serif;border:none;outline:none}
+input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,10,15,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:56px}
+.nav > .nav-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0;flex:none;z-index:40}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.1em;color:var(--accent);cursor:pointer}
+.nav-links{display:flex;gap:8px;align-items:center}
+.nav-btn{background:none;color:var(--text2);padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;transition:all .2s;border:none}
+.nav-btn:hover,.nav-btn.active{background:var(--surface2);color:var(--text)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;color:#000;flex-shrink:0}
+.nav-username{font-size:13px;font-weight:500;color:var(--text2)}
+.nav-user{display:flex;align-items:center;gap:10px}
+
+/* NAV CENTER: separate search box + separate franchise-tabs pill, centered as one group */
+.nav-center{position:relative;flex:1;display:flex;align-items:center;justify-content:center;height:40px;margin:0 1.5rem;max-width:580px}
+.nav-search-group{position:relative;display:flex;align-items:center}
+
+.nav-search{position:absolute;left:0;top:0;height:40px;width:40px;box-sizing:border-box;border-radius:20px;background:var(--surface);border:1px solid var(--border);overflow:hidden;transition:width .35s cubic-bezier(.65,0,.35,1),background .3s ease,border-color .3s ease;display:flex;align-items:center;z-index:60}
+.nav-search.expanded{width:100%;background:var(--surface2);border-color:var(--accent)}
+.nav-search-icon-btn{width:40px;height:40px;flex-shrink:0;background:none;border:none;color:var(--text2);font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;transition:color .2s}
+.nav-search-icon-btn:hover{color:var(--accent)}
+.nav-search.expanded .nav-search-icon-btn{color:var(--accent)}
+.nav-search-input{flex:1;min-width:0;background:none;border:none;color:var(--text);font-size:13px;padding:0 14px 0 4px;opacity:0;transition:opacity .2s ease}
+.nav-search.expanded .nav-search-input{opacity:1;transition:opacity .2s ease .15s}
+
+.franchise-tabs{position:relative;display:flex;align-items:center;gap:2px;height:40px;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:0 4px;margin-left:46px;transition:opacity .2s ease}
+.franchise-tabs.hide{opacity:0;pointer-events:none}
+.franchise-indicator{position:absolute;top:4px;bottom:4px;border-radius:999px;background:var(--accent);transition:left .35s cubic-bezier(.65,0,.35,1),width .35s cubic-bezier(.65,0,.35,1),opacity .2s ease;z-index:0;opacity:0}
+.franchise-btn{position:relative;z-index:1;padding:7px 16px;border-radius:999px;background:none;border:none;font-size:13px;font-weight:600;color:var(--text2);transition:color .2s;white-space:nowrap}
+.franchise-btn:hover{color:var(--accent)}
+.franchise-btn.active{color:#000}
+.franchise-btn.active:hover{color:#000}
+
+.rankings-btn{height:40px;box-sizing:border-box;padding:0 18px;margin-left:8px;flex-shrink:0;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--text2);font-size:13px;font-weight:600;white-space:nowrap;transition:color .2s,background .2s,border-color .2s}
+.rankings-btn:hover{color:var(--accent)}
+.rankings-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
+
+.nav-search-results{position:absolute;top:calc(100% + 8px);left:0;width:100%;min-width:320px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);max-height:380px;overflow-y:auto;box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:200;display:none}
+.nav-search-results.show{display:block}
+.nav-search-item{display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;transition:background .15s}
+.nav-search-item:hover{background:var(--surface2)}
+.nav-search-poster{width:32px;height:44px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;overflow:hidden;position:relative}
+.nav-search-poster img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.nav-search-info{min-width:0;flex:1}
+.nav-search-title{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-search-meta{font-size:11px;color:var(--text3);margin-top:1px;display:flex;align-items:center;gap:6px}
+.nav-search-empty{padding:14px 12px;font-size:13px;color:var(--text3);text-align:center}
+.nav-search-genre{font-size:9px;font-weight:700;letter-spacing:.04em;padding:2px 6px;border-radius:4px;flex-shrink:0}
+
+/* PROFILE MENU */
+.profile-menu{position:relative}
+.profile-trigger{background:none;border:none;padding:0;cursor:pointer;border-radius:50%;transition:box-shadow .2s;line-height:0}
+.profile-trigger:hover{box-shadow:0 0 0 3px var(--surface2)}
+.avatar-generic{width:32px;height:32px;border-radius:50%;background:var(--surface2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text2)}
+.profile-dropdown{position:absolute;top:calc(100% + 10px);right:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);min-width:190px;box-shadow:0 12px 32px rgba(0,0,0,.5);opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .18s ease;overflow:hidden;z-index:200}
+.profile-dropdown.open{opacity:1;visibility:visible;transform:translateY(0)}
+.dropdown-user{padding:12px 14px;font-size:13px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border)}
+.dropdown-item{display:block;width:100%;text-align:left;background:none;border:none;padding:11px 14px;font-size:13px;color:var(--text2);transition:background .15s,color .15s}
+.dropdown-item:hover{background:var(--surface2);color:var(--text)}
+
+/* PAGES */
+.page{display:none;min-height:calc(100vh - 56px);padding:2rem}
+
+/* ADMIN */
+.admin-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface)}
+.admin-table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+.admin-table th{text-align:left;padding:12px 14px;color:var(--text2);font-weight:600;font-size:11px;letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap}
+.admin-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.admin-table tr:last-child td{border-bottom:none}
+.admin-table tr:hover td{background:var(--surface2)}
+.admin-mismatch{color:var(--red);font-weight:600}
+.admin-ok{color:var(--text2)}
+.admin-docid{font-family:monospace;font-size:11px;color:var(--text3)}
+.admin-del-btn{background:rgba(224,85,85,0.15);color:var(--red);border:1px solid rgba(224,85,85,0.3);padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;transition:background .15s}
+.admin-del-btn:hover{background:rgba(224,85,85,0.3)}
+.admin-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px}
+.admin-wipe-btn{background:var(--red);color:#fff;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600}
+.admin-wipe-btn:hover{opacity:.85}
+.page.active{display:block}
+
+/* AUTH */
+.auth-wrap{min-height:calc(100vh - 56px);display:flex;align-items:center;justify-content:center}
+
+/* HOME / FRANCHISE SELECT */
+.home-wrap{min-height:calc(100vh - 56px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;position:relative;z-index:1}
+.franchise-select-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:.5rem 4rem;display:flex;flex-direction:column;box-shadow:0 20px 55px rgba(0,0,0,.45)}
+.franchise-select-item{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:3px;background:none;border:none;color:var(--text2);padding:.9rem 0;cursor:pointer;transition:color .25s ease,transform .25s ease,text-shadow .25s ease}
+.franchise-select-item:hover{transform:scale(1.05)}
+.franchise-select-item[data-franchise="marvel"]:hover{color:#ff5c66;text-shadow:0 0 26px rgba(224,48,61,.55)}
+.franchise-select-item[data-franchise="dc"]:hover{color:#e2e5f5;text-shadow:0 0 26px rgba(200,205,230,.5)}
+.franchise-select-item[data-franchise="starwars"]:hover{color:#ffd75e;text-shadow:0 0 26px rgba(244,196,48,.55)}
+.franchise-select-divider{height:1px;background:var(--border)}
+.home-hint{font-size:13px;color:var(--text3);letter-spacing:.03em}
+
+/* CINEMATIC INTRO */
+.intro-zoom{position:fixed;background:#000;overflow:hidden;z-index:400;display:none;align-items:center;justify-content:center}
+.intro-video{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .35s ease}
+.intro-skip{position:absolute;bottom:32px;right:32px;background:rgba(255,255,255,.12);backdrop-filter:blur(6px);color:#fff;border:1px solid rgba(255,255,255,.3);padding:10px 22px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s ease;z-index:2}
+.intro-skip:hover{background:rgba(255,255,255,.22)}
+.auth-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2.5rem;width:380px;max-width:100%}
+.auth-title{font-size:32px;color:var(--accent);margin-bottom:0.25rem}
+.auth-sub{color:var(--text2);font-size:13px;margin-bottom:2rem}
+.form-label{font-size:12px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;display:block}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;color:var(--text);font-size:14px;margin-bottom:1rem;transition:border .2s}
+.form-input:focus{border-color:var(--accent)}
+.btn-primary{width:100%;background:var(--accent);color:#000;font-weight:600;font-size:14px;padding:11px;border-radius:var(--radius);transition:all .2s;border:none}
+.btn-primary:hover{background:var(--accent2)}
+.auth-toggle{text-align:center;margin-top:1.25rem;font-size:13px;color:var(--text2)}
+.auth-toggle span{color:var(--accent);cursor:pointer;font-weight:500}
+.form-error{background:rgba(224,85,85,0.12);border:1px solid rgba(224,85,85,0.3);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:1rem}
+
+/* HOME */
+.home-hero{text-align:center;padding:3rem 0 2.5rem}
+.home-hero h1{font-size:clamp(48px,8vw,88px);color:var(--accent);margin-bottom:0.5rem}
+.home-hero p{color:var(--text2);font-size:15px;max-width:480px;margin:0 auto}
+.section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.25rem}
+.section-title{font-size:28px;color:var(--text)}
+.section-sub{font-size:13px;color:var(--text3)}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1rem}
+
+/* CARDS */
+.series-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:all .2s;display:flex;flex-direction:column}
+.series-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.card-poster{height:220px;display:flex;align-items:center;justify-content:center;font-size:52px;flex-shrink:0;position:relative;overflow:hidden}
+.card-poster img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.card-poster .poster-emoji{position:relative;z-index:1}
+.card-body{padding:0.75rem 0.9rem 0.9rem;flex:1;display:flex;flex-direction:column}
+.card-title{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:0.05em;line-height:1.2;margin-bottom:4px}
+.card-meta{font-size:11px;color:var(--text3);margin-bottom:8px}
+.card-scores{display:flex;gap:6px;margin-top:auto;flex-wrap:wrap}
+.score-pill{display:flex;align-items:center;gap:4px;padding:3px 7px;border-radius:20px;font-size:11px;font-weight:600;font-family:'DM Mono',monospace}
+.score-imdb{background:rgba(232,201,109,0.12);color:var(--accent)}
+.score-site{background:rgba(85,192,136,0.12);color:var(--green)}
+.score-site-none{background:rgba(90,90,114,0.12);color:var(--text3)}
+
+/* SEARCH & FILTER */
+.search-bar{position:relative;margin-bottom:1rem}
+.search-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px 16px 11px 44px;color:var(--text);font-size:14px;transition:border .2s}
+.search-input:focus{border-color:var(--accent)}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:18px;pointer-events:none}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem}
+.filter-btn{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text2);transition:all .2s}
+.filter-btn:hover,.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#000}
+
+/* RANKINGS */
+.rankings-wrap{max-width:900px;margin:0 auto}
+.rankings-tabs{position:relative;display:flex;gap:4px;margin-bottom:2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:4px;width:fit-content}
+.rankings-indicator{position:absolute;top:4px;bottom:4px;border-radius:7px;background:var(--accent);transition:left .35s cubic-bezier(.65,0,.35,1),width .35s cubic-bezier(.65,0,.35,1);z-index:0}
+.tab-btn{position:relative;z-index:1;padding:8px 20px;border-radius:7px;font-size:13px;font-weight:500;background:none;color:var(--text2);transition:color .2s;border:none}
+.tab-btn.active{color:#000}
+.dice-btn{display:inline-block;margin-left:8px;font-size:14px;cursor:pointer;transition:transform .15s ease;border-radius:5px}
+.dice-btn:hover{transform:scale(1.25)}
+.dice-spin{animation:diceSpin .65s cubic-bezier(.36,.07,.19,.97)}
+@keyframes diceSpin{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(360deg) scale(1.4)}100%{transform:rotate(720deg) scale(1)}}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(5,5,8,0.75);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:1.5rem}
+.modal-overlay.show{display:flex}
+.modal-box{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem;max-width:420px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.6);animation:modalPop .25s cubic-bezier(.34,1.56,.64,1)}
+@keyframes modalPop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--text2);font-size:16px;cursor:pointer;line-height:1}
+.modal-close:hover{color:var(--text)}
+.dice-poster{width:100%;aspect-ratio:2/3;max-width:180px;margin:0 auto 14px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative}
+.dice-poster img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+
+/* POSTER ROW (franchise catalog pages) — horizontal scroll, 9 per row */
+.poster-row-wrap{position:relative;margin-bottom:2.5rem}
+.poster-grid{display:flex;gap:1.1rem;overflow-x:hidden;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none}
+.poster-grid::-webkit-scrollbar{display:none}
+.poster-card{cursor:pointer;flex:0 0 calc((100% - 8*1.1rem)/9);min-width:0}
+.poster-card-img{width:100%;aspect-ratio:2/3;border-radius:10px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 6px 18px rgba(0,0,0,.4);transition:transform .25s ease,box-shadow .25s ease}
+.poster-card-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.poster-card:hover .poster-card-img{transform:translateY(-5px) scale(1.03);box-shadow:0 14px 30px rgba(0,0,0,.55)}
+.poster-card-title{margin-top:9px;font-size:13px;font-weight:500;color:var(--text2);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .2s}
+.poster-card:hover .poster-card-title{color:var(--text)}
+.poster-card.coming-soon{cursor:default}
+.poster-card.coming-soon .poster-card-img{opacity:.5}
+.poster-card.coming-soon:hover .poster-card-img{transform:none;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.poster-card-badge{position:absolute;bottom:6px;left:6px;right:6px;background:rgba(0,0,0,.65);backdrop-filter:blur(3px);color:var(--accent);font-size:9px;font-weight:700;letter-spacing:.04em;text-align:center;padding:3px 4px;border-radius:5px}
+@keyframes gridIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.poster-card{animation:gridIn .4s ease backwards}
+.row-arrow{position:absolute;top:0;bottom:0;width:56px;display:flex;align-items:center;justify-content:center;border:none;color:#fff;font-size:26px;cursor:pointer;z-index:5;opacity:0;pointer-events:none;transition:opacity .2s ease}
+.row-arrow.show{opacity:1;pointer-events:auto}
+.row-arrow-left{left:0;background:linear-gradient(to right, var(--bg) 25%, transparent)}
+.row-arrow-right{right:0;background:linear-gradient(to left, var(--bg) 25%, transparent)}
+.row-arrow:hover{color:var(--accent)}
+
+.rank-row{display:flex;align-items:center;gap:1rem;padding:0.9rem 1.1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:all .2s}
+.rank-row:hover{border-color:var(--border2);background:var(--surface2)}
+.rank-num{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--text3);min-width:32px;text-align:center}
+.rank-num.top3{color:var(--accent)}
+.rank-emoji{font-size:26px;width:36px;text-align:center;flex-shrink:0}
+.rank-info{flex:1;min-width:0}
+.rank-title{font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-meta{font-size:13px;color:var(--text3);margin-top:3px}
+.type-badge{display:inline-block;margin-left:8px;font-size:10px;font-weight:700;letter-spacing:0.5px;color:var(--blue);background:rgba(24,95,165,0.18);border-radius:4px;padding:2px 6px;vertical-align:middle}
+.rank-score{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;flex-shrink:0}
+
+/* DETAIL */
+.detail-wrap{max-width:800px;margin:0 auto}
+.detail-back{display:flex;align-items:center;gap:6px;color:var(--text2);font-size:13px;cursor:pointer;margin-bottom:1.5rem;background:none;border:none;font-family:'DM Sans',sans-serif;transition:color .2s}
+.detail-back:hover{color:var(--text)}
+.detail-header{display:flex;gap:2rem;margin-bottom:2rem;align-items:flex-start}
+.detail-poster{font-size:72px;width:130px;height:190px;border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;position:relative}
+.detail-poster img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;border-radius:var(--radius-lg)}
+.detail-poster .poster-emoji{position:relative;z-index:1}
+.detail-title{font-size:48px;color:var(--accent);margin-bottom:0.25rem}
+.detail-tagline{color:var(--text2);font-size:13px;margin-bottom:1rem}
+.detail-desc{font-size:14px;line-height:1.7;color:var(--text2);margin-bottom:1.25rem}
+.detail-meta-row{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.25rem}
+.detail-tag{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text2)}
+.scores-row{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem}
+.score-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;text-align:center;flex:1;min-width:100px}
+.score-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+.score-val{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1}
+.score-val.imdb{color:var(--accent)}
+.score-val.friends{color:var(--green)}
+.score-val.none{color:var(--text3);font-size:24px}
+.score-count{font-size:11px;color:var(--text3);margin-top:4px}
+
+/* RATING */
+.rate-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem}
+.rate-section h3{font-size:20px;margin-bottom:1rem}
+.score-input{width:92px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;color:var(--text);font-size:20px;font-weight:600;font-family:'DM Mono',monospace;text-align:center;transition:border .2s}
+.score-input:focus{border-color:var(--accent)}
+.score-input.invalid{border-color:var(--red)}
+.score-input::-webkit-outer-spin-button,.score-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.score-input[type=number]{-moz-appearance:textfield}
+.rate-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;color:var(--text);font-size:14px;resize:vertical;min-height:80px;margin-bottom:1rem;transition:border .2s}
+.rate-textarea:focus{border-color:var(--accent)}
+.btn-submit{background:var(--accent);color:#000;font-weight:600;font-size:13px;padding:9px 20px;border-radius:var(--radius);transition:all .2s;border:none}
+.btn-submit:hover{background:var(--accent2)}
+.btn-edit{background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-size:12px;padding:5px 12px;border-radius:6px;transition:all .2s}
+.btn-edit:hover{border-color:var(--border2);color:var(--text)}
+.btn-danger{background:rgba(224,85,85,0.1);border:1px solid rgba(224,85,85,0.3);color:var(--red);font-size:12px;padding:5px 12px;border-radius:6px;transition:all .2s}
+.btn-danger:hover{background:rgba(224,85,85,0.2)}
+
+/* COMMENTS */
+.comment-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:10px}
+.comment-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.comment-body{font-size:14px;color:var(--text2);line-height:1.6}
+.comment-score{font-family:'DM Mono',monospace;background:rgba(232,201,109,0.12);color:var(--accent);padding:2px 8px;border-radius:20px;font-size:12px;font-weight:600}
+.comment-date{font-size:11px;color:var(--text3);margin-left:auto}
+.comment-actions{display:flex;gap:6px;margin-top:10px}
+.no-comments{text-align:center;padding:2rem;color:var(--text3);font-size:14px}
+
+/* HISTORY */
+.history-wrap{max-width:700px;margin:0 auto}
+.history-row{display:flex;align-items:center;gap:1rem;padding:0.9rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:all .2s}
+.history-row:hover{border-color:var(--border2)}
+.history-emoji{font-size:28px;flex-shrink:0}
+.history-info{flex:1;min-width:0}
+.history-title{font-weight:500;font-size:14px}
+.history-comment{font-size:12px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.history-date{font-size:11px;color:var(--text3);margin-top:2px}
+.history-score{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--accent);flex-shrink:0}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--text3)}
+.empty-state .big{font-size:48px;margin-bottom:1rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 18px;font-size:13px;font-weight:500;z-index:999;transform:translateY(100px);opacity:0;transition:all .3s;pointer-events:none;max-width:280px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-color:rgba(85,192,136,0.4);color:var(--green)}
+.toast.error{border-color:rgba(224,85,85,0.4);color:var(--red)}
+
+/* PAGINATION */
+.pagination{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:2rem;flex-wrap:wrap}
+.page-btn{padding:6px 14px;border-radius:6px;font-size:13px;background:var(--surface);border:1px solid var(--border);color:var(--text2);transition:all .2s}
+.page-btn:hover,.page-btn.active{background:var(--accent);border-color:var(--accent);color:#000}
+.page-info{font-size:13px;color:var(--text3)}
+.flex-center{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* ── LIFE & ATMOSPHERE ───────────────────────────────────────────────── */
+.bg-ambient{position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(ellipse 900px 620px at 10% -8%, rgba(224,48,61,0.08), transparent 60%),
+    radial-gradient(ellipse 900px 620px at 90% -4%, rgba(244,196,48,0.07), transparent 60%),
+    radial-gradient(ellipse 1100px 750px at 50% 115%, rgba(126,111,224,0.06), transparent 62%);
+}
+.bg-grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.page{position:relative;overflow:hidden}
+.page-glow{position:absolute;top:-140px;right:-120px;width:520px;height:520px;border-radius:50%;filter:blur(100px);opacity:.15;pointer-events:none;z-index:0}
+.glow-marvel{background:#e0303d}
+.glow-dc{background:#aeb4d6}
+.glow-dcamu{background:#7e6fe0}
+.glow-starwars{background:#f4c430}
+.glow-gold{background:var(--accent)}
+.rankings-wrap,.auth-wrap,.detail-wrap,.catalog-wrap{position:relative;z-index:1}
+.catalog-wrap{max-width:1500px;margin:0 auto}
+
+@keyframes heroSheen{0%{background-position:170% 0}100%{background-position:-30% 0}}
+.hero-title{
+  display:inline-block;font-size:40px;
+  background-image:linear-gradient(110deg, var(--_c,var(--accent)) 35%, #fff 50%, var(--_c,var(--accent)) 65%);
+  background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:heroSheen 1.5s ease-out 1;
+  filter:drop-shadow(0 0 24px var(--_glow,rgba(232,201,109,.35)));
+}
+.hero-marvel{--_c:#ff5c66;--_glow:rgba(224,48,61,.45)}
+.hero-dc{--_c:#e2e5f5;--_glow:rgba(180,186,220,.4)}
+.hero-dcamu{--_c:#b3a6ff;--_glow:rgba(126,111,224,.45)}
+.hero-starwars{--_c:#ffd75e;--_glow:rgba(244,196,48,.5)}
+.hero-gold{--_c:var(--accent);--_glow:rgba(232,201,109,.4)}
+
+@keyframes staggerIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.rank-row{animation:staggerIn .4s ease backwards}
+.rank-poster,.nav-search-poster,.dice-poster{transition:transform .3s ease}
+.rank-row:hover .rank-poster,.rank-row:hover .card-poster{transform:scale(1.04)}
+.rank-row:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.35)}
+
+.rank-num{position:relative;font-family:'Bebas Neue',sans-serif;font-size:16px;min-width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);flex-shrink:0}
+.rank-num.top3{color:#000;background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:var(--accent);box-shadow:0 0 14px rgba(232,201,109,.5)}
+
+.auth-box{position:relative;overflow:hidden}
+.auth-box::before{content:'';position:absolute;top:-90px;right:-70px;width:260px;height:260px;border-radius:50%;background:var(--accent);filter:blur(80px);opacity:.16;pointer-events:none;z-index:0}
+.auth-box>*{position:relative;z-index:1}
+.btn-primary:hover{filter:brightness(1.08);box-shadow:0 6px 20px rgba(232,201,109,.3);transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+
+</style>
+</head>
+<body>
+<div class="bg-ambient" aria-hidden="true"></div>
+<div class="bg-grain" aria-hidden="true"></div>
+
+<nav class="nav">
+  <div class="nav-logo" onclick="goHome()">Orach</div>
+  <div class="nav-center" id="navCenter">
+    <div class="nav-search-group" id="navSearchGroup">
+      <div class="nav-search" id="navSearch">
+        <button class="nav-search-icon-btn" id="navSearchToggle" onclick="toggleNavSearch(event)">🔍</button>
+        <input class="nav-search-input" id="navSearchInput" placeholder="Search Marvel, DC, Star Wars…" oninput="onNavSearch()" autocomplete="off" />
+      </div>
+      <div class="franchise-tabs" id="franchiseTabs">
+        <div class="franchise-indicator" id="franchiseIndicator"></div>
+        <button class="franchise-btn" id="dock-marvel" onclick="showPage('marvel')">Marvel</button>
+        <button class="franchise-btn" id="dock-dc" onclick="showPage('dc')">DC</button>
+        <button class="franchise-btn" id="dock-dcamu" onclick="showPage('dcamu')">DCAMU</button>
+        <button class="franchise-btn" id="dock-starwars" onclick="showPage('starwars')">Star Wars</button>
+      </div>
+      <button class="rankings-btn" id="rankingsNavBtn" onclick="showPage('rankings')">Rankings</button>
+      <div class="nav-search-results" id="navSearchResults"></div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <div class="profile-menu" id="profileMenu">
+      <button class="profile-trigger" id="profileTrigger" onclick="toggleProfileMenu(event)"></button>
+      <div class="profile-dropdown" id="profileDropdown"></div>
+    </div>
+  </div>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="page-glow glow-marvel" style="top:-60px;left:-140px;right:auto"></div>
+  <div class="page-glow glow-starwars" style="top:auto;bottom:-180px;right:-160px"></div>
+  <div class="home-wrap">
+    <div class="franchise-select-box" id="franchiseSelectBox">
+      <button class="franchise-select-item" data-franchise="marvel" onclick="selectFranchiseIntro('marvel',event)">MARVEL</button>
+      <div class="franchise-select-divider"></div>
+      <button class="franchise-select-item" data-franchise="dc" onclick="selectFranchiseIntro('dc',event)">DC</button>
+      <div class="franchise-select-divider"></div>
+      <button class="franchise-select-item" data-franchise="starwars" onclick="selectFranchiseIntro('starwars',event)">STAR WARS</button>
+    </div>
+    <p class="home-hint">Pick a universe to begin</p>
+  </div>
+</div>
+
+<!-- INTRO ZOOM / OPENING VIDEO -->
+<div class="intro-zoom" id="introZoom">
+  <video id="introVideo" class="intro-video" playsinline></video>
+  <button class="intro-skip" id="introSkipBtn">Skip ⏭</button>
+</div>
+
+<!-- AUTH -->
+<div class="page" id="page-auth">
+  <div class="page-glow glow-gold" style="top:-80px;left:-100px;right:auto"></div>
+  <div class="page-glow glow-marvel" style="top:auto;bottom:-160px;right:-140px;opacity:.1"></div>
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <h1 class="auth-title hero-title hero-gold" style="font-size:32px">Orach</h1>
+      <p class="auth-sub" id="authSub">Watch order for Marvel, DC, Star Wars and more.</p>
+      <div id="authError" class="form-error" style="display:none"></div>
+      <div id="authFormRegister" style="display:none">
+        <label class="form-label">Username</label>
+        <input class="form-input" id="regUsername" placeholder="e.g. parsa" />
+        <label class="form-label">Password</label>
+        <input class="form-input" id="regPassword" type="password" placeholder="Choose a password" />
+        <button class="btn-primary" onclick="doRegister()">Create account</button>
+        <div class="auth-toggle">Already have an account? <span onclick="toggleAuth('login')">Sign in</span></div>
+      </div>
+      <div id="authFormLogin">
+        <label class="form-label">Username</label>
+        <input class="form-input" id="loginUsername" placeholder="Your username" />
+        <label class="form-label">Password</label>
+        <input class="form-input" id="loginPassword" type="password" placeholder="Your password" />
+        <button class="btn-primary" onclick="doLogin()">Sign in</button>
+        <div class="auth-toggle">New here? <span onclick="toggleAuth('register')">Create account</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RANKINGS -->
+<div class="page" id="page-rankings">
+  <div class="page-glow glow-gold"></div>
+  <div class="rankings-wrap">
+    <div style="margin-bottom:1.5rem">
+      <h2 class="hero-title hero-gold">RANKINGS</h2>
+      <p style="color:var(--text2);font-size:14px" id="rankingsSub">The best — ranked by your community</p>
+    </div>
+    <div class="rankings-tabs" id="rankingsTabsWrap">
+      <div class="rankings-indicator" id="rankingsIndicator"></div>
+      <button class="tab-btn active" id="tab-site" onclick="switchRankingsTab('site')">Orach Top 50</button>
+      <button class="tab-btn" id="tab-imdb" onclick="switchRankingsTab('imdb')">IMDb Animations Top 50<span class="dice-btn" id="diceBtn" onclick="rollDice(event)" title="Random pick">🎲</span></button>
+    </div>
+    <div id="rankingsList"></div>
+    <div id="imdbAnimeList" style="display:none"></div>
+  </div>
+</div>
+
+<!-- DICE MODAL -->
+<div class="modal-overlay" id="diceModal" onclick="closeDiceModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeDiceModal(event)">✕</button>
+    <div id="diceModalContent"></div>
+    <button class="admin-wipe-btn" style="background:var(--accent);color:#000;width:100%;margin-top:14px" onclick="rollDice(event)">🎲 Pick another</button>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="page" id="page-profile">
+  <div class="page-glow glow-gold"></div>
+  <div class="rankings-wrap">
+    <div style="margin-bottom:1.5rem">
+      <h2 class="hero-title hero-gold">MY PROFILE</h2>
+      <p style="color:var(--text2);font-size:14px" id="profileSub">Titles you've rated</p>
+    </div>
+    <div id="profileList"></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div class="page-glow glow-marvel"></div>
+  <div class="rankings-wrap">
+    <div class="admin-toolbar">
+      <div>
+        <h2 class="hero-title hero-marvel">FIX RATINGS</h2>
+        <p style="color:var(--text2);font-size:14px">Ratings whose movie ID no longer matches the current catalog</p>
+      </div>
+      <button class="admin-wipe-btn" onclick="wipeAllRatings()">Delete ALL ratings</button>
+    </div>
+    <div id="adminList"></div>
+  </div>
+</div>
+
+<!-- MARVEL -->
+<div class="page" id="page-marvel">
+  <div class="page-glow glow-marvel"></div>
+  <div class="catalog-wrap">
+    <div style="margin-bottom:1.5rem">
+      <h2 class="hero-title hero-marvel">MARVEL</h2>
+      <p style="color:var(--text2);font-size:14px">The full MCU, in the order you should watch it</p>
+    </div>
+    <div id="marvelList"></div>
+  </div>
+</div>
+
+<!-- DC -->
+<div class="page" id="page-dc">
+  <div class="page-glow glow-dc"></div>
+  <div class="catalog-wrap">
+    <div style="margin-bottom:1.5rem">
+      <h2 class="hero-title hero-dc">DC</h2>
+      <p style="color:var(--text2);font-size:14px">The DCEU, in the order you should watch it</p>
+    </div>
+    <div id="dcList"></div>
+  </div>
+</div>
+
+<!-- DCAMU -->
+<div class="page" id="page-dcamu">
+  <div class="page-glow glow-dcamu"></div>
+  <div class="catalog-wrap">
+    <div style="margin-bottom:1.5rem">
+      <h2 class="hero-title hero-dcamu">DCAMU</h2>
+      <p style="color:var(--text2);font-size:14px">The DC Animated Movie Universe, in the order you should watch it</p>
+    </div>
+    <div id="dcamuList"></div>
+  </div>
+</div>
+
+<!-- STAR WARS -->
+<div class="page" id="page-starwars">
+  <div class="page-glow glow-starwars"></div>
+  <div class="catalog-wrap">
+    <div style="margin-bottom:1.5rem">
+      <h2 class="hero-title hero-starwars">STAR WARS</h2>
+      <p style="color:var(--text2);font-size:14px">The saga, in the order you should watch it</p>
+    </div>
+    <div id="starwarsList"></div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div class="page" id="page-detail">
+  <div class="page-glow glow-gold" style="opacity:.1"></div>
+  <div class="detail-wrap">
+    <button class="detail-back" id="detailBackBtn">← Back</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<script>
+const MOVIES = [
+  // ── MARVEL — PHASE 1 ──
+  {id:1,title:"Iron Man",year:2008,genre:"Marvel",phase:"Phase 1",order:1,director:"Jon Favreau",desc:"Billionaire engineer Tony Stark builds a powered suit of armor after being held captive, becoming Iron Man.",emoji:"🤖",imdb:7.9},
+  {id:2,title:"The Incredible Hulk",year:2008,genre:"Marvel",phase:"Phase 1",order:2,director:"Louis Leterrier",desc:"Bruce Banner hunts for a cure to the rage monster within him while evading the military.",emoji:"💚",imdb:6.6},
+  {id:3,title:"Iron Man 2",year:2010,genre:"Marvel",phase:"Phase 1",order:3,director:"Jon Favreau",desc:"Tony Stark deals with government pressure, a new rival, and the toxic side effects of his own suit.",emoji:"🤖",imdb:6.8},
+  {id:4,title:"Thor",year:2011,genre:"Marvel",phase:"Phase 1",order:4,director:"Kenneth Branagh",desc:"The Asgardian god of thunder is banished to Earth and must learn humility to reclaim his power.",emoji:"⚡",imdb:7.0},
+  {id:5,title:"Captain America: The First Avenger",year:2011,genre:"Marvel",phase:"Phase 1",order:5,director:"Joe Johnston",desc:"A frail young man is transformed into a super-soldier to fight in World War II.",emoji:"🛡️",imdb:6.9},
+  {id:6,title:"The Avengers",year:2012,genre:"Marvel",phase:"Phase 1",order:6,director:"Joss Whedon",desc:"Earth's mightiest heroes team up for the first time to stop Loki and an alien invasion.",emoji:"🦸",imdb:8.0},
+  // ── MARVEL — PHASE 2 ──
+  {id:7,title:"Iron Man 3",year:2013,genre:"Marvel",phase:"Phase 2",order:7,director:"Shane Black",desc:"Tony Stark faces a mysterious terrorist known as the Mandarin while battling personal demons.",emoji:"🤖",imdb:7.1},
+  {id:8,title:"Thor: The Dark World",year:2013,genre:"Marvel",phase:"Phase 2",order:8,director:"Alan Taylor",desc:"Thor must stop the Dark Elf Malekith from plunging the universe into darkness.",emoji:"⚡",imdb:6.8},
+  {id:9,title:"Captain America: The Winter Soldier",year:2014,genre:"Marvel",phase:"Phase 2",order:9,director:"Anthony & Joe Russo",desc:"Cap uncovers a conspiracy within S.H.I.E.L.D. while facing a deadly assassin from his past.",emoji:"🛡️",imdb:7.8},
+  {id:10,title:"Guardians of the Galaxy",year:2014,genre:"Marvel",phase:"Phase 2",order:10,director:"James Gunn",desc:"A band of misfit outlaws band together to protect the galaxy from a powerful threat.",emoji:"🚀",imdb:8.0},
+  {id:11,title:"Avengers: Age of Ultron",year:2015,genre:"Marvel",phase:"Phase 2",order:11,director:"Joss Whedon",desc:"The Avengers face their greatest challenge yet — an artificial intelligence bent on extinction.",emoji:"🤖",imdb:7.3},
+  {id:12,title:"Ant-Man",year:2015,genre:"Marvel",phase:"Phase 2",order:12,director:"Peyton Reed",desc:"A master thief uses a size-shifting suit to become a hero and pull off a heist that could save the world.",emoji:"🐜",imdb:7.1},
+  // ── MARVEL — PHASE 3 ──
+  {id:13,title:"Captain America: Civil War",year:2016,genre:"Marvel",phase:"Phase 3",order:13,director:"Anthony & Joe Russo",desc:"Political pressure divides the Avengers into two opposing factions led by Cap and Iron Man.",emoji:"🛡️",imdb:7.8},
+  {id:14,title:"Doctor Strange",year:2016,genre:"Marvel",phase:"Phase 3",order:14,director:"Scott Derrickson",desc:"A brilliant but arrogant surgeon learns the mystic arts after a career-ending accident.",emoji:"🧙",imdb:7.5},
+  {id:15,title:"Guardians of the Galaxy Vol. 2",year:2017,genre:"Marvel",phase:"Phase 3",order:15,director:"James Gunn",desc:"The Guardians uncover Star-Lord's true parentage and face new threats across the galaxy.",emoji:"🚀",imdb:7.6},
+  {id:16,title:"Spider-Man: Homecoming",year:2017,genre:"Marvel",phase:"Phase 3",order:16,director:"Jon Watts",desc:"A young Peter Parker balances high school life with his new responsibilities as Spider-Man.",emoji:"🕷️",imdb:7.4},
+  {id:17,title:"Thor: Ragnarok",year:2017,genre:"Marvel",phase:"Phase 3",order:17,director:"Taika Waititi",desc:"Thor must escape captivity and stop Hela from destroying Asgard and triggering Ragnarok.",emoji:"⚡",imdb:7.9},
+  {id:18,title:"Black Panther",year:2018,genre:"Marvel",phase:"Phase 3",order:18,director:"Ryan Coogler",desc:"T'Challa returns home to Wakanda to claim the throne, facing a challenger with a personal vendetta.",emoji:"🐾",imdb:7.3},
+  {id:19,title:"Avengers: Infinity War",year:2018,genre:"Marvel",phase:"Phase 3",order:19,director:"Anthony & Joe Russo",desc:"The Avengers unite to stop Thanos from collecting all six Infinity Stones.",emoji:"💎",imdb:8.4},
+  {id:20,title:"Ant-Man and the Wasp",year:2018,genre:"Marvel",phase:"Phase 3",order:20,director:"Peyton Reed",desc:"Scott Lang teams up with Hope van Dyne on a mission into the quantum realm.",emoji:"🐜",imdb:7.0},
+  {id:21,title:"Captain Marvel",year:2019,genre:"Marvel",phase:"Phase 3",order:21,director:"Anna Boden & Ryan Fleck",desc:"Carol Danvers becomes one of the universe's most powerful heroes after a Kree experiment.",emoji:"⭐",imdb:6.8},
+  {id:22,title:"Avengers: Endgame",year:2019,genre:"Marvel",phase:"Phase 3",order:22,director:"Anthony & Joe Russo",desc:"The remaining Avengers assemble once more to undo Thanos's actions and restore the universe.",emoji:"💎",imdb:8.4},
+  {id:23,title:"Spider-Man: Far From Home",year:2019,genre:"Marvel",phase:"Phase 3",order:23,director:"Jon Watts",desc:"Peter Parker faces new threats across Europe while grappling with the loss of a mentor.",emoji:"🕷️",imdb:7.4},
+  // ── MARVEL — PHASE 4 · MOVIES ──
+  {id:27,title:"Black Widow",year:2021,genre:"Marvel",phase:"Phase 4 · Movies",order:24,director:"Cate Shortland",desc:"Natasha Romanoff confronts her dark past and a conspiracy linked to her family of spies.",emoji:"🕷️",imdb:6.7},
+  {id:29,title:"Shang-Chi and the Legend of the Ten Rings",year:2021,genre:"Marvel",phase:"Phase 4 · Movies",order:25,director:"Destin Daniel Cretton",desc:"Shang-Chi confronts the past he thought he left behind when drawn into the Ten Rings organization.",emoji:"🐉",imdb:7.4},
+  {id:30,title:"Eternals",year:2021,genre:"Marvel",phase:"Phase 4 · Movies",order:26,director:"Chloé Zhao",desc:"A team of ancient immortal aliens emerge to protect Earth from their evil counterparts, the Deviants.",emoji:"🌌",imdb:6.3},
+  {id:32,title:"Spider-Man: No Way Home",year:2021,genre:"Marvel",phase:"Phase 4 · Movies",order:27,director:"Jon Watts",desc:"Peter Parker's identity is revealed, and he turns to Doctor Strange for help — with multiversal consequences.",emoji:"🕷️",imdb:8.2},
+  {id:34,title:"Doctor Strange in the Multiverse of Madness",year:2022,genre:"Marvel",phase:"Phase 4 · Movies",order:28,director:"Sam Raimi",desc:"Doctor Strange journeys across the multiverse to confront a mysterious new threat.",emoji:"🧙",imdb:6.9},
+  {id:36,title:"Thor: Love and Thunder",year:2022,genre:"Marvel",phase:"Phase 4 · Movies",order:29,director:"Taika Waititi",desc:"Thor seeks inner peace, but must spring back into action against Gorr, the God Butcher.",emoji:"⚡",imdb:6.2},
+  {id:38,title:"Black Panther: Wakanda Forever",year:2022,genre:"Marvel",phase:"Phase 4 · Movies",order:30,director:"Ryan Coogler",desc:"Wakanda fights to protect their nation from intervening world powers after the death of King T'Challa.",emoji:"🐾",imdb:6.7},
+  // ── MARVEL — PHASE 4 · SERIES ──
+  {id:24,title:"WandaVision",year:2021,genre:"Marvel",phase:"Phase 4 · Series",order:31,type:"series",director:"Matt Shakman",desc:"Wanda Maximoff and Vision live an idyllic suburban life that hides a strange and powerful secret.",emoji:"📺",imdb:7.9},
+  {id:25,title:"The Falcon and the Winter Soldier",year:2021,genre:"Marvel",phase:"Phase 4 · Series",order:32,type:"series",director:"Kari Skogland",desc:"Sam Wilson and Bucky Barnes team up on a global adventure testing their abilities and their patience.",emoji:"📺",imdb:7.4},
+  {id:26,title:"Loki",year:2021,genre:"Marvel",phase:"Phase 4 · Series",order:33,type:"series",director:"Kate Herron",desc:"The God of Mischief is recruited by a mysterious organization to fix a fracture in time itself.",emoji:"📺",imdb:8.2},
+  {id:28,title:"What If…?",year:2021,genre:"Marvel",phase:"Phase 4 · Series",order:34,type:"series",director:"Bryan Andrews",desc:"The Watcher explores pivotal moments from the MCU, turning them into alternate timelines.",emoji:"📺",imdb:7.4},
+  {id:31,title:"Hawkeye",year:2021,genre:"Marvel",phase:"Phase 4 · Series",order:35,type:"series",director:"Rhys Thomas",desc:"Clint Barton teams up with skilled archer Kate Bishop to unravel a mystery from his past.",emoji:"📺",imdb:7.6},
+  {id:33,title:"Moon Knight",year:2022,genre:"Marvel",phase:"Phase 4 · Series",order:36,type:"series",director:"Mohamed Diab",desc:"A mild-mannered gift shop employee becomes a host for the Egyptian moon god Khonshu.",emoji:"📺",imdb:7.4},
+  {id:35,title:"Ms. Marvel",year:2022,genre:"Marvel",phase:"Phase 4 · Series",order:37,type:"series",director:"Adil El Arbi & Bilall Fallah",desc:"Teenager Kamala Khan discovers she has superpowers and becomes the hero Ms. Marvel.",emoji:"📺",imdb:6.5},
+  {id:37,title:"She-Hulk: Attorney at Law",year:2022,genre:"Marvel",phase:"Phase 4 · Series",order:38,type:"series",director:"Kat Coiro",desc:"Lawyer Jennifer Walters navigates life as a six-foot-seven green superpowered hero.",emoji:"📺",imdb:5.0},
+  // ── MARVEL — PHASE 5 · MOVIES ──
+  {id:39,title:"Ant-Man and the Wasp: Quantumania",year:2023,genre:"Marvel",phase:"Phase 5 · Movies",order:39,director:"Peyton Reed",desc:"The Lang family is pulled into the Quantum Realm and confronts the conqueror Kang.",emoji:"🐜",imdb:6.0},
+  {id:41,title:"Guardians of the Galaxy Vol. 3",year:2023,genre:"Marvel",phase:"Phase 5 · Movies",order:40,director:"James Gunn",desc:"The Guardians embark on a mission to save Rocket's life, confronting his traumatic origins.",emoji:"🚀",imdb:7.9},
+  {id:42,title:"The Marvels",year:2023,genre:"Marvel",phase:"Phase 5 · Movies",order:41,director:"Nia DaCosta",desc:"Carol Danvers, Kamala Khan, and Monica Rambeau team up after their powers become entangled.",emoji:"⭐",imdb:5.6},
+  {id:45,title:"Deadpool & Wolverine",year:2024,genre:"Marvel",phase:"Phase 5 · Movies",order:42,director:"Shawn Levy",desc:"Wade Wilson is recruited by the Time Variance Authority and teams up with a reluctant Wolverine.",emoji:"🗡️",imdb:7.6},
+  {id:47,title:"Captain America: Brave New World",year:2025,genre:"Marvel",phase:"Phase 5 · Movies",order:43,director:"Julius Onah",desc:"Sam Wilson, the new Captain America, finds himself in the middle of an international incident.",emoji:"🛡️",imdb:5.7},
+  {id:48,title:"Thunderbolts",year:2025,genre:"Marvel",phase:"Phase 5 · Movies",order:44,director:"Jake Schreier",desc:"A group of antiheroes and former villains are sent on a covert mission that puts them in a deadly trap.",emoji:"⚡",imdb:7.6},
+  // ── MARVEL — PHASE 5 · SERIES ──
+  {id:40,title:"Secret Invasion",year:2023,genre:"Marvel",phase:"Phase 5 · Series",order:45,type:"series",director:"Ali Selim",desc:"Nick Fury uncovers a faction of shapeshifting Skrulls who have infiltrated Earth.",emoji:"📺",imdb:5.8},
+  {id:43,title:"Echo",year:2024,genre:"Marvel",phase:"Phase 5 · Series",order:46,type:"series",director:"Sydney Freeland",desc:"Maya Lopez returns to her roots to confront her past and reconnect with her Native American community.",emoji:"📺",imdb:6.4},
+  {id:44,title:"Agatha All Along",year:2024,genre:"Marvel",phase:"Phase 5 · Series",order:47,type:"series",director:"Jac Schaeffer",desc:"Agatha Harkness assembles a coven of witches to walk the dangerous Witches' Road and regain her power.",emoji:"📺",imdb:7.5},
+  {id:101,title:"Your Friendly Neighborhood Spider-Man",year:2025,genre:"Marvel",phase:"Phase 5 · Series",order:48,type:"series",director:"Jeff Trammell",desc:"An animated look at Peter Parker's earliest days learning to be Spider-Man, told in an alternate timeline with a style inspired by his classic comic book roots.",emoji:"📺",imdb:7.3},
+  {id:46,title:"Ironheart",year:2025,genre:"Marvel",phase:"Phase 5 · Series",order:49,type:"series",director:"Sam Bailey",desc:"Genius inventor Riri Williams builds her own suit of armor and forges her own path as Ironheart.",emoji:"📺",imdb:6.5},
+  // ── MARVEL — PHASE 6 · MOVIES ──
+  {id:102,title:"The Fantastic Four: First Steps",year:2025,genre:"Marvel",phase:"Phase 6 · Movies",order:50,director:"Matt Shakman",desc:"Marvel's First Family balances heroism and family bonds in a retro-futuristic world while defending Earth from the cosmic threat of Galactus and his herald, the Silver Surfer.",emoji:"4️⃣",imdb:6.8},
+  {id:103,title:"Spider-Man: Brand New Day",year:2026,genre:"Marvel",phase:"Phase 6 · Movies",order:51,director:"Destin Daniel Cretton",desc:"Peter Parker fights crime full-time in a city that no longer remembers him, until a shocking new threat forces him to confront who he's becoming.",emoji:"🕷️",imdb:8.2},
+  {id:104,title:"Avengers: Doomsday",year:null,genre:"Marvel",phase:"Phase 6 · Movies",order:52,comingSoon:true,director:"Anthony & Joe Russo",desc:"Coming soon — heroes from across the MCU assemble to face Doctor Doom.",emoji:"👑"},
+  {id:105,title:"Avengers: Secret Wars",year:null,genre:"Marvel",phase:"Phase 6 · Movies",order:53,comingSoon:true,director:"Anthony & Joe Russo",desc:"Coming soon — the multiverse-spanning conclusion to the current era of the Avengers saga.",emoji:"🌠"},
+  // ── MARVEL — PHASE 6 · SERIES ──
+  {id:106,title:"Eyes of Wakanda",year:2025,genre:"Marvel",phase:"Phase 6 · Series",order:54,type:"series",director:"Todd Harris",desc:"An animated anthology following generations of Wakandan warriors, the Hatut Zaraze, on dangerous missions across history to recover Vibranium artifacts stolen from their homeland.",emoji:"🐾",imdb:6.2},
+  {id:107,title:"Marvel Zombies",year:2025,genre:"Marvel",phase:"Phase 6 · Series",order:55,type:"series",director:"Bryan Andrews",desc:"After the Avengers fall to a zombie plague, a group of survivors races across a devastated world to find a way to stop the super-powered undead.",emoji:"🧟",imdb:7.0},
+  {id:108,title:"Wonder Man",year:2026,genre:"Marvel",phase:"Phase 6 · Series",order:56,type:"series",director:"Destin Daniel Cretton",desc:"A struggling actor lands the lead role in a superhero movie reboot, pulling him into a satirical, behind-the-curtain look at fame and reinvention in Hollywood.",emoji:"🎬",imdb:6.4},
+  {id:109,title:"VisionQuest",year:null,genre:"Marvel",phase:"Phase 6 · Series",order:57,type:"series",comingSoon:true,director:"Terry Matalas",desc:"Coming soon — rebuilt as an all-white android, Vision goes into hiding from those who'd weaponize him as Ultron re-emerges, closing out the trilogy that began with WandaVision and Agatha All Along.",emoji:"👁️"},
+
+  {id:76,title:"Spider-Man",year:2002,genre:"Marvel",phase:"Legacy Spider-Man",order:1001,director:"Sam Raimi",desc:"Bitten by a genetically modified spider, Peter Parker gains powers and learns that with great power comes great responsibility.",emoji:"🕸️",imdb:7.4},
+  {id:77,title:"Spider-Man 2",year:2004,genre:"Marvel",phase:"Legacy Spider-Man",order:1002,director:"Sam Raimi",desc:"Peter Parker struggles to balance his personal life with being Spider-Man while facing the tormented Doctor Octopus.",emoji:"🕸️",imdb:7.3},
+  {id:78,title:"Spider-Man 3",year:2007,genre:"Marvel",phase:"Legacy Spider-Man",order:1003,director:"Sam Raimi",desc:"Peter Parker deals with a symbiotic alien suit that amplifies his aggression while new enemies emerge.",emoji:"🕸️",imdb:6.2},
+  {id:79,title:"The Amazing Spider-Man",year:2012,genre:"Marvel",phase:"Legacy Spider-Man",order:1004,director:"Marc Webb",desc:"Peter Parker uncovers his father's legacy and becomes Spider-Man while facing the monstrous Lizard.",emoji:"🕸️",imdb:6.9},
+  {id:80,title:"The Amazing Spider-Man 2",year:2014,genre:"Marvel",phase:"Legacy Spider-Man",order:1005,director:"Marc Webb",desc:"Spider-Man battles Electro and other emerging threats while confronting secrets from his past.",emoji:"🕸️",imdb:6.6},
+
+  {id:81,title:"X-Men",year:2000,genre:"Marvel",phase:"X-Men Universe",order:1010,director:"Bryan Singer",desc:"Two mutants join the X-Men to help protect humanity from Magneto's Brotherhood.",emoji:"🧬",imdb:7.4},
+  {id:82,title:"X2",posterTitle:"X2: X-Men United",year:2003,genre:"Marvel",phase:"X-Men Universe",order:1011,director:"Bryan Singer",desc:"The X-Men join forces with their enemy Magneto to stop a military commander from eradicating all mutants.",emoji:"🧬",imdb:7.5},
+  {id:83,title:"X-Men: The Last Stand",year:2006,genre:"Marvel",phase:"X-Men Universe",order:1012,director:"Brett Ratner",desc:"A cure for the mutant gene divides the X-Men as Jean Grey's dark powers resurface.",emoji:"🧬",imdb:6.7},
+  {id:84,title:"X-Men Origins: Wolverine",year:2009,genre:"Marvel",phase:"X-Men Universe",order:1013,director:"Gavin Hood",desc:"Wolverine's violent past and the origins of his adamantium claws are revealed.",emoji:"🧬",imdb:6.0},
+  {id:85,title:"X-Men: First Class",year:2011,genre:"Marvel",phase:"X-Men Universe",order:1014,director:"Matthew Vaughn",desc:"A young Charles Xavier and Erik Lensherr form the X-Men amid the Cuban Missile Crisis.",emoji:"🧬",imdb:7.7},
+  {id:86,title:"The Wolverine",year:2013,genre:"Marvel",phase:"X-Men Universe",order:1015,director:"James Mangold",desc:"Wolverine travels to Japan, where he is embroiled in a conflict that tests his mortality.",emoji:"🧬",imdb:6.7},
+  {id:87,title:"X-Men: Days of Future Past",year:2014,genre:"Marvel",phase:"X-Men Universe",order:1016,director:"Bryan Singer",desc:"Wolverine is sent to the past to change a pivotal event that leads to a dark future for mutants.",emoji:"🧬",imdb:7.9},
+  {id:88,title:"X-Men: Apocalypse",year:2016,genre:"Marvel",phase:"X-Men Universe",order:1017,director:"Bryan Singer",desc:"The X-Men face their greatest threat yet in the immortal mutant Apocalypse.",emoji:"🧬",imdb:6.9},
+  {id:89,title:"Logan",year:2017,genre:"Marvel",phase:"X-Men Universe",order:1018,director:"James Mangold",desc:"An aging Wolverine cares for an ailing Professor X and protects a young mutant girl on the run.",emoji:"🧬",imdb:8.1},
+  {id:90,title:"X-Men: The Dark Phoenix",posterTitle:"Dark Phoenix",year:2019,genre:"Marvel",phase:"X-Men Universe",order:1019,director:"Simon Kinberg",desc:"Jean Grey's powers spiral out of control, transforming her into the destructive Dark Phoenix.",emoji:"🧬",imdb:5.3},
+  {id:91,title:"Deadpool",year:2016,genre:"Marvel",phase:"X-Men Universe",order:1020,director:"Tim Miller",desc:"A wisecracking mercenary gains accelerated healing powers and adopts the alter ego Deadpool.",emoji:"⚔️",imdb:8.0},
+  {id:92,title:"Deadpool 2",year:2018,genre:"Marvel",phase:"X-Men Universe",order:1021,director:"David Leitch",desc:"Deadpool assembles a team of mutants to protect a young boy from a time-traveling soldier.",emoji:"⚔️",imdb:7.6},
+
+  {id:93,title:"Daredevil",year:2015,genre:"Marvel",phase:"The Defenders Saga",order:1030,type:"series",director:"Drew Goddard",desc:"Blinded as a child, Matt Murdock uses his heightened senses to fight crime by night as Daredevil across three gritty seasons.",emoji:"📺",imdb:8.6},
+  {id:94,title:"Jessica Jones",year:2015,genre:"Marvel",phase:"The Defenders Saga",order:1031,type:"series",director:"Melissa Rosenberg",desc:"A super-powered private investigator battles her own demons and a mind-controlling villain from her past.",emoji:"📺",imdb:7.9},
+  {id:95,title:"Luke Cage",year:2016,genre:"Marvel",phase:"The Defenders Saga",order:1032,type:"series",director:"Cheo Hodari Coker",desc:"A man with unbreakable skin and super strength becomes the reluctant hero of Harlem.",emoji:"📺",imdb:7.6},
+  {id:96,title:"Iron Fist",year:2017,genre:"Marvel",phase:"The Defenders Saga",order:1033,type:"series",director:"Scott Buck",desc:"Danny Rand returns to New York with mystical martial arts powers to reclaim his family's company.",emoji:"📺",imdb:6.4},
+  {id:97,title:"The Defenders",year:2017,genre:"Marvel",phase:"The Defenders Saga",order:1034,type:"series",director:"S.J. Clarkson",desc:"Daredevil, Jessica Jones, Luke Cage, and Iron Fist team up to stop a mysterious organization.",emoji:"📺",imdb:7.4},
+  {id:98,title:"The Punisher",year:2017,genre:"Marvel",phase:"The Defenders Saga",order:1035,type:"series",director:"Steve Lightfoot",desc:"Frank Castle wages a brutal war on crime after uncovering a conspiracy tied to his family's murder.",emoji:"📺",imdb:8.5},
+  {id:99,title:"Daredevil: Born Again",year:2025,genre:"Marvel",phase:"The Defenders Saga",order:1036,type:"series",director:"Dario Scardapane",desc:"Matt Murdock returns to the mask after Wilson Fisk rises to power as New York's mayor.",emoji:"📺",imdb:8.1},
+  {id:100,title:"Punisher: One Last Kill",year:null,genre:"Marvel",phase:"The Defenders Saga",order:1037,type:"series",comingSoon:true,desc:"Coming soon to Marvel's Defenders Saga.",emoji:"📺"},
+
+  // ── DC ──
+  {id:49,title:"The Suicide Squad",year:2021,genre:"DC",order:49,director:"James Gunn",desc:"A team of imprisoned supervillains is sent on a deadly black-ops mission to a hostile jungle.",emoji:"💣",imdb:7.2},
+  {id:50,title:"Peacemaker",year:2022,genre:"DC",order:50,type:"series",director:"James Gunn",desc:"The merciless yet morally questionable Peacemaker gets a second chance as a member of a black-ops squad.",emoji:"📺",imdb:8.1},
+  {id:51,title:"Creature Commandos",year:2024,genre:"DC",order:51,type:"series",director:"James Gunn",desc:"A team of monstrous misfit operatives is sent on dangerous black-ops missions in exchange for their freedom.",emoji:"📺",imdb:7.7},
+  {id:52,title:"Superman",year:2025,genre:"DC",order:52,director:"James Gunn",desc:"Superman balances his Kryptonian heritage with his human upbringing as the new DCU's first hero.",emoji:"🦸",imdb:7.3},
+  {id:53,title:"Supergirl",year:2026,genre:"DC",order:53,director:"Craig Gillespie",desc:"Kara Zor-El, still haunted by Krypton's fall, is pulled into a ruthless quest for revenge when a young warrior begs for her help.",emoji:"⭐",imdb:6.0},
+  {id:54,title:"Lanterns",year:null,genre:"DC",order:54,type:"series",comingSoon:true,desc:"Coming soon to the DCU.",emoji:"🔦"},
+  {id:55,title:"Clayface",year:null,genre:"DC",order:55,comingSoon:true,desc:"Coming soon to the DCU.",emoji:"🎭"},
+  // ── DCAMU — NEW 52 ──
+  {id:110,title:"Justice League: The Flashpoint Paradox",year:2013,genre:"DCAMU",phase:"New 52",order:1,director:"Jay Oliva",desc:"Barry Allen wakes up in an altered timeline where his choices have shattered the world he knew, forcing him to fix the fracture in reality.",emoji:"⚡",imdb:7.9},
+  {id:111,title:"Justice League: War",year:2014,genre:"DCAMU",phase:"New 52",order:2,director:"Jay Oliva",desc:"A young and untested Justice League forms for the first time to repel a full-scale invasion from Darkseid's forces.",emoji:"🛡️",imdb:6.8},
+  {id:112,title:"Son of Batman",year:2014,genre:"DCAMU",phase:"New 52",order:3,director:"Ethan Spaulding",desc:"Batman discovers he has a son raised by the League of Assassins and must teach him to control his violent instincts.",emoji:"🦇",imdb:6.6},
+  {id:113,title:"Justice League: Throne of Atlantis",year:2015,genre:"DCAMU",phase:"New 52",order:4,director:"Ethan Spaulding",desc:"Arthur Curry discovers his destiny as the heir to the throne of Atlantis as war threatens to break out between land and sea.",emoji:"🔱",imdb:6.8},
+  {id:114,title:"Batman vs. Robin",year:2015,genre:"DCAMU",phase:"New 52",order:5,director:"Jay Oliva",desc:"Batman's son Damian is drawn toward a secret society called the Court of Owls, testing the bond between father and son.",emoji:"🦇",imdb:6.5},
+  {id:115,title:"Batman: Bad Blood",year:2016,genre:"DCAMU",phase:"New 52",order:6,director:"Jay Oliva",desc:"With Batman missing, Nightwing, Robin, and a mysterious new Batwoman must work together to protect Gotham.",emoji:"🦇",imdb:6.9},
+  {id:116,title:"Justice League vs. Teen Titans",year:2016,genre:"DCAMU",phase:"New 52",order:7,director:"Sam Liu",desc:"Damian Wayne is sent to train with the Teen Titans, just as a demonic threat begins possessing the Justice League.",emoji:"🛡️",imdb:6.5},
+  {id:117,title:"Justice League Dark",year:2017,genre:"DCAMU",phase:"New 52",order:8,director:"Jay Oliva",desc:"When a wave of supernatural chaos overwhelms the Justice League, John Constantine assembles a team versed in the mystic arts.",emoji:"🔮",imdb:6.9},
+  {id:118,title:"Teen Titans: The Judas Contract",year:2017,genre:"DCAMU",phase:"New 52",order:9,director:"Sam Liu",desc:"A new Titans recruit hides a dangerous secret as the mercenary Deathstroke closes in on the team.",emoji:"🎭",imdb:7.5},
+  {id:119,title:"Suicide Squad: Hell to Pay",year:2018,genre:"DCAMU",phase:"New 52",order:10,director:"Sam Liu",desc:"Task Force X pursues a mystical artifact on a mission that could either free them or destroy them all.",emoji:"💀",imdb:6.8},
+  {id:120,title:"The Death of Superman",year:2018,genre:"DCAMU",phase:"New 52",order:11,director:"Sam Liu",desc:"A monstrous creature called Doomsday rampages across the world, leading to an all-out battle with the Man of Steel.",emoji:"🔵",imdb:7.6},
+  {id:121,title:"Constantine: City of Demons",year:2018,genre:"DCAMU",phase:"New 52",order:12,director:"Doug Murphy",desc:"John Constantine races to save a dying friend's daughter from a demonic curse tied to his own troubled past.",emoji:"🔥",imdb:6.9},
+  {id:122,title:"Reign of the Supermen",year:2019,genre:"DCAMU",phase:"New 52",order:13,director:"Sam Liu",desc:"In the wake of Superman's death, four new figures claim his legacy, but only one may be the real Man of Steel.",emoji:"🔵",imdb:6.9},
+  {id:123,title:"Batman: Hush",year:2019,genre:"DCAMU",phase:"New 52",order:14,director:"Justin Copeland",desc:"A mysterious new adversary called Hush manipulates Batman's rogues gallery, forcing him to question who he can trust.",emoji:"🦇",imdb:6.9},
+  {id:124,title:"Wonder Woman: Bloodlines",year:2019,genre:"DCAMU",phase:"New 52",order:15,director:"Sam Liu",desc:"Diana Prince faces a formidable new threat in Cheetah while confronting a rival with a deeply personal connection to Themyscira.",emoji:"🗡️",imdb:6.6},
+  {id:125,title:"Justice League Dark: Apokolips War",year:2020,genre:"DCAMU",phase:"New 52",order:16,director:"Matt Peters & Christina Sotta",desc:"In the devastating finale of the New 52 saga, Earth's remaining heroes make a last, desperate stand against Darkseid.",emoji:"🌋",imdb:7.4},
+  // ── DCAMU — TOMORROWVERSE ──
+  {id:126,title:"Superman: Man of Tomorrow",year:2020,genre:"DCAMU",phase:"Tomorrowverse",order:17,director:"Chris Palmer",desc:"A young Clark Kent arrives in Metropolis and takes his first steps toward becoming Superman while facing Parasite and Lobo.",emoji:"🔵",imdb:6.5},
+  {id:127,title:"Justice Society: World War II",year:2021,genre:"DCAMU",phase:"Tomorrowverse",order:18,director:"Jeremy Adams & Matt Peters",desc:"The Flash is pulled back in time to World War II, where he joins the Justice Society in the fight against Nazi forces.",emoji:"🎖️",imdb:6.9},
+  {id:128,title:"Batman: The Long Halloween, Part One",year:2021,genre:"DCAMU",phase:"Tomorrowverse",order:19,director:"Chris Palmer",desc:"A young Batman hunts a mysterious killer who strikes only on holidays, unraveling Gotham's criminal underworld.",emoji:"🦇",imdb:7.5},
+  {id:129,title:"Batman: The Long Halloween, Part Two",year:2021,genre:"DCAMU",phase:"Tomorrowverse",order:20,director:"Chris Palmer",desc:"As the holiday killings continue, Batman's hunt for the truth pushes him toward the origin of his deadliest foe.",emoji:"🦇",imdb:7.6},
+  {id:130,title:"Green Lantern: Beware My Power",year:2022,genre:"DCAMU",phase:"Tomorrowverse",order:21,director:"Jeff Wamester",desc:"John Stewart becomes Earth's Green Lantern and joins a fledgling Justice League to stop an ancient evil.",emoji:"💚",imdb:6.6},
+  {id:131,title:"Legion of Super-Heroes",year:2023,genre:"DCAMU",phase:"Tomorrowverse",order:22,director:"Jeff Wamester",desc:"Supergirl travels to the future and joins a team of legacy heroes defending the United Planets.",emoji:"🚀",imdb:6.2},
+  {id:132,title:"Justice League: Warworld",year:2023,genre:"DCAMU",phase:"Tomorrowverse",order:23,director:"Jeff Wamester",desc:"Superman is enslaved as a gladiator on the brutal planet Warworld while his allies race to find him.",emoji:"🪐",imdb:6.8},
+  {id:133,title:"Justice League: Crisis on Infinite Earths, Part One",year:2024,genre:"DCAMU",phase:"Tomorrowverse",order:24,director:"Jeff Wamester",desc:"A multiversal threat begins erasing entire realities, forcing heroes across countless Earths to unite.",emoji:"🌌",imdb:7.2},
+  {id:134,title:"Justice League: Crisis on Infinite Earths, Part Two",year:2024,genre:"DCAMU",phase:"Tomorrowverse",order:25,director:"Jeff Wamester",desc:"As the Anti-Monitor's assault intensifies, the assembled heroes make their boldest stand yet to save the multiverse.",emoji:"🌌",imdb:7.3},
+  {id:135,title:"Justice League: Crisis on Infinite Earths, Part Three",year:2024,genre:"DCAMU",phase:"Tomorrowverse",order:26,director:"Jeff Wamester",desc:"In the Tomorrowverse's grand finale, the surviving heroes face the ultimate sacrifice to rebuild what remains of existence.",emoji:"🌌",imdb:7.5},
+  // ── STAR WARS ──
+  {id:56,title:"Star Wars Episode I: The Phantom Menace",year:1999,genre:"Star Wars",order:56,director:"George Lucas",desc:"A young Anakin Skywalker is discovered as the Jedi sense a disturbance in the Force.",emoji:"⚔️",imdb:6.5},
+  {id:57,title:"Star Wars Episode II: Attack of the Clones",year:2002,genre:"Star Wars",order:57,director:"George Lucas",desc:"Obi-Wan investigates an assassination attempt on Senator Padmé Amidala as a clone army is uncovered.",emoji:"⚔️",imdb:6.6},
+  {id:58,title:"Star Wars: The Clone Wars",year:2008,genre:"Star Wars",order:58,type:"series",director:"Dave Filoni",desc:"The Clone Wars rage on as Anakin, Obi-Wan, and Ahsoka lead the Republic's forces against the Separatists.",emoji:"📺",imdb:8.4},
+  {id:59,title:"Star Wars Episode III: Revenge of the Sith",year:2005,genre:"Star Wars",order:59,director:"George Lucas",desc:"Anakin Skywalker falls to the dark side, becoming Darth Vader as the Republic crumbles.",emoji:"⚔️",imdb:7.6},
+  {id:60,title:"Star Wars: The Bad Batch",year:2021,genre:"Star Wars",order:60,type:"series",director:"Jennifer Corbett",desc:"An elite squad of clones with unique abilities navigate a changing galaxy after the fall of the Republic.",emoji:"📺",imdb:8.2},
+  {id:61,title:"Solo: A Star Wars Story",year:2018,genre:"Star Wars",order:61,director:"Ron Howard",desc:"A young Han Solo finds adventure when he meets his future copilot Chewbacca and Lando Calrissian.",emoji:"🚀",imdb:6.9},
+  {id:62,title:"Star Wars: Obi-Wan Kenobi",posterTitle:"Obi-Wan Kenobi",year:2022,genre:"Star Wars",order:62,type:"series",director:"Deborah Chow",desc:"Obi-Wan Kenobi watches over a young Luke Skywalker while facing a dark threat from his past.",emoji:"📺",imdb:7.1},
+  {id:63,title:"Star Wars Rebels",year:2014,genre:"Star Wars",order:63,type:"series",director:"Dave Filoni",desc:"A crew of rebels fight against the Empire's tyranny in the years before A New Hope.",emoji:"📺",imdb:8.2},
+  {id:64,title:"Star Wars: Andor",posterTitle:"Andor",year:2022,genre:"Star Wars",order:64,type:"series",director:"Tony Gilroy",desc:"Cassian Andor's path toward becoming a rebel hero begins amid Imperial oppression.",emoji:"📺",imdb:8.4},
+  {id:65,title:"Rogue One: A Star Wars Story",year:2016,genre:"Star Wars",order:65,director:"Gareth Edwards",desc:"A group of rebels unite for a dangerous mission to steal the plans to the Death Star.",emoji:"🚀",imdb:7.8},
+  {id:66,title:"Star Wars Episode IV: A New Hope",year:1977,genre:"Star Wars",order:66,director:"George Lucas",desc:"Luke Skywalker joins forces with a Jedi Knight to rescue a princess and save the galaxy from the Empire.",emoji:"⚔️",imdb:8.6},
+  {id:67,title:"Star Wars Episode V: The Empire Strikes Back",year:1980,genre:"Star Wars",order:67,director:"Irvin Kershner",desc:"Luke trains under Yoda while his friends are pursued by Darth Vader across the galaxy.",emoji:"⚔️",imdb:8.7},
+  {id:68,title:"Star Wars Episode VI: Return of the Jedi",year:1983,genre:"Star Wars",order:68,director:"Richard Marquand",desc:"The Rebels mount a final assault to destroy the second Death Star and redeem Darth Vader.",emoji:"⚔️",imdb:8.3},
+  {id:69,title:"The Mandalorian",year:2019,genre:"Star Wars",order:69,type:"series",director:"Jon Favreau",desc:"A lone bounty hunter in the outer reaches of the galaxy protects a mysterious child known as Grogu.",emoji:"📺",imdb:8.7},
+  {id:70,title:"The Book of Boba Fett",year:2021,genre:"Star Wars",order:70,type:"series",director:"Jon Favreau",desc:"Legendary bounty hunter Boba Fett and mercenary Fennec Shand navigate Tatooine's criminal underworld.",emoji:"📺",imdb:6.7},
+  {id:71,title:"Ahsoka",year:2023,genre:"Star Wars",order:71,type:"series",director:"Dave Filoni",desc:"Ahsoka Tano investigates an emerging threat to a vulnerable galaxy in the wake of the Empire's fall.",emoji:"📺",imdb:7.4},
+  {id:72,title:"Skeleton Crew",year:2024,genre:"Star Wars",order:72,type:"series",director:"Jon Watts",desc:"A group of kids get lost in the galaxy and must find their way home, stumbling into a grand adventure.",emoji:"📺",imdb:7.2},
+  {id:73,title:"Star Wars Episode VII: The Force Awakens",year:2015,genre:"Star Wars",order:73,director:"J.J. Abrams",desc:"A new generation rises as Rey, Finn, and Poe confront the First Order's growing power.",emoji:"⚔️",imdb:7.8},
+  {id:74,title:"Star Wars Episode VIII: The Last Jedi",year:2017,genre:"Star Wars",order:74,director:"Rian Johnson",desc:"Rey seeks out Luke Skywalker for training as the Resistance faces its darkest hour.",emoji:"⚔️",imdb:6.9},
+  {id:75,title:"Star Wars Episode IX: The Rise of Skywalker",year:2019,genre:"Star Wars",order:75,director:"J.J. Abrams",desc:"The surviving Resistance faces the First Order once more in a final battle for the galaxy's fate.",emoji:"⚔️",imdb:6.5},
+];
+
+// ── IMDB TOP 50 ANIMATED MOVIES (view-only, not rateable) ──────────────────
+const ANIME_TOP50 = [
+  {id:9001,title:"Spirited Away",year:2001,director:"Hayao Miyazaki",desc:"A young girl wanders into a spirit world and must work in a bathhouse of gods to save her parents.",emoji:"🐉",imdb:8.6},
+  {id:9002,title:"Spider-Man: Across the Spider-Verse",year:2023,director:"Joaquim Dos Santos, Kemp Powers & Justin K. Thompson",desc:"Miles Morales journeys across the multiverse and clashes with a society of Spider-People over what it means to be a hero.",emoji:"🕷️",imdb:8.6},
+  {id:9003,title:"Grave of the Fireflies",year:1988,director:"Isao Takahata",desc:"Two siblings struggle to survive in Japan during the final months of World War II.",emoji:"🕯️",imdb:8.5},
+  {id:9004,title:"The Lion King",year:1994,director:"Roger Allers & Rob Minkoff",desc:"A young lion prince flees his kingdom after his father's death, only to learn the true meaning of responsibility.",emoji:"🦁",imdb:8.5},
+  {id:9005,title:"Spider-Man: Into the Spider-Verse",year:2018,director:"Bob Persichetti, Peter Ramsey & Rodney Rothman",desc:"Teenager Miles Morales becomes Spider-Man and teams up with variants of the hero from other dimensions.",emoji:"🕸️",imdb:8.4},
+  {id:9006,title:"Your Name",year:2016,director:"Makoto Shinkai",desc:"Two teenagers in different cities begin mysteriously swapping bodies, forging a bond that transcends time.",emoji:"🌠",imdb:8.4},
+  {id:9007,title:"Coco",year:2017,director:"Lee Unkrich & Adrian Molina",desc:"A boy with a hidden passion for music travels to the Land of the Dead to uncover his family's true history.",emoji:"💀",imdb:8.4},
+  {id:9008,title:"Princess Mononoke",year:1997,director:"Hayao Miyazaki",desc:"A young warrior gets caught in the middle of a war between the gods of a forest and the humans who consume its resources.",emoji:"🐺",imdb:8.4},
+  {id:9009,title:"WALL-E",year:2008,director:"Andrew Stanton",desc:"A lonely waste-collecting robot on a ruined Earth falls for a sleek probe sent to find signs of life.",emoji:"🤖",imdb:8.4},
+  {id:9010,title:"Klaus",year:2019,director:"Sergio Pablos",desc:"A postman posted to a frozen town forms an unlikely friendship with a reclusive toymaker, giving birth to a legend.",emoji:"🎅",imdb:8.2},
+  {id:9011,title:"Howl's Moving Castle",year:2004,director:"Hayao Miyazaki",desc:"A young woman cursed with old age seeks refuge in the walking castle of a mysterious wizard.",emoji:"🏰",imdb:8.2},
+  {id:9012,title:"Up",year:2009,director:"Pete Docter",desc:"An elderly widower ties thousands of balloons to his house and sets off on the adventure he always promised his late wife.",emoji:"🎈",imdb:8.3},
+  {id:9013,title:"Toy Story",year:1995,director:"John Lasseter",desc:"A cowboy doll's world is turned upside down when a flashy new spaceman toy arrives and steals his owner's affection.",emoji:"🤠",imdb:8.3},
+  {id:9014,title:"Toy Story 3",year:2010,director:"Lee Unkrich",desc:"As their owner heads off to college, Woody, Buzz, and the gang face life in daycare and a fight for survival.",emoji:"🤠",imdb:8.3},
+  {id:9015,title:"Inside Out",year:2015,director:"Pete Docter",desc:"Five emotions inside a young girl's mind fight to guide her through a difficult family move.",emoji:"🧠",imdb:8.1},
+  {id:9016,title:"Ratatouille",year:2007,director:"Brad Bird & Jan Pinkava",desc:"A rat with a gift for cooking forms an unlikely partnership with a young kitchen worker in Paris.",emoji:"🐀",imdb:8.1},
+  {id:9017,title:"My Neighbor Totoro",year:1988,director:"Hayao Miyazaki",desc:"Two young sisters befriend gentle forest spirits after moving to the countryside to be near their ailing mother.",emoji:"🌳",imdb:8.1},
+  {id:9018,title:"The Incredibles",year:2004,director:"Brad Bird",desc:"A family of retired superheroes is forced back into action to save the world and rediscover each other.",emoji:"🦸",imdb:8.0},
+  {id:9019,title:"Finding Nemo",year:2003,director:"Andrew Stanton",desc:"An overprotective clownfish crosses the ocean to find his son after he's swept away by divers.",emoji:"🐠",imdb:8.2},
+  {id:9020,title:"How to Train Your Dragon",year:2010,director:"Dean DeBlois & Chris Sanders",desc:"A young Viking befriends the dragon he was raised to hate, challenging everything his village believes.",emoji:"🐲",imdb:8.1},
+  {id:9021,title:"A Silent Voice",year:2016,director:"Naoko Yamada",desc:"A former bully seeks redemption by reconnecting with the deaf classmate he once tormented.",emoji:"🤟",imdb:8.1},
+  {id:9022,title:"Toy Story 2",year:1999,director:"John Lasseter",desc:"Woody is stolen by a toy collector, sending Buzz and friends on a rescue mission that tests his sense of purpose.",emoji:"🤠",imdb:7.9},
+  {id:9023,title:"Zootopia",year:2016,director:"Byron Howard & Rich Moore",desc:"A rookie rabbit police officer and a cynical con-artist fox uncover a conspiracy in a city of anthropomorphic animals.",emoji:"🐰",imdb:8.0},
+  {id:9024,title:"Wolf Children",year:2012,director:"Mamoru Hosoda",desc:"A young mother raises her two half-wolf children alone, navigating the challenges of a life lived in secret.",emoji:"🐺",imdb:8.0},
+  {id:9025,title:"Castle in the Sky",year:1986,director:"Hayao Miyazaki",desc:"A young boy and girl race sky pirates and government agents to find a legendary floating city.",emoji:"☁️",imdb:7.9},
+  {id:9026,title:"The Wind Rises",year:2013,director:"Hayao Miyazaki",desc:"A fictionalized account of the man who designed Japan's WWII fighter planes, torn between dreams and their consequences.",emoji:"✈️",imdb:7.8},
+  {id:9027,title:"Persepolis",year:2007,director:"Marjane Satrapi & Vincent Paronnaud",desc:"An Iranian girl comes of age against the backdrop of the Islamic Revolution and its aftermath.",emoji:"✏️",imdb:8.0},
+  {id:9028,title:"The Nightmare Before Christmas",year:1993,director:"Henry Selick",desc:"The king of Halloween Town discovers Christmas and decides to take it over, with chaotic results.",emoji:"🎃",imdb:8.0},
+  {id:9029,title:"The Iron Giant",year:1999,director:"Brad Bird",desc:"A young boy befriends a giant robot from outer space and tries to protect it from a paranoid government agent.",emoji:"🤖",imdb:8.1},
+  {id:9030,title:"Weathering with You",year:2019,director:"Makoto Shinkai",desc:"A runaway teen meets a girl with the power to control the weather in a rain-soaked Tokyo.",emoji:"🌧️",imdb:7.5},
+  {id:9031,title:"Shrek",year:2001,director:"Andrew Adamson & Vicky Jenson",desc:"A grumpy ogre sets out to rescue a princess in order to reclaim his swamp from a horde of exiled fairy-tale creatures.",emoji:"👹",imdb:7.9},
+  {id:9032,title:"Kung Fu Panda",year:2008,director:"Mark Osborne & John Stevenson",desc:"An overweight, clumsy panda is unexpectedly chosen to fulfill an ancient prophecy as a kung fu master.",emoji:"🐼",imdb:7.6},
+  {id:9033,title:"Big Hero 6",year:2014,director:"Don Hall & Chris Williams",desc:"A young robotics prodigy and his inflatable robot companion form a team of high-tech heroes.",emoji:"🎈",imdb:7.8},
+  {id:9034,title:"Soul",year:2020,director:"Pete Docter",desc:"A jazz musician's soul is separated from his body and must find his way back before it's too late.",emoji:"🎷",imdb:8.0},
+  {id:9035,title:"Puss in Boots: The Last Wish",year:2022,director:"Joel Crawford",desc:"Down to his last life, a swashbuckling cat sets out on one final quest to restore his nine lives.",emoji:"🐱",imdb:7.9},
+  {id:9036,title:"The LEGO Movie",year:2014,director:"Phil Lord & Christopher Miller",desc:"An ordinary LEGO figure mistaken for a chosen hero is recruited to stop a tyrant from gluing the universe together forever.",emoji:"🧱",imdb:7.7},
+  {id:9037,title:"Aladdin",year:1992,director:"Ron Clements & John Musker",desc:"A street urchin uses a genie's magic to pose as a prince and win the heart of a sultan's daughter.",emoji:"🧞",imdb:8.0},
+  {id:9038,title:"Beauty and the Beast",year:1991,director:"Gary Trousdale & Kirk Wise",desc:"A young woman is held captive in an enchanted castle by a cursed prince transformed into a beast.",emoji:"🌹",imdb:8.0},
+  {id:9039,title:"Wallace & Gromit: The Curse of the Were-Rabbit",year:2005,director:"Nick Park & Steve Box",desc:"An inventor and his loyal dog investigate a monstrous rabbit terrorizing their town's vegetable competition.",emoji:"🐇",imdb:7.3},
+  {id:9040,title:"Corpse Bride",year:2005,director:"Tim Burton & Mike Johnson",desc:"A nervous groom is accidentally married to a deceased bride who whisks him away to the land of the dead.",emoji:"💀",imdb:7.3},
+  {id:9041,title:"Kubo and the Two Strings",year:2016,director:"Travis Knight",desc:"A young boy with magical storytelling powers sets out on a quest to save his family from vengeful spirits.",emoji:"🎸",imdb:7.6},
+  {id:9042,title:"Ponyo",year:2008,director:"Hayao Miyazaki",desc:"A goldfish princess longs to become human after befriending a young boy on the coast of Japan.",emoji:"🐠",imdb:7.7},
+  {id:9043,title:"Moana",year:2016,director:"Ron Clements & John Musker",desc:"A headstrong island girl sets sail across the Pacific to save her people, guided by the ocean itself.",emoji:"🌊",imdb:7.6},
+  {id:9044,title:"Encanto",year:2021,director:"Byron Howard & Jared Bush",desc:"The only ordinary member of a magical Colombian family discovers the truth threatening her family's gift.",emoji:"🦋",imdb:7.2},
+  {id:9045,title:"Luca",year:2021,director:"Enrico Casarosa",desc:"A young sea monster disguised as a human spends a summer of freedom in a seaside Italian town.",emoji:"🐟",imdb:7.4},
+  {id:9046,title:"Turning Red",year:2022,director:"Domee Shi",desc:"A thirteen-year-old discovers she transforms into a giant red panda whenever she gets too excited.",emoji:"🐼",imdb:7.0},
+  {id:9047,title:"The Mitchells vs. the Machines",year:2021,director:"Mike Rianda",desc:"A quirky family's road trip becomes humanity's last hope during a robot uprising.",emoji:"🤖",imdb:7.6},
+  {id:9048,title:"Flow",year:2024,director:"Gints Zilbalodis",desc:"A solitary cat joins a group of animals on a boat, navigating a flooded world without a single word of dialogue.",emoji:"🐱",imdb:7.9},
+  {id:9049,title:"The Boy and the Heron",year:2023,director:"Hayao Miyazaki",desc:"A grieving boy follows a mysterious heron into a fantastical world tied to his family's past and future.",emoji:"🐦",imdb:7.7},
+  {id:9050,title:"Shrek 2",year:2004,director:"Andrew Adamson, Kelly Asbury & Conrad Vernon",desc:"Shrek and Fiona visit her parents' kingdom, where a fairy godmother schemes to break up their marriage.",emoji:"👹",imdb:7.3},
+];
+
+// ── SECTION META (descriptions + required-before-watching notes) ──────────
+const SECTION_META = {
+  "Legacy Spider-Man": {
+    desc: "Essential Non-MCU Movies — Sam Raimi's original trilogy and Marc Webb's Amazing Spider-Man duology, the foundation of Spider-Man's cinematic legacy before he swung into the MCU.",
+    required: ["Spider-Man: Homecoming", "Avengers: Doomsday"]
+  },
+  "X-Men Universe": {
+    desc: "Fox's mutant saga, from the original X-Men trilogy through the prequels and the Deadpool duology, all before the multiverse brought them into the MCU fold.",
+    required: ["Deadpool & Wolverine", "Avengers: Doomsday"]
+  },
+  "The Defenders Saga": {
+    desc: "Marvel's gritty, street-level Netflix corner of the MCU — Daredevil, Jessica Jones, Luke Cage, Iron Fist and the Punisher, all leading into their MCU return.",
+    required: ["Spider-Man: Brand New Day", "Avengers: Doomsday"]
+  }
+};
+
+// ── FIREBASE ──────────────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyB6ENchGeYkacIA5ubtzVdKe9HCFKMVP8Q",
+  authDomain: "screenlog-e8490.firebaseapp.com",
+  projectId: "screenlog-e8490",
+  storageBucket: "screenlog-e8490.firebasestorage.app",
+  messagingSenderId: "745530849419",
+  appId: "1:745530849419:web:c6596db241f5b1a4773c8e"
+};
+
+let db;
+let initializeApp, getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs;
+
+async function initFirebase(){
+  const appMod = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+  const dbMod  = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  initializeApp = appMod.initializeApp;
+  getFirestore  = dbMod.getFirestore;
+  doc           = dbMod.doc;
+  getDoc        = dbMod.getDoc;
+  setDoc        = dbMod.setDoc;
+  deleteDoc     = dbMod.deleteDoc;
+  collection    = dbMod.collection;
+  getDocs       = dbMod.getDocs;
+  const fbApp   = initializeApp(firebaseConfig);
+  db            = getFirestore(fbApp);
+}
+
+// allRatings: { "username_seriesId": {username, seriesId, score, comment, date} }
+let allRatingsCache = {}; // loaded once on login, refreshed on detail open
+let ratingsLoaded = false;
+
+async function loadAllRatings(){
+  try{
+    const snap = await getDocs(collection(db,'ratings'));
+    allRatingsCache = {};
+    snap.forEach(d=>{ allRatingsCache[d.id] = d.data(); });
+    ratingsLoaded = true;
+  }catch(e){ console.error('loadAllRatings',e); }
+}
+
+async function saveRatingToDb(username, seriesId, score, comment){
+  const s=Math.round(parseFloat(score)*10)/10;
+  if(!Number.isFinite(s)||s<1||s>10){
+    throw new Error('Invalid score: must be a number between 1 and 10');
+  }
+  const key = `${username}_${seriesId}`;
+  const data = {username, seriesId, score:s, comment, date: new Date().toISOString()};
+  await setDoc(doc(db,'ratings',key), data);
+  allRatingsCache[key] = data;
+}
+
+async function deleteRatingFromDb(username, seriesId){
+  const key = `${username}_${seriesId}`;
+  await deleteDoc(doc(db,'ratings',key));
+  delete allRatingsCache[key];
+}
+
+async function saveUserToDb(username, password){
+  await setDoc(doc(db,'users',username), {username, password});
+}
+
+async function getUserFromDb(username){
+  const snap = await getDoc(doc(db,'users',username));
+  return snap.exists() ? snap.data() : null;
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let state = {
+  currentUser: null,
+  currentPage: 'auth',
+  detailSeriesId: null,
+  detailFrom: 'marvel',
+  editingRating: false,
+  scrollPos: {},
+};
+
+function saveCurrentUser(u){
+  try{ localStorage.setItem('screenlog_user', u||''); }catch(e){}
+}
+function loadCurrentUser(){
+  try{ return localStorage.getItem('screenlog_user')||null; }catch(e){ return null; }
+}
+
+// ── AUTH ──────────────────────────────────────────────────────────────────
+function toggleAuth(mode){
+  document.getElementById('authFormRegister').style.display=mode==='register'?'':'none';
+  document.getElementById('authFormLogin').style.display=mode==='register'?'none':'';
+  document.getElementById('authSub').textContent=mode==='register'?'Create your account to get started.':'Watch order for Marvel, DC, Star Wars and more.';
+  hideAuthError();
+}
+function showAuthError(m){const e=document.getElementById('authError');e.textContent=m;e.style.display='';}
+function hideAuthError(){document.getElementById('authError').style.display='none';}
+
+async function doRegister(){
+  const u=document.getElementById('regUsername').value.trim().toLowerCase();
+  const p=document.getElementById('regPassword').value;
+  if(!u||u.length<2){showAuthError('Username must be at least 2 characters.');return;}
+  if(!p||p.length<4){showAuthError('Password must be at least 4 characters.');return;}
+  showAuthError('⏳ Creating account...');
+  try{
+    const existing = await getUserFromDb(u);
+    if(existing){showAuthError('That username is already taken.');return;}
+    await saveUserToDb(u,p);
+    state.currentUser=u;
+    saveCurrentUser(u);
+    await loadAllRatings();
+    onLogin();
+  }catch(e){showAuthError('Connection error. Please try again.');}
+}
+
+async function doLogin(){
+  const u=document.getElementById('loginUsername').value.trim().toLowerCase();
+  const p=document.getElementById('loginPassword').value;
+  if(!u||!p){showAuthError('Please enter your username and password.');return;}
+  showAuthError('⏳ Signing in...');
+  try{
+    const user = await getUserFromDb(u);
+    if(!user||user.password!==p){showAuthError('Incorrect username or password.');return;}
+    state.currentUser=u;
+    saveCurrentUser(u);
+    await loadAllRatings();
+    onLogin();
+  }catch(e){showAuthError('Connection error. Please try again.');}
+}
+
+function onLogin(){updateNav();showPage('marvel');showToast('Welcome, '+state.currentUser+'! 👋','success');}
+function doLogout(){
+  state.currentUser=null;
+  saveCurrentUser('');
+  allRatingsCache={};
+  ratingsLoaded=false;
+  updateNav();
+  showPage('auth');
+  toggleAuth('login');
+  document.getElementById('loginUsername').value='';
+  document.getElementById('loginPassword').value='';
+}
+const ADMIN_USERNAME='parsapoxo';
+function updateNav(){
+  const u=state.currentUser;
+  document.getElementById('profileTrigger').innerHTML=u
+    ?`<div class="avatar">${u.slice(0,2).toUpperCase()}</div>`
+    :`<div class="avatar-generic">👤</div>`;
+  const adminItem=(u===ADMIN_USERNAME)?`<button class="dropdown-item" onclick="goToAdmin()">Fix ratings (admin)</button>`:'';
+  document.getElementById('profileDropdown').innerHTML=u
+    ?`<div class="dropdown-user">${u}</div>
+      <button class="dropdown-item" onclick="goToProfile()">View my profile</button>
+      ${adminItem}
+      <button class="dropdown-item" onclick="closeProfileMenu();doLogout()">Log out</button>`
+    :`<button class="dropdown-item" onclick="closeProfileMenu();showPage('auth')">Sign in</button>`;
+}
+function toggleProfileMenu(e){
+  if(e)e.stopPropagation();
+  document.getElementById('profileDropdown').classList.toggle('open');
+}
+function closeProfileMenu(){
+  document.getElementById('profileDropdown').classList.remove('open');
+}
+document.addEventListener('click',(e)=>{
+  const menu=document.getElementById('profileMenu');
+  if(menu&&!menu.contains(e.target))closeProfileMenu();
+  const search=document.getElementById('navSearch');
+  const results=document.getElementById('navSearchResults');
+  const insideSearch=(search&&search.contains(e.target))||(results&&results.contains(e.target));
+  if(!insideSearch)collapseNavSearch();
+});
+async function goToProfile(){
+  if(!state.currentUser){showPage('auth');return;}
+  closeProfileMenu();
+  showPage('profile');
+}
+function goToAdmin(){
+  if(state.currentUser!==ADMIN_USERNAME){showPage('marvel');return;}
+  closeProfileMenu();
+  showPage('admin');
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────
+function showPage(name,push,restoreScroll){
+  if(push===undefined)push=true;
+  if(name==='auth'&&state.currentUser){showPage('marvel',push,restoreScroll);return;}
+  if(name==='profile'&&!state.currentUser){showPage('auth',push,restoreScroll);return;}
+  if(name==='admin'&&state.currentUser!==ADMIN_USERNAME){showPage('marvel',push,restoreScroll);return;}
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  state.currentPage=name;
+  collapseNavSearch();
+  closeProfileMenu();
+  if(name==='marvel'){renderFranchise('Marvel','marvel');}
+  if(name==='dc'){renderFranchise('DC','dc');}
+  if(name==='dcamu'){renderFranchise('DCAMU','dcamu');}
+  if(name==='starwars'){renderFranchise('Star Wars','starwars');}
+  if(name==='rankings'){renderRankings();switchRankingsTab('site');}
+  if(name==='profile'){renderProfile();}
+  if(name==='admin'){renderAdmin();}
+  updateFranchiseTabs(name);
+  if(restoreScroll&&state.scrollPos[name]!==undefined){
+    const y=state.scrollPos[name];
+    requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo(0,y)));
+  } else {
+    window.scrollTo(0,0);
+  }
+  if(push)history.pushState({page:name},'','#'+name);
+}
+function goHome(){showPage('home');}
+
+// ── CINEMATIC FRANCHISE INTRO ────────────────────────────────────────────
+const INTRO_VIDEOS={marvel:'videos/marvel-intro.mp4',dc:'videos/dc-intro.mp4',starwars:'videos/starwars-intro.mp4'};
+function selectFranchiseIntro(franchise,e){
+  const btn=e.currentTarget;
+  const rect=btn.getBoundingClientRect();
+  const zoom=document.getElementById('introZoom');
+  const video=document.getElementById('introVideo');
+  const skipBtn=document.getElementById('introSkipBtn');
+  let finished=false;
+  const goToList=()=>{
+    if(finished)return;
+    finished=true;
+    zoom.style.display='none';
+    video.pause();
+    video.style.opacity='0';
+    video.removeAttribute('src');
+    video.load();
+    showPage(franchise);
+  };
+  video.style.opacity='0';
+  video.src=INTRO_VIDEOS[franchise];
+  video.currentTime=0;
+  video.onended=goToList;
+  video.onerror=goToList;
+  skipBtn.onclick=goToList;
+  const playPromise=video.play();
+  if(playPromise&&playPromise.catch)playPromise.catch(()=>{});
+
+  zoom.style.transition='none';
+  zoom.style.display='flex';
+  zoom.style.top=rect.top+'px';
+  zoom.style.left=rect.left+'px';
+  zoom.style.width=rect.width+'px';
+  zoom.style.height=rect.height+'px';
+  zoom.style.borderRadius='18px';
+  void zoom.offsetWidth;
+  zoom.style.transition='top .55s cubic-bezier(.7,0,.3,1),left .55s cubic-bezier(.7,0,.3,1),width .55s cubic-bezier(.7,0,.3,1),height .55s cubic-bezier(.7,0,.3,1),border-radius .55s cubic-bezier(.7,0,.3,1)';
+  requestAnimationFrame(()=>{
+    zoom.style.top='0';
+    zoom.style.left='0';
+    zoom.style.width='100vw';
+    zoom.style.height='100vh';
+    zoom.style.borderRadius='0';
+  });
+  setTimeout(()=>{video.style.opacity='1';},560);
+  setTimeout(()=>{if(video.paused&&video.currentTime===0){goToList();}},3000);
+}
+
+window.addEventListener('popstate',(e)=>{
+  const s=e.state;
+  if(!s){goHome();return;}
+  if(s.page==='detail'){openDetail(s.id,s.from,false);}
+  else{showPage(s.page,false,true);}
+});
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function getAllRatings(sid){
+  return Object.values(allRatingsCache)
+    .filter(r=>r.seriesId===sid)
+    .sort((a,b)=>new Date(b.date)-new Date(a.date));
+}
+function getSiteAvg(sid){
+  const r=getAllRatings(sid);if(!r.length)return null;
+  return Math.round(r.reduce((s,x)=>s+x.score,0)/r.length*10)/10;
+}
+function getMyRating(sid){
+  if(!state.currentUser)return null;
+  return allRatingsCache[`${state.currentUser}_${sid}`]||null;
+}
+function formatDate(d){return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}
+function showToast(msg,type){
+  const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'');
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);
+}
+function posterBg(id){
+  const c=['rgba(83,74,183,0.2)','rgba(15,110,86,0.2)','rgba(152,66,29,0.2)','rgba(153,53,86,0.2)','rgba(24,95,165,0.2)','rgba(132,80,11,0.2)'];
+  return c[id%c.length];
+}
+
+// ── GLOBAL SEARCH ─────────────────────────────────────────────────────────
+const GENRE_TO_PAGE={Marvel:'marvel',DC:'dc',DCAMU:'dcamu','Star Wars':'starwars'};
+const GENRE_BADGE={
+  Marvel:'background:rgba(224,48,61,0.18);color:#ff6b73',
+  DC:'background:rgba(255,255,255,0.1);color:#cfcfe0',
+  DCAMU:'background:rgba(126,111,224,0.18);color:#a79bf0',
+  'Star Wars':'background:rgba(244,196,48,0.18);color:#f4c430'
+};
+function onNavSearch(){
+  const q=document.getElementById('navSearchInput').value.trim().toLowerCase();
+  const box=document.getElementById('navSearchResults');
+  if(!q){box.classList.remove('show');box.innerHTML='';return;}
+  const results=MOVIES.filter(m=>m.title.toLowerCase().includes(q)).slice(0,8);
+  if(!results.length){
+    box.innerHTML='<div class="nav-search-empty">No titles found</div>';
+  } else {
+    box.innerHTML=results.map(s=>{
+      const cached=posterCache[s.id];
+      const bg=posterBg(s.id);
+      const img=cached&&cached!=='N/A'?`<img src="${cached}" alt="" onerror="this.remove()"/>`:'';
+      return `<div class="nav-search-item" onclick="onSearchResultClick(${s.id},'${GENRE_TO_PAGE[s.genre]}')">
+        <div class="nav-search-poster" data-poster="search-${s.id}" style="background:${bg}">
+          <span class="poster-emoji" style="${cached&&cached!=='N/A'?'display:none':''}">${s.emoji}</span>${img}
+        </div>
+        <div class="nav-search-info">
+          <div class="nav-search-title">${s.title}</div>
+          <div class="nav-search-meta"><span class="nav-search-genre" style="${GENRE_BADGE[s.genre]}">${s.genre.toUpperCase()}</span>${s.year||'TBA'}</div>
+        </div>
+      </div>`;
+    }).join('');
+    loadSearchPosters(results);
+  }
+  box.classList.add('show');
+}
+async function loadSearchPosters(results){
+  for(const s of results){
+    const url=await fetchPoster(s);
+    const el=document.querySelector(`[data-poster="search-${s.id}"]`);
+    if(!el)continue;
+    const emoji=el.querySelector('.poster-emoji');
+    injectPoster(el,url,emoji);
+  }
+}
+function onSearchResultClick(id,page){
+  document.getElementById('navSearchInput').value='';
+  collapseNavSearch();
+  openDetail(id,page);
+}
+function hideNavSearch(){
+  const box=document.getElementById('navSearchResults');
+  if(box){box.classList.remove('show');box.innerHTML='';}
+}
+
+// ── COLLAPSIBLE SEARCH ──────────────────────────────────────────────────
+function toggleNavSearch(e){
+  if(e)e.stopPropagation();
+  const search=document.getElementById('navSearch');
+  if(search.classList.contains('expanded')){collapseNavSearch();}
+  else{
+    search.classList.add('expanded');
+    document.getElementById('franchiseTabs').classList.add('hide');
+    setTimeout(()=>document.getElementById('navSearchInput').focus(),150);
+  }
+}
+function collapseNavSearch(){
+  const search=document.getElementById('navSearch');
+  if(!search||!search.classList.contains('expanded'))return;
+  search.classList.remove('expanded');
+  document.getElementById('franchiseTabs').classList.remove('hide');
+  document.getElementById('navSearchInput').value='';
+  hideNavSearch();
+}
+
+// ── FRANCHISE TABS (Marvel / DC / Star Wars) ─────────────────────────────
+function updateFranchiseTabs(page){
+  document.querySelectorAll('.franchise-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('rankingsNavBtn').classList.toggle('active',page==='rankings');
+  const indicator=document.getElementById('franchiseIndicator');
+  const pages=['marvel','dc','dcamu','starwars'];
+  if(!pages.includes(page)){indicator.style.opacity='0';return;}
+  const btn=document.getElementById('dock-'+page);
+  const wrap=document.getElementById('franchiseTabs');
+  if(!btn||!wrap)return;
+  btn.classList.add('active');
+  const wrapRect=wrap.getBoundingClientRect();
+  const btnRect=btn.getBoundingClientRect();
+  indicator.style.opacity='1';
+  indicator.style.left=(btnRect.left-wrapRect.left)+'px';
+  indicator.style.width=btnRect.width+'px';
+}
+window.addEventListener('resize',()=>updateFranchiseTabs(state.currentPage));
+
+
+function scrollPosterRow(rowId,dir){
+  const row=document.getElementById(rowId);
+  if(!row)return;
+  row.scrollBy({left:dir*row.clientWidth*0.9,behavior:'smooth'});
+}
+function updateRowArrows(rowId){
+  const row=document.getElementById(rowId);
+  const left=document.getElementById(rowId+'-left');
+  const right=document.getElementById(rowId+'-right');
+  if(!row||!left||!right)return;
+  const maxScroll=row.scrollWidth-row.clientWidth;
+  left.classList.toggle('show',row.scrollLeft>4);
+  right.classList.toggle('show',maxScroll>4&&row.scrollLeft<maxScroll-4);
+}
+window.addEventListener('resize',()=>{
+  document.querySelectorAll('.poster-grid[id^="row-"]').forEach(g=>updateRowArrows(g.id));
+});
+
+function renderFranchise(franchise,pageName){
+  const containerId=pageName+'List';
+  const list=MOVIES.filter(m=>m.genre===franchise).sort((a,b)=>a.order-b.order);
+  const el=document.getElementById(containerId);
+  if(!list.length){
+    el.innerHTML=`<div class="empty-state"><div class="big">🎬</div><p>Coming soon — the watch order will be added here.</p></div>`;
+    return;
+  }
+  const renderCard=s=>{
+    const num=list.indexOf(s);
+    const delay=(num%12)*30;
+    const cached=posterCache[s.id];
+    const bg=posterBg(s.id);
+    const img=cached&&cached!=='N/A'?`<img src="${cached}" alt="${s.title}" onerror="this.remove()"/>`:'';
+    if(s.comingSoon){
+      return `<div class="poster-card coming-soon" style="animation-delay:${delay}ms">
+        <div class="poster-card-img" data-poster="${s.id}" style="background:${bg}">
+          <span class="poster-emoji" style="${cached&&cached!=='N/A'?'display:none':''}">${s.emoji}</span>${img}
+          <span class="poster-card-badge">COMING SOON</span>
+        </div>
+        <div class="poster-card-title">${s.title}</div>
+      </div>`;
+    }
+    return `<div class="poster-card" style="animation-delay:${delay}ms" onclick="openDetail(${s.id},'${pageName}')">
+      <div class="poster-card-img" data-poster="${s.id}" style="background:${bg}">
+        <span class="poster-emoji" style="${cached&&cached!=='N/A'?'display:none':''}">${s.emoji}</span>${img}
+      </div>
+      <div class="poster-card-title">${s.title}</div>
+    </div>`;
+  };
+  const wrapRow=(rowId,cardsHtml)=>`<div class="poster-row-wrap">
+      <button class="row-arrow row-arrow-left" id="${rowId}-left" onclick="scrollPosterRow('${rowId}',-1)">‹</button>
+      <div class="poster-grid" id="${rowId}" onscroll="updateRowArrows('${rowId}')">${cardsHtml}</div>
+      <button class="row-arrow row-arrow-right" id="${rowId}-right" onclick="scrollPosterRow('${rowId}',1)">›</button>
+    </div>`;
+  const hasPhases=list.some(m=>m.phase);
+  if(hasPhases){
+    const phases=[...new Set(list.map(m=>m.phase))];
+    el.innerHTML=phases.map((ph,pi)=>{
+      const items=list.filter(m=>m.phase===ph);
+      const cards=items.map(renderCard).join('');
+      const meta=SECTION_META[ph];
+      const metaHtml=meta?`<div style="margin:-0.75rem 0 1.25rem;font-size:13px;color:var(--text2);line-height:1.6">
+          <p style="margin-bottom:4px">${meta.desc}</p>
+          <p style="color:var(--accent);font-weight:500">⚠️ Required before watching: ${meta.required.join(' → ')}</p>
+        </div>`:'';
+      const rowId=`row-${pageName}-${pi}`;
+      return `<div class="section-header" style="margin-top:1.5rem"><h2 class="section-title">${ph}</h2><span class="section-sub">${items.length} titles</span></div>${metaHtml}${wrapRow(rowId,cards)}`;
+    }).join('');
+  } else {
+    el.innerHTML=wrapRow(`row-${pageName}-0`,list.map(renderCard).join(''));
+  }
+  preloadPosters(list);
+  requestAnimationFrame(()=>{
+    document.querySelectorAll(`#${containerId} .poster-grid`).forEach(g=>updateRowArrows(g.id));
+  });
+}
+
+// ── RANKINGS ──────────────────────────────────────────────────────────────
+function rankPosterHtml(s){
+  const cached=posterCache[s.id];
+  const bg=posterBg(s.id);
+  const img=cached&&cached!=='N/A'?`<img src="${cached}" alt="${s.title}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onerror="this.remove()"/>`:'';
+  return `<div class="rank-poster" data-poster="${s.id}" style="width:84px;height:124px;border-radius:10px;background:${bg};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:38px;overflow:hidden;position:relative;box-shadow:0 4px 14px rgba(0,0,0,0.35);">
+    <span class="poster-emoji" style="${cached&&cached!=='N/A'?'display:none':''}">${s.emoji}</span>${img}
+  </div>`;
+}
+
+function renderRankings(){
+  const list=document.getElementById('rankingsList');
+  const top=MOVIES.map(s=>({...s,avg:getSiteAvg(s.id)})).filter(s=>s.avg!==null).sort((a,b)=>b.avg-a.avg).slice(0,50);
+  if(!top.length){list.innerHTML='<div class="empty-state"><div class="big">🎬</div><p>No ratings yet. Be the first to rate a movie!</p></div>';return;}
+  list.innerHTML=top.map((s,i)=>{
+    const n=i+1,cnt=getAllRatings(s.id).length,delay=(i%10)*30;
+    return `<div class="rank-row" style="animation-delay:${delay}ms" onclick="openDetail(${s.id},'rankings')">
+      <span class="rank-num${n<=3?' top3':''}">${n}</span>
+      ${rankPosterHtml(s)}
+      <div class="rank-info"><div class="rank-title">${s.title}</div><div class="rank-meta">${s.year} · ${cnt} rating${cnt!==1?'s':''}</div></div>
+      <span class="rank-score" style="color:var(--green)">👥 ${s.avg}</span>
+    </div>`;
+  }).join('');
+  preloadPosters(top);
+}
+function switchRankingsTab(tab){
+  document.getElementById('tab-site').classList.toggle('active',tab==='site');
+  document.getElementById('tab-imdb').classList.toggle('active',tab==='imdb');
+  document.getElementById('rankingsList').style.display=tab==='site'?'':'none';
+  document.getElementById('imdbAnimeList').style.display=tab==='imdb'?'':'none';
+  document.getElementById('rankingsSub').textContent=tab==='site'
+    ?"The best — ranked by your community"
+    :"IMDb's highest-rated animated features — for browsing only, no ratings here";
+  if(tab==='imdb')renderImdbAnime();
+  positionRankingsIndicator(tab);
+}
+function positionRankingsIndicator(tab){
+  const indicator=document.getElementById('rankingsIndicator');
+  const wrap=document.getElementById('rankingsTabsWrap');
+  const btn=document.getElementById(tab==='site'?'tab-site':'tab-imdb');
+  if(!indicator||!wrap||!btn)return;
+  const wrapRect=wrap.getBoundingClientRect();
+  const btnRect=btn.getBoundingClientRect();
+  indicator.style.left=(btnRect.left-wrapRect.left)+'px';
+  indicator.style.width=btnRect.width+'px';
+}
+window.addEventListener('resize',()=>{
+  if(state.currentPage==='rankings'){
+    const activeTab=document.getElementById('tab-imdb').classList.contains('active')?'imdb':'site';
+    positionRankingsIndicator(activeTab);
+  }
+});
+function renderImdbAnime(){
+  const list=document.getElementById('imdbAnimeList');
+  const sorted=[...ANIME_TOP50].sort((a,b)=>b.imdb-a.imdb);
+  list.innerHTML=sorted.map((s,i)=>{
+    const n=i+1,delay=(i%10)*30;
+    return `<div class="rank-row" style="cursor:default;animation-delay:${delay}ms">
+      <span class="rank-num${n<=3?' top3':''}">${n}</span>
+      ${rankPosterHtml(s)}
+      <div class="rank-info"><div class="rank-title">${s.title}</div><div class="rank-meta">${s.year} · dir. ${s.director}</div></div>
+      <span class="rank-score" style="color:var(--accent)">⭐ ${s.imdb}</span>
+    </div>`;
+  }).join('');
+  preloadPosters(sorted);
+}
+async function rollDice(e){
+  if(e)e.stopPropagation();
+  switchRankingsTab('imdb');
+  const dice=document.getElementById('diceBtn');
+  dice.classList.remove('dice-spin');
+  void dice.offsetWidth;
+  dice.classList.add('dice-spin');
+  await new Promise(res=>setTimeout(res,650));
+  const pick=ANIME_TOP50[Math.floor(Math.random()*ANIME_TOP50.length)];
+  const content=document.getElementById('diceModalContent');
+  const cached=posterCache[pick.id];
+  const bg=posterBg(pick.id);
+  const img=cached&&cached!=='N/A'?`<img src="${cached}" alt="${pick.title}" onerror="this.remove()"/>`:'';
+  content.innerHTML=`
+    <div class="dice-poster" data-poster="dice-${pick.id}" style="background:${bg}">
+      <span class="poster-emoji" style="${cached&&cached!=='N/A'?'display:none':''}">${pick.emoji}</span>${img}
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:19px;font-weight:700;color:var(--text)">${pick.title}</div>
+      <div style="font-size:13px;color:var(--text2);margin:4px 0 10px">${pick.year} · dir. ${pick.director} · ⭐ ${pick.imdb}</div>
+      <p style="font-size:13px;color:var(--text2);line-height:1.5">${pick.desc}</p>
+    </div>`;
+  document.getElementById('diceModal').classList.add('show');
+  const el=document.querySelector(`[data-poster="dice-${pick.id}"]`);
+  if(el&&(!cached||cached==='N/A')){
+    const url=await fetchPoster(pick);
+    const emoji=el.querySelector('.poster-emoji');
+    injectPoster(el,url,emoji);
+  }
+}
+function closeDiceModal(e){
+  if(e)e.stopPropagation();
+  document.getElementById('diceModal').classList.remove('show');
+}
+
+// ── PROFILE ───────────────────────────────────────────────────────────────
+async function renderProfile(){
+  const list=document.getElementById('profileList');
+  if(!state.currentUser)return;
+  await loadAllRatings();
+  const mine=Object.values(allRatingsCache)
+    .filter(r=>r.username===state.currentUser)
+    .map(r=>({...r,series:MOVIES.find(m=>m.id===r.seriesId)}))
+    .filter(r=>r.series)
+    .sort((a,b)=>new Date(b.date)-new Date(a.date));
+  document.getElementById('profileSub').textContent=mine.length
+    ?`${mine.length} title${mine.length!==1?'s':''} you've rated`
+    :"Titles you've rated";
+  if(!mine.length){
+    list.innerHTML='<div class="empty-state"><div class="big">⭐</div><p>You haven\'t rated anything yet. Go rate something!</p></div>';
+    return;
+  }
+  list.innerHTML=mine.map((r,i)=>{
+    const s=r.series,delay=(i%10)*30;
+    return `<div class="rank-row" style="animation-delay:${delay}ms" onclick="openDetail(${s.id},'profile')">
+      ${rankPosterHtml(s)}
+      <div class="rank-info"><div class="rank-title">${s.title}</div><div class="rank-meta">${s.genre} · ${s.year||'TBA'} · rated ${formatDate(r.date)}</div></div>
+      <span class="rank-score" style="color:var(--accent)">⭐ ${r.score}</span>
+    </div>`;
+  }).join('');
+  preloadPosters(mine.map(r=>r.series));
+}
+
+// ── ADMIN: FIX RATINGS ───────────────────────────────────────────────────
+async function renderAdmin(){
+  if(state.currentUser!==ADMIN_USERNAME)return;
+  const list=document.getElementById('adminList');
+  list.innerHTML='<div class="empty-state"><div class="big">⏳</div><p>Loading ratings…</p></div>';
+  let snap;
+  try{
+    snap=await getDocs(collection(db,'ratings'));
+  }catch(err){
+    list.innerHTML=`<div class="empty-state"><div class="big">⚠️</div><p>Failed to load ratings: ${err.message}</p></div>`;
+    return;
+  }
+  const rows=[];
+  snap.forEach(d=>{
+    const r=d.data();
+    const movie=MOVIES.find(m=>m.id===r.seriesId);
+    rows.push({docId:d.id,username:r.username,seriesId:r.seriesId,score:r.score,date:r.date,movie});
+  });
+  rows.sort((a,b)=>(a.movie?0:-1)-(b.movie?0:-1)||a.username.localeCompare(b.username));
+  if(!rows.length){
+    list.innerHTML='<div class="empty-state"><div class="big">✅</div><p>No ratings in the database.</p></div>';
+    return;
+  }
+  const mismatchCount=rows.filter(r=>!r.movie).length;
+  list.innerHTML=`
+    ${mismatchCount?`<p style="color:var(--red);font-size:13px;margin-bottom:10px">⚠️ ${mismatchCount} rating${mismatchCount!==1?'s':''} point to a movie ID that no longer exists in the catalog.</p>`:'<p style="color:var(--green);font-size:13px;margin-bottom:10px">✅ All ratings currently match a real title.</p>'}
+    <div class="admin-table-wrap"><table class="admin-table">
+      <thead><tr><th>User</th><th>Series ID</th><th>Matched title</th><th>Score</th><th>Date</th><th>Doc ID</th><th></th></tr></thead>
+      <tbody>
+        ${rows.map(r=>`<tr>
+          <td>${r.username}</td>
+          <td>${r.seriesId}</td>
+          <td class="${r.movie?'admin-ok':'admin-mismatch'}">${r.movie?r.movie.title:'⚠️ NO MATCH'}</td>
+          <td>${r.score}</td>
+          <td>${r.date?formatDate(r.date):'—'}</td>
+          <td class="admin-docid">${r.docId}</td>
+          <td><button class="admin-del-btn" onclick="deleteAdminRating('${r.docId}')">Delete</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>`;
+}
+async function deleteAdminRating(docId){
+  if(state.currentUser!==ADMIN_USERNAME)return;
+  if(!confirm('Delete this rating? This cannot be undone.'))return;
+  try{
+    await deleteDoc(doc(db,'ratings',docId));
+    delete allRatingsCache[docId];
+    showToast('Rating deleted','success');
+    renderAdmin();
+  }catch(err){
+    showToast('Failed to delete: '+err.message,'error');
+  }
+}
+async function wipeAllRatings(){
+  if(state.currentUser!==ADMIN_USERNAME)return;
+  if(!confirm('Delete ALL ratings from the database? This cannot be undone.'))return;
+  if(!confirm('Are you absolutely sure? Every rating from every user will be permanently deleted.'))return;
+  try{
+    const snap=await getDocs(collection(db,'ratings'));
+    for(const d of snap.docs){await deleteDoc(d.ref);}
+    allRatingsCache={};
+    showToast('All ratings deleted','success');
+    renderAdmin();
+  }catch(err){
+    showToast('Failed to wipe ratings: '+err.message,'error');
+  }
+}
+
+// DETAIL
+let selectedScore=0;
+async function openDetail(id,from,push){
+  if(push===undefined)push=true;
+  const sel=window.getSelection();
+  if(sel&&sel.toString().length>0)return; // don't navigate if user is selecting/copying text
+  const originPage=from||state.currentPage||'marvel';
+  if(push)state.scrollPos[originPage]=window.scrollY; // remember where we were so back can return here
+  state.detailSeriesId=id;state.detailFrom=originPage;state.editingRating=false;selectedScore=0;
+  document.getElementById('detailBackBtn').onclick=()=>history.back();
+  showPage('detail',false);
+  if(push)history.pushState({page:'detail',id,from:state.detailFrom},'','#detail-'+id);
+  // Refresh all ratings from Firebase so we always see latest from all friends
+  await loadAllRatings();
+  renderDetail();
+}
+function renderDetail(){
+  const s=MOVIES.find(x=>x.id===state.detailSeriesId);
+  const avg=getSiteAvg(s.id);const allR=getAllRatings(s.id);const myR=getMyRating(s.id);const li=!!state.currentUser;
+  let rateSection='';
+  if(!li){
+    rateSection=`<div class="rate-section" style="text-align:center"><p style="color:var(--text2);font-size:14px">Sign in to rate and comment.</p><button class="btn-submit" style="margin-top:1rem" onclick="showPage('auth')">Sign in</button></div>`;
+  } else if(myR&&!state.editingRating){
+    rateSection=`<div class="rate-section"><h3>Your Rating</h3>
+      <div class="flex-center" style="margin-bottom:0.75rem">
+        <span class="score-pill score-imdb" style="font-size:15px;padding:5px 14px">${myR.score}/10</span>
+        <span style="font-size:12px;color:var(--text3)">Rated ${formatDate(myR.date)}</span>
+      </div>
+      ${myR.comment?`<p style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:1rem">"${myR.comment}"</p>`:''}
+      <div class="flex-center"><button class="btn-edit" onclick="startEdit()">✏️ Edit</button><button class="btn-danger" onclick="deleteRating()">🗑 Delete</button></div>
+    </div>`;
+  } else {
+    rateSection=`<div class="rate-section"><h3>${myR?'Edit Rating':'Rate This Movie'}</h3>
+      <div class="score-input-row" style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
+        <input type="text" inputmode="decimal" maxlength="4"
+          class="score-input" id="scoreInput" placeholder="1–10"
+          value="${selectedScore||''}"
+          oninput="sanitizeScoreInput(this)"
+          onkeydown="return blockInvalidScoreKeys(event)" />
+        <span style="font-size:13px;color:var(--text3)">out of 10 — decimals allowed, e.g. 7.7</span>
+      </div>
+      <textarea class="rate-textarea" id="commentInput" placeholder="Write a comment (optional)...">${myR&&myR.comment?myR.comment:''}</textarea>
+      <div class="flex-center">
+        <button class="btn-submit" onclick="submitRating()">${myR?'Update':'Submit'}</button>
+        ${myR?`<button class="btn-edit" onclick="cancelEdit()">Cancel</button>`:''}
+      </div>
+    </div>`;
+  }
+  let commentsHtml=allR.length?allR.map(r=>{
+    const isMe=state.currentUser&&r.username===state.currentUser;
+    return `<div class="comment-card">
+      <div class="comment-header">
+        <div class="avatar" style="width:28px;height:28px;font-size:11px">${r.username.slice(0,2).toUpperCase()}</div>
+        <span style="font-weight:500;font-size:13px">${r.username}</span>
+        <span class="comment-score">${r.score}/10</span>
+        <span class="comment-date">${formatDate(r.date)}</span>
+      </div>
+      ${r.comment?`<div class="comment-body">"${r.comment}"</div>`:'<div class="comment-body" style="color:var(--text3);font-style:italic">No comment left.</div>'}
+      ${isMe?`<div class="comment-actions"><button class="btn-edit" onclick="startEdit()">✏️ Edit</button><button class="btn-danger" onclick="deleteRating()">🗑 Delete</button></div>`:''}
+    </div>`;
+  }).join(''):'<div class="no-comments">No ratings yet. Be the first!</div>';
+
+  document.getElementById('detailContent').innerHTML=`
+    <div class="detail-header">
+      <div class="detail-poster" style="background:${posterBg(s.id)}" id="detailPoster">
+        <span class="poster-emoji">${s.emoji}</span>
+      </div>
+      <div class="detail-info">
+        <h1 class="detail-title">${s.title}</h1>
+        <div class="detail-tagline">${s.year} · ${s.genre}</div>
+        <p class="detail-desc">${s.desc}</p>
+        <div class="detail-meta-row">
+          <span class="detail-tag">🎬 ${s.director}</span>
+          <span class="detail-tag">📅 ${s.year}</span>
+          ${s.phase?`<span class="detail-tag">${s.phase} · #${MOVIES.filter(m=>m.genre===s.genre).sort((a,b)=>a.order-b.order).findIndex(m=>m.id===s.id)+1} in order</span>`:`<span class="detail-tag">#${MOVIES.filter(m=>m.genre===s.genre).sort((a,b)=>a.order-b.order).findIndex(m=>m.id===s.id)+1} in ${s.genre} watch order</span>`}
+        </div>
+      </div>
+    </div>
+    <div class="scores-row">
+      <div class="score-card"><div class="score-label">IMDb Score</div><div class="score-val imdb">${s.imdb}</div><div class="score-count">Official rating</div></div>
+      <div class="score-card"><div class="score-label">Friends' Avg</div>${avg!==null?`<div class="score-val friends">${avg}</div><div class="score-count">${allR.length} rating${allR.length!==1?'s':''}</div>`:`<div class="score-val none">—</div><div class="score-count">No ratings yet</div>`}</div>
+      ${myR?`<div class="score-card"><div class="score-label">Your Score</div><div class="score-val" style="color:var(--blue)">${myR.score}</div><div class="score-count">Your rating</div></div>`:''}
+    </div>
+    ${rateSection}
+    <div class="comments-section"><h3 style="font-size:22px;margin-bottom:1.25rem">Friends' Ratings & Comments</h3>${commentsHtml}</div>`;
+
+  // Load poster for detail page
+  fetchPoster(s).then(url=>{
+    if(url&&url!=='N/A'){
+      const el=document.getElementById('detailPoster');
+      if(!el)return;
+      const emoji=el.querySelector('.poster-emoji');
+      injectPoster(el,url,emoji);
+    }
+  });
+}
+// Live-sanitize as the user types: keep only digits and a single decimal point, max 1 decimal place.
+function sanitizeScoreInput(el){
+  let v=el.value.replace(/[^0-9.]/g,''); // strip letters, signs, exponents, everything but digits/dot
+  const firstDot=v.indexOf('.');
+  if(firstDot!==-1){
+    v=v.slice(0,firstDot+1)+v.slice(firstDot+1).replace(/\./g,''); // only one dot allowed
+    v=v.slice(0,firstDot+2); // only one digit after the dot
+  }
+  el.value=v;
+  el.classList.remove('invalid');
+}
+// Block keystrokes that would let junk through (letters, e/E, +, -, comma, second decimal point).
+function blockInvalidScoreKeys(e){
+  const allowed=['Backspace','Delete','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Tab','Home','End'];
+  if(allowed.includes(e.key)||e.ctrlKey||e.metaKey)return true;
+  if(/^[0-9]$/.test(e.key))return true;
+  if(e.key==='.')return !e.target.value.includes('.'); // only one decimal point allowed
+  return false;
+}
+// Final authoritative check right before anything is saved — never trust the input alone.
+function parseValidScore(raw){
+  if(raw===null||raw===undefined)return null;
+  const trimmed=String(raw).trim();
+  if(!/^([1-9]|10)(\.[0-9])?$/.test(trimmed))return null; // whole number or one-decimal, 1-10 only
+  const n=Math.round(parseFloat(trimmed)*10)/10;
+  if(!Number.isFinite(n)||n<1||n>10)return null;
+  return n;
+}
+
+async function submitRating(){
+  const el=document.getElementById('scoreInput');
+  const score=parseValidScore(el.value);
+  if(score===null){
+    el.classList.add('invalid');
+    showToast('Please enter a number between 1 and 10 (one decimal allowed, e.g. 7.7)','error');
+    return;
+  }
+  const comment=document.getElementById('commentInput').value.trim();
+  try{
+    await saveRatingToDb(state.currentUser, state.detailSeriesId, score, comment);
+    state.editingRating=false;selectedScore=0;
+    showToast('Rating saved! ✅','success');
+    renderDetail();
+  }catch(e){showToast('Error saving rating. Try again.','error');}
+}
+
+function startEdit(){state.editingRating=true;const r=getMyRating(state.detailSeriesId);if(r)selectedScore=r.score;renderDetail();}
+function cancelEdit(){state.editingRating=false;selectedScore=0;renderDetail();}
+
+async function deleteRating(){
+  if(!confirm('Delete your rating for this movie?'))return;
+  try{
+    await deleteRatingFromDb(state.currentUser, state.detailSeriesId);
+    state.editingRating=false;selectedScore=0;
+    showToast('Rating deleted.','');
+    renderDetail();
+  }catch(e){showToast('Error deleting rating. Try again.','error');}
+}
+
+// POSTERS
+const OMDB_KEY='8ab568f1';
+const posterCache={};
+
+function cleanTitle(title){
+  return title
+    .replace(/\s+S\d+$/i,'')
+    .replace(/\s+S\d+\s*[-–:].*/i,'')
+    .replace(/\s+Season\s*\d+.*/i,'')
+    .replace(/\s+\(Complete\).*/i,'')
+    .replace(/\s+\(US\).*/i,'')
+    .trim();
+}
+
+async function fetchPoster(s){
+  if(posterCache[s.id]!==undefined) return posterCache[s.id];
+  const title=cleanTitle(s.posterTitle||s.title);
+  const omdbType=s.type==='series'?'series':'movie';
+  try{
+    const url=`https://www.omdbapi.com/?t=${encodeURIComponent(title)}&type=${omdbType}&apikey=${OMDB_KEY}`;
+    const r=await fetch(url);
+    const d=await r.json();
+    if(d.Poster&&d.Poster!=='N/A'){
+      posterCache[s.id]=d.Poster;
+      return d.Poster;
+    }
+    posterCache[s.id]='N/A';
+    return 'N/A';
+  }catch(e){
+    posterCache[s.id]='N/A';
+    return 'N/A';
+  }
+}
+
+function injectPoster(el,url,emoji){
+  if(!el||!url||url==='N/A') return;
+  if(el.querySelector('img')) return;
+  const img=document.createElement('img');
+  img.src=url;
+  img.alt='poster';
+  img.style='width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;';
+  img.onload=function(){if(emoji)emoji.style.display='none';};
+  img.onerror=function(){this.remove();};
+  el.appendChild(img);
+}
+
+async function preloadPosters(seriesList){
+  for(let i=0;i<seriesList.length;i+=4){
+    const batch=seriesList.slice(i,i+4);
+    const urls=await Promise.all(batch.map(s=>fetchPoster(s)));
+    batch.forEach((s,idx)=>{
+      const el=document.querySelector(`[data-poster="${s.id}"]`);
+      if(!el) return;
+      const emoji=el.querySelector('.poster-emoji');
+      injectPoster(el,urls[idx],emoji);
+    });
+    // Small delay between batches to be kind to the API
+    if(i+4<seriesList.length) await new Promise(r=>setTimeout(r,300));
+  }
+}
+
+// INIT
+async function init(){
+  await initFirebase();
+  const savedUser = loadCurrentUser();
+  updateNav();
+  toggleAuth('login');
+  if(savedUser){
+    state.currentUser = savedUser;
+    updateNav();
+    await loadAllRatings();
+  }
+  showPage('home',false);
+  history.replaceState({page:'home'},'','#home');
+}
+init();
+</script>
+</body>
+</html>
