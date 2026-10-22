@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 6.1.3
+- Fixed a stray "No titles found" box appearing under the nav on first click. The (collapsed) search input could be filled by browser autofill, which fired the search with that text and could not be dismissed. Search now ignores input while collapsed, always clears/hides on collapse, the results box is hidden via CSS unless the search is open, and the input is marked as non-autofillable.
 ## 6.1.2
 - Nav tabs: the sliding yellow indicator is now perfectly symmetric inside its pill (equal gap on all four sides: 5px top/bottom/left/right on desktop). Fixed a 1px border offset and rounding of widths in the indicator positioning; same fix for the Rankings sub-tab indicator; drag clamp now matches the pill padding.
 ## 6.1.1

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Orach — v6.1.2 -->
+<!-- Orach — v6.1.3 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="app-version" content="6.1.2" />
+<meta name="app-version" content="6.1.3" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -80,6 +80,7 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 
 .nav-search-results{position:absolute;top:calc(100% + 8px);left:0;width:100%;min-width:320px;background:var(--glass-bg-strong);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);box-shadow:var(--glass-shadow), inset 0 1px 0 var(--glass-hi);border-radius:var(--radius);max-height:380px;overflow-y:auto;z-index:200;display:none}
 .nav-search-results.show{display:block}
+.nav-search:not(.expanded) ~ .nav-search-results{display:none!important}
 .nav-search-item{display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;transition:background .15s}
 .nav-search-item:hover{background:rgba(255,255,255,0.08)}
 .nav-search-poster{width:32px;height:44px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;overflow:hidden;position:relative}
@@ -458,7 +459,7 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
     <div class="nav-search-group" id="navSearchGroup">
       <div class="nav-search" id="navSearch">
         <button class="nav-search-icon-btn" id="navSearchToggle" onclick="toggleNavSearch(event)">🔍</button>
-        <input class="nav-search-input" id="navSearchInput" placeholder="Search Marvel, DC, Star Wars…" oninput="onNavSearch()" autocomplete="off" />
+        <input class="nav-search-input" id="navSearchInput" name="orach-title-search" placeholder="Search Marvel, DC, Star Wars…" oninput="onNavSearch()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore data-form-type="other" />
       </div>
       <div class="franchise-tabs" id="franchiseTabs">
         <div class="franchise-indicator" id="franchiseIndicator"></div>
@@ -488,7 +489,7 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
   <button class="mtab" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
 </div>
 <div class="toast" id="toast"></div>
-<div class="version-badge">v6.1.2</div>
+<div class="version-badge">v6.1.3</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -1258,8 +1259,11 @@ const GENRE_BADGE={
   'Star Wars':'background:rgba(244,196,48,0.18);color:#f4c430'
 };
 function onNavSearch(){
-  const q=document.getElementById('navSearchInput').value.trim().toLowerCase();
+  const input=document.getElementById('navSearchInput');
   const box=document.getElementById('navSearchResults');
+  // Browser autofill can fill this input (and fire 'input') while the search is collapsed; ignore that
+  if(!document.getElementById('navSearch').classList.contains('expanded')){input.value='';box.classList.remove('show');box.innerHTML='';return;}
+  const q=input.value.trim().toLowerCase();
   if(!q){box.classList.remove('show');box.innerHTML='';return;}
   const results=MOVIES.filter(m=>!m.hidden&&m.title.toLowerCase().includes(q)).slice(0,8);
   if(!results.length){
@@ -1315,11 +1319,13 @@ function toggleNavSearch(e){
 }
 function collapseNavSearch(){
   const search=document.getElementById('navSearch');
-  if(!search||!search.classList.contains('expanded'))return;
+  if(!search)return;
+  const input=document.getElementById('navSearchInput');
+  if(input&&input.value)input.value='';
+  hideNavSearch();
+  if(!search.classList.contains('expanded'))return;
   search.classList.remove('expanded');
   document.getElementById('franchiseTabs').classList.remove('hide');
-  document.getElementById('navSearchInput').value='';
-  hideNavSearch();
 }
 
 // ── FRANCHISE TABS (Marvel / DC / Star Wars) ─────────────────────────────
