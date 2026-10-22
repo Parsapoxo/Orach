@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Orach — v6.0.0 -->
+<!-- Orach — v6.1.2 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="app-version" content="6.0.0" />
+<meta name="app-version" content="6.1.2" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -221,11 +221,15 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 .poster-card-badge{position:absolute;bottom:6px;left:6px;right:6px;background:rgba(0,0,0,.65);backdrop-filter:blur(3px);color:var(--accent);font-size:9px;font-weight:700;letter-spacing:.04em;text-align:center;padding:3px 4px;border-radius:5px}
 @keyframes gridIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .poster-card{animation:gridIn .4s ease backwards}
-.row-arrow{position:absolute;top:0;bottom:0;width:56px;display:flex;align-items:center;justify-content:center;border:none;color:#fff;font-size:26px;cursor:pointer;z-index:5;opacity:0;pointer-events:none;transition:opacity .2s ease}
+.row-arrow{position:absolute;top:0;bottom:31px;width:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;color:#fff;font-size:26px;text-shadow:0 2px 8px rgba(0,0,0,.7);cursor:pointer;z-index:5;opacity:0;pointer-events:none;transition:opacity .2s ease,color .2s ease}
 .row-arrow.show{opacity:1;pointer-events:auto}
-.row-arrow-left{left:0;background:linear-gradient(to right, var(--bg) 25%, transparent)}
-.row-arrow-right{right:0;background:linear-gradient(to left, var(--bg) 25%, transparent)}
+.row-arrow-left{left:0}
+.row-arrow-right{right:0}
 .row-arrow:hover{color:var(--accent)}
+/* Edge fade is a mask on the row itself (no solid overlay), so it blends with the ambient background on both sides equally */
+.poster-grid{--fade-l:0px;--fade-r:0px;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 var(--fade-l),#000 calc(100% - var(--fade-r)),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 var(--fade-l),#000 calc(100% - var(--fade-r)),transparent 100%)}
+.poster-grid.fade-left{--fade-l:64px}
+.poster-grid.fade-right{--fade-r:64px}
 
 .rank-row{display:flex;align-items:center;gap:1rem;padding:0.9rem 1.1rem;background:var(--glass-bg);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);box-shadow:inset 0 1px 0 var(--glass-hi);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:all .2s}
 .rank-row:hover{border-color:var(--glass-border);background:var(--glass-bg-strong)}
@@ -369,24 +373,33 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 .btn-primary:hover{filter:brightness(1.08);box-shadow:0 6px 20px rgba(232,201,109,.3);transform:translateY(-1px)}
 .btn-primary:active{transform:translateY(0)}
 
+
+/* ── MOBILE TAB BAR (floating liquid-glass pill, phones only) ───────────── */
+.mobile-tabbar{display:none;position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:120;height:60px;padding:5px;gap:2px;border-radius:999px;background:var(--glass-bg-strong);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);box-shadow:0 10px 30px rgba(0,0,0,.5), inset 0 1px 0 var(--glass-hi), inset 0 -1px 0 rgba(0,0,0,.18);touch-action:none;user-select:none;-webkit-user-select:none}
+.mtab-indicator{position:absolute;top:5px;bottom:5px;border-radius:999px;background:var(--accent);box-shadow:inset 0 1px 0 rgba(255,255,255,.55), inset 0 -2px 4px rgba(0,0,0,.12), 0 2px 10px rgba(232,201,109,.35);z-index:0;opacity:0;transition:left .35s cubic-bezier(.65,0,.35,1),width .35s cubic-bezier(.65,0,.35,1),opacity .2s ease}
+.mtab{position:relative;z-index:1;flex:1;min-width:0;background:none;border:none;border-radius:999px;color:var(--text2);font-size:12px;font-weight:600;white-space:nowrap;padding:0 2px;transition:color .2s}
+.mtab.active{color:#000}
+
 /* ── MOBILE ──────────────────────────────────────────────────────────── */
 @media (max-width:680px){
   .nav{padding:0 10px;height:52px}
   .nav-logo{font-size:17px}
   .nav-links{gap:4px}
 
-  /* Free the search+tabs group from desktop's absolute-centered layout;
-     let it flow between the logo and the profile icon, and scroll
-     horizontally if the tabs don't all fit. */
-  .nav > .nav-center{position:static;left:auto;top:auto;transform:none;margin:0 8px;flex:1;min-width:0;max-width:none;justify-content:flex-start}
-  .nav-center{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
-  .nav-center::-webkit-scrollbar{display:none}
-  .nav-search-group{flex-shrink:0}
-  .nav-search,.nav-search-icon-btn{width:34px;height:34px}
-  .franchise-tabs{margin-left:38px;padding:0 3px}
-  .franchise-btn{padding:6px 10px;font-size:11.5px}
-  .rankings-btn{padding:0 12px;font-size:11.5px;margin-left:6px}
-  .nav-search.expanded{width:60vw}
+  /* Phone nav: top bar = logo + search + profile only. The section tabs
+     (Marvel / DC / DCAMU / Star Wars / Rankings) live in a floating glass
+     tab bar at the bottom — see .mobile-tabbar. */
+  .nav > .nav-center{position:static;left:auto;top:auto;transform:none;margin:0 8px;flex:1;min-width:0;max-width:none;justify-content:flex-end}
+  .nav-search-group{position:static;width:100%;justify-content:flex-end}
+  .nav-search{position:relative;left:auto;top:auto;width:36px;height:36px;flex-shrink:0}
+  .nav-search-icon-btn{width:36px;height:36px}
+  .nav-search.expanded{width:100%}
+  .franchise-tabs,.rankings-btn{display:none}
+
+  .mobile-tabbar{display:flex}
+  .page{padding-bottom:calc(1.1rem + 96px)}
+  .toast{bottom:92px}
+  .version-badge{padding-bottom:0}
 
   .page{padding:1.1rem}
   .catalog-wrap,.rankings-wrap,.detail-wrap{max-width:100%}
@@ -404,7 +417,9 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
   /* Poster grid: fewer, bigger cards per row instead of 6 */
   .poster-card{flex:0 0 calc((100% - 2*0.7rem)/2.4)}
   .poster-grid{gap:0.7rem}
-  .row-arrow{width:40px}
+  .row-arrow{width:34px}
+  .poster-grid.fade-left{--fade-l:44px}
+  .poster-grid.fade-right{--fade-r:44px}
 
   /* Detail page: stack poster above info instead of side-by-side */
   .detail-header{flex-direction:column;align-items:center;text-align:center;gap:1rem}
@@ -423,7 +438,12 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 
   .rank-row{padding:.7rem .8rem;gap:.7rem}
 
-  .nav-search-results{min-width:0;left:-40px;right:-10px;width:auto}
+  .nav-search-results{top:calc(100% + 6px);left:10px;right:10px;width:auto;min-width:0}
+
+  /* The fixed version badge sits on top of whatever's scrolled underneath it
+     (posters, in this case) — keep it, but tuck it unobtrusively in the nav
+     corner instead of floating over page content on a small screen. */
+  .version-badge{position:static;display:block;text-align:center;padding:10px 0 4px;opacity:.4}
 }
 
 </style>
@@ -459,8 +479,16 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
   </div>
 </nav>
 
+<div class="mobile-tabbar" id="mobileTabbar">
+  <div class="mtab-indicator" id="mtabIndicator"></div>
+  <button class="mtab" data-page="marvel" onclick="showPage('marvel')">Marvel</button>
+  <button class="mtab" data-page="dc" onclick="showPage('dc')">DC</button>
+  <button class="mtab" data-page="dcamu" onclick="showPage('dcamu')">DCAMU</button>
+  <button class="mtab" data-page="starwars" onclick="showPage('starwars')">Star Wars</button>
+  <button class="mtab" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
+</div>
 <div class="toast" id="toast"></div>
-<div class="version-badge">v6.0.0</div>
+<div class="version-badge">v6.1.2</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -1295,7 +1323,61 @@ function collapseNavSearch(){
 }
 
 // ── FRANCHISE TABS (Marvel / DC / Star Wars) ─────────────────────────────
+
+// ── MOBILE TAB BAR ────────────────────────────────────────────────────────
+const MTAB_PAGES=['marvel','dc','dcamu','starwars','rankings'];
+function updateMobileTabbar(page){
+  const bar=document.getElementById('mobileTabbar');
+  if(!bar)return;
+  const ind=document.getElementById('mtabIndicator');
+  bar.querySelectorAll('.mtab').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+  const btn=bar.querySelector('.mtab[data-page="'+page+'"]');
+  if(!btn||!btn.offsetWidth){ind.style.opacity='0';return;}
+  ind.style.opacity='1';
+  ind.style.left=btn.offsetLeft+'px';
+  ind.style.width=btn.offsetWidth+'px';
+}
+function setupMobileTabbarDrag(){
+  const bar=document.getElementById('mobileTabbar');
+  const ind=document.getElementById('mtabIndicator');
+  let dragging=false,moved=false,startX=0,startLeft=0,pid=null;
+  bar.addEventListener('pointerdown',(e)=>{
+    if(!MTAB_PAGES.includes(state.currentPage))return;
+    const r=ind.getBoundingClientRect();
+    if(e.clientX<r.left||e.clientX>r.right)return;
+    dragging=true;moved=false;pid=e.pointerId;
+    try{bar.setPointerCapture(pid);}catch(err){}
+    ind.style.transition='none';
+    startX=e.clientX;startLeft=ind.offsetLeft;
+  });
+  bar.addEventListener('pointermove',(e)=>{
+    if(!dragging)return;
+    const dx=e.clientX-startX;
+    if(Math.abs(dx)>4)moved=true;
+    ind.style.left=Math.max(4,Math.min(startLeft+dx,bar.clientWidth-ind.offsetWidth-4))+'px';
+  });
+  const end=()=>{
+    if(!dragging)return;
+    dragging=false;
+    try{bar.releasePointerCapture(pid);}catch(err){}
+    ind.style.transition='';
+    if(!moved){updateMobileTabbar(state.currentPage);return;}
+    const center=ind.offsetLeft+ind.offsetWidth/2;
+    let closest=state.currentPage,best=Infinity;
+    bar.querySelectorAll('.mtab').forEach(b=>{
+      const d=Math.abs(b.offsetLeft+b.offsetWidth/2-center);
+      if(d<best){best=d;closest=b.dataset.page;}
+    });
+    if(closest===state.currentPage)updateMobileTabbar(closest);
+    else showPage(closest);
+  };
+  bar.addEventListener('pointerup',end);
+  bar.addEventListener('pointercancel',end);
+}
+setupMobileTabbarDrag();
+
 function updateFranchiseTabs(page){
+  updateMobileTabbar(page);
   document.querySelectorAll('.franchise-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('rankingsNavBtn').classList.toggle('active',page==='rankings');
   const indicator=document.getElementById('franchiseIndicator');
@@ -1309,8 +1391,9 @@ function updateFranchiseTabs(page){
   const btnRect=btn.getBoundingClientRect();
   indicator.style.transition='left .35s cubic-bezier(.65,0,.35,1),width .35s cubic-bezier(.65,0,.35,1),opacity .2s ease';
   indicator.style.opacity='1';
-  indicator.style.left=Math.round(btnRect.left-wrapRect.left)+'px';
-  indicator.style.width=Math.round(btnRect.width)+'px';
+  // absolute children are positioned from the padding edge (inside the 1px border), so subtract clientLeft; keep sub-pixel widths so left/right gaps stay equal
+  indicator.style.left=(btnRect.left-wrapRect.left-wrap.clientLeft)+'px';
+  indicator.style.width=btnRect.width+'px';
 }
 window.addEventListener('resize',()=>updateFranchiseTabs(state.currentPage));
 // The nav label font (DM Sans) loads asynchronously; if the indicator was
@@ -1348,7 +1431,7 @@ function setupIndicatorDrag(){
     const wrapWidth=wrap.clientWidth;
     const indicatorWidth=indicator.offsetWidth;
     let newLeft=startLeft+(e.clientX-startX);
-    newLeft=Math.max(2,Math.min(newLeft,wrapWidth-indicatorWidth-2));
+    newLeft=Math.max(4,Math.min(newLeft,wrapWidth-indicatorWidth-4));
     indicator.style.left=newLeft+'px';
   });
   const endDrag=()=>{
@@ -1387,8 +1470,12 @@ function updateRowArrows(rowId){
   const right=document.getElementById(rowId+'-right');
   if(!row||!left||!right)return;
   const maxScroll=row.scrollWidth-row.clientWidth;
-  left.classList.toggle('show',row.scrollLeft>4);
-  right.classList.toggle('show',maxScroll>4&&row.scrollLeft<maxScroll-4);
+  const showL=row.scrollLeft>4;
+  const showR=maxScroll>4&&row.scrollLeft<maxScroll-4;
+  left.classList.toggle('show',showL);
+  right.classList.toggle('show',showR);
+  row.classList.toggle('fade-left',showL);
+  row.classList.toggle('fade-right',showR);
 }
 window.addEventListener('resize',()=>{
   document.querySelectorAll('.poster-grid[id^="row-"]').forEach(g=>updateRowArrows(g.id));
@@ -1496,7 +1583,7 @@ function positionRankingsIndicator(tab){
   if(!indicator||!wrap||!btn)return;
   const wrapRect=wrap.getBoundingClientRect();
   const btnRect=btn.getBoundingClientRect();
-  indicator.style.left=(btnRect.left-wrapRect.left)+'px';
+  indicator.style.left=(btnRect.left-wrapRect.left-wrap.clientLeft)+'px';
   indicator.style.width=btnRect.width+'px';
 }
 window.addEventListener('resize',()=>{
