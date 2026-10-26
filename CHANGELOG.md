@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 6.2.0
+- Redesign ("cinema ledger", branch `redesign`): desktop nav is now a fixed left sidebar (logo, always-open search, Marvel / DC / DCAMU / Star Wars / Rankings with franchise-colored dots, profile at the bottom); gold accent warmed up; home is four franchise tiles (DCAMU added); poster cards get rounder corners and a watch-order number; filter chips and big headings restyled. Mobile keeps its top bar + floating tab bar. All logic unchanged except search now also opens on focus.
 ## 6.1.3
 - Fixed a stray "No titles found" box appearing under the nav on first click. The (collapsed) search input could be filled by browser autofill, which fired the search with that text and could not be dismissed. Search now ignores input while collapsed, always clears/hides on collapse, the results box is hidden via CSS unless the search is open, and the input is marked as non-autofillable.
 ## 6.1.2
