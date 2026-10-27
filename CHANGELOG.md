@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.3
+- Cleanup: removed the whole old glass theme and the code of the previous navigation instead of layering the redesign over it. Gone: glass tokens/blur/inner highlights everywhere (panels are now solid), the sliding + draggable nav indicator, the Rankings sub-tab indicator, the floating liquid-glass mobile tab bar and its drag logic, the old collapsible search states, the old home picker styles. New: one `.nav-item` list (sidebar on desktop), search always visible top right (icon opens it on phones), solid bottom tab bar on phones, a single place that sets the active nav item (`updateFranchiseTabs`).
 ## 7.0.0-beta.2
 - Redesign now matches the concept: search moved to the top right; "Home" item added to the sidebar; account card (avatar + username / "Sign in") at the bottom of the sidebar; All / Movies / Series filter chips on every franchise page; new title page (large poster, big title, breadcrumb, scores beside the poster); The Defenders Saga now always sits last (it appeared between Phase 1 and Phase 2 because of its order values).
 ## 7.0.0-beta.1
