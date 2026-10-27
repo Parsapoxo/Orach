@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.4
+- Search box no longer triggers the browser's saved-password dropdown: it's now a real `type="search"` field (name `q`, read-only until focused, password-manager opt-outs), and the sign-in / register / admin-token fields declare their real `autocomplete` roles so the browser stops guessing that the search field is a username field.
 ## 7.0.0-beta.3
 - Cleanup: removed the whole old glass theme and the code of the previous navigation instead of layering the redesign over it. Gone: glass tokens/blur/inner highlights everywhere (panels are now solid), the sliding + draggable nav indicator, the Rankings sub-tab indicator, the floating liquid-glass mobile tab bar and its drag logic, the old collapsible search states, the old home picker styles. New: one `.nav-item` list (sidebar on desktop), search always visible top right (icon opens it on phones), solid bottom tab bar on phones, a single place that sets the active nav item (`updateFranchiseTabs`).
 ## 7.0.0-beta.2

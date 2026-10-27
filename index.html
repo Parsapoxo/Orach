@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Orach — v7.0.0-beta.3 -->
+<!-- Orach — v7.0.0-beta.4 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="app-version" content="7.0.0-beta.3" />
+<meta name="app-version" content="7.0.0-beta.4" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -394,7 +394,8 @@ body{padding-left:228px}
 .nav-search{position:fixed;top:22px;right:32px;width:260px;height:40px;z-index:120;display:flex;align-items:center;border-radius:99px;background:var(--surface);border:1px solid var(--border);transition:border-color .2s}
 .nav-search:focus-within{border-color:var(--accent)}
 .nav-search-icon-btn{width:40px;height:40px;flex:none;background:none;color:var(--text2);font-size:15px;display:flex;align-items:center;justify-content:center}
-.nav-search-input{flex:1;min-width:0;background:none;border:none;color:var(--text);font-size:13px;padding:0 14px 0 0}
+.nav-search-input::-webkit-search-cancel-button{display:none}
+.nav-search-input{-webkit-appearance:none;appearance:none;flex:1;min-width:0;background:none;border:none;color:var(--text);font-size:13px;padding:0 14px 0 0}
 .nav-search-results{position:fixed;top:70px;right:32px;width:340px;max-height:380px;overflow-y:auto;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);z-index:200;display:none}
 .nav-search-results.show{display:block}
 
@@ -488,7 +489,7 @@ body{padding-left:228px}
   <div class="nav-logo" onclick="goHome()">Orach</div>
   <div class="nav-search" id="navSearch">
     <button class="nav-search-icon-btn" id="navSearchToggle" onclick="toggleNavSearch(event)" aria-label="Search">🔍</button>
-    <input class="nav-search-input" id="navSearchInput" name="orach-title-search" placeholder="Search titles" oninput="onNavSearch()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore data-form-type="other" />
+    <input class="nav-search-input" id="navSearchInput" type="search" name="q" role="searchbox" placeholder="Search titles" oninput="onNavSearch()" onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','')" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore data-bwignore data-form-type="other" />
   </div>
   <div class="nav-search-results" id="navSearchResults"></div>
   <div class="nav-list">
@@ -515,7 +516,7 @@ body{padding-left:228px}
   <button class="mtab" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
 </div>
 <div class="toast" id="toast"></div>
-<div class="version-badge">v7.0.0-beta.3</div>
+<div class="version-badge">v7.0.0-beta.4</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -550,17 +551,17 @@ body{padding-left:228px}
       <div id="authError" class="form-error" style="display:none"></div>
       <div id="authFormRegister" style="display:none">
         <label class="form-label">Username</label>
-        <input class="form-input" id="regUsername" placeholder="e.g. parsa" />
+        <input class="form-input" id="regUsername" autocomplete="username" placeholder="e.g. parsa" />
         <label class="form-label">Password</label>
-        <input class="form-input" id="regPassword" type="password" placeholder="Choose a password" />
+        <input class="form-input" id="regPassword" type="password" autocomplete="new-password" placeholder="Choose a password" />
         <button class="btn-primary" onclick="doRegister()">Create account</button>
         <div class="auth-toggle">Already have an account? <span onclick="toggleAuth('login')">Sign in</span></div>
       </div>
       <div id="authFormLogin">
         <label class="form-label">Username</label>
-        <input class="form-input" id="loginUsername" placeholder="Your username" />
+        <input class="form-input" id="loginUsername" autocomplete="username" placeholder="Your username" />
         <label class="form-label">Password</label>
-        <input class="form-input" id="loginPassword" type="password" placeholder="Your password" />
+        <input class="form-input" id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password" />
         <button class="btn-primary" onclick="doLogin()">Sign in</button>
         <div class="auth-toggle">New here? <span onclick="toggleAuth('register')">Create account</span></div>
       </div>
@@ -1661,7 +1662,7 @@ function renderGhGate(){
   box.innerHTML=`
     <div class="auth-box" style="max-width:460px;margin:0 0 2rem">
       <label style="font-size:12px;font-weight:600;color:var(--text2);letter-spacing:.04em;text-transform:uppercase">GitHub Personal Access Token</label>
-      <input type="password" id="ghTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" value="${saved}"
+      <input type="password" id="ghTokenInput" autocomplete="off" data-lpignore="true" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" value="${saved}"
         style="width:100%;margin:8px 0 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;box-sizing:border-box"/>
       <button class="btn-primary" style="width:auto;padding:10px 22px" onclick="unlockGithubAdmin()">Unlock</button>
       <p id="ghGateMsg" style="font-size:12px;margin-top:10px;color:var(--text3)"></p>
