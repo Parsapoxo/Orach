@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.2
+- Redesign now matches the concept: search moved to the top right; "Home" item added to the sidebar; account card (avatar + username / "Sign in") at the bottom of the sidebar; All / Movies / Series filter chips on every franchise page; new title page (large poster, big title, breadcrumb, scores beside the poster); The Defenders Saga now always sits last (it appeared between Phase 1 and Phase 2 because of its order values).
 ## 7.0.0-beta.1
 - Redesign ("cinema ledger", branch `redesign`): desktop nav is now a fixed left sidebar (logo, always-open search, Marvel / DC / DCAMU / Star Wars / Rankings with franchise-colored dots, profile at the bottom); gold accent warmed up; home is four franchise tiles (DCAMU added); poster cards get rounder corners and a watch-order number; filter chips and big headings restyled. Mobile keeps its top bar + floating tab bar. All logic unchanged except search now also opens on focus.
 ## 6.1.3
