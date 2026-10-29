@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Orach — v7.0.0-beta.4 -->
+<!-- Orach — v7.0.0-beta.5 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="app-version" content="7.0.0-beta.4" />
+<meta name="app-version" content="7.0.0-beta.5" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -12,7 +12,7 @@
 :root{--topbar:0px;
   --bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a25;--surface:#1e1e2e;--surface2:#252538;
   --border:#2a2a40;--border2:#353550;--accent:#f2b84b;--accent2:#d99a2b;
-  --text:#f0f0f5;--text2:#9090a8;--text3:#5a5a72;
+  --text:#f0f0f5;--text2:#9090a8;--text3:#7c7a96;
   --red:#e05555;--green:#55c088;--blue:#5588e0;
   --radius:10px;--radius-lg:20px;
 }
@@ -57,24 +57,9 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 .page{display:none;min-height:calc(100vh - var(--topbar));padding:2rem}
 
 /* ADMIN */
-.admin-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);}
-.admin-table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
-.admin-table th{text-align:left;padding:12px 14px;color:var(--text2);font-weight:600;font-size:11px;letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap}
-.admin-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
-.admin-table tr:last-child td{border-bottom:none}
-.admin-table tr:hover td{background:var(--surface2)}
-.admin-mismatch{color:var(--red);font-weight:600}
-.admin-ok{color:var(--text2)}
-.admin-docid{font-family:monospace;font-size:11px;color:var(--text3)}
-.admin-del-btn{background:rgba(224,85,85,0.15);color:var(--red);border:1px solid rgba(224,85,85,0.3);padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;transition:background .15s}
-.admin-del-btn:hover{background:rgba(224,85,85,0.3)}
-.admin-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px}
-.admin-wipe-btn{background:var(--red);color:#fff;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600}
-.admin-wipe-btn:hover{opacity:.85}
 .page.active{display:block}
 
 /* AUTH */
-.auth-wrap{min-height:calc(100vh - var(--topbar));display:flex;align-items:center;justify-content:center}
 
 /* HOME / FRANCHISE SELECT */
 .home-wrap{min-height:calc(100vh - var(--topbar));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;position:relative;z-index:1}
@@ -84,66 +69,26 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 .intro-video{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .35s ease}
 .intro-skip{position:absolute;bottom:32px;right:32px;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3);padding:10px 22px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s ease;z-index:2}
 .intro-skip:hover{background:rgba(255,255,255,.22)}
-.auth-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2.5rem;width:380px;max-width:100%}
-.auth-title{font-size:32px;color:var(--accent);margin-bottom:0.25rem}
-.auth-sub{color:var(--text2);font-size:13px;margin-bottom:2rem}
-.form-label{font-size:12px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;display:block}
-.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;color:var(--text);font-size:14px;margin-bottom:1rem;transition:border .2s}
-.form-input:focus{border-color:var(--accent)}
-.btn-primary{width:100%;background:var(--accent);color:#000;font-weight:600;font-size:14px;padding:11px;border-radius:var(--radius);transition:all .2s;border:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.5), inset 0 -2px 5px rgba(0,0,0,.12)}
-.btn-primary:hover{background:var(--accent2)}
-.auth-toggle{text-align:center;margin-top:1.25rem;font-size:13px;color:var(--text2)}
-.auth-toggle span{color:var(--accent);cursor:pointer;font-weight:500}
-.form-error{background:rgba(224,85,85,0.12);border:1px solid rgba(224,85,85,0.3);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:1rem}
 
 /* HOME */
-.home-hero{text-align:center;padding:3rem 0 2.5rem}
-.home-hero h1{font-size:clamp(48px,8vw,88px);color:var(--accent);margin-bottom:0.5rem}
-.home-hero p{color:var(--text2);font-size:15px;max-width:480px;margin:0 auto}
 .section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.25rem}
 .section-title{font-size:28px;color:var(--text)}
 .section-sub{font-size:13px;color:var(--text3)}
-.grid-4{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1rem}
 
 /* CARDS */
-.series-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:all .2s;display:flex;flex-direction:column}
-.series-card:hover{border-color:var(--border2);transform:translateY(-2px)}
-.card-poster{height:220px;display:flex;align-items:center;justify-content:center;font-size:52px;flex-shrink:0;position:relative;overflow:hidden}
-.card-poster img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
-.card-poster .poster-emoji{position:relative;z-index:1}
-.card-body{padding:0.75rem 0.9rem 0.9rem;flex:1;display:flex;flex-direction:column}
 .card-title{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:0.05em;line-height:1.2;margin-bottom:4px}
-.card-meta{font-size:11px;color:var(--text3);margin-bottom:8px}
-.card-scores{display:flex;gap:6px;margin-top:auto;flex-wrap:wrap}
 .score-pill{display:flex;align-items:center;gap:4px;padding:3px 7px;border-radius:20px;font-size:11px;font-weight:600;font-family:'DM Mono',monospace}
 .score-imdb{background:rgba(242,184,75,0.12);color:var(--accent)}
-.score-site{background:rgba(85,192,136,0.12);color:var(--green)}
-.score-site-none{background:rgba(90,90,114,0.12);color:var(--text3)}
 
 /* SEARCH & FILTER */
-.search-bar{position:relative;margin-bottom:1rem}
 .search-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px 16px 11px 44px;color:var(--text);font-size:14px;transition:border .2s}
 .search-input:focus{border-color:var(--accent)}
 .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:18px;pointer-events:none}
-.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem}
-.filter-btn{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--text2);transition:all .2s}
-.filter-btn:hover,.filter-btn.active{background:var(--accent);border-color:var(--accent);color:#000}
 
 /* RANKINGS */
-.rankings-wrap{max-width:900px;margin:0 auto}
-.dice-btn{display:inline-block;margin-left:8px;font-size:14px;cursor:pointer;transition:transform .15s ease;border-radius:5px}
-.dice-btn:hover{transform:scale(1.25)}
-.dice-spin{animation:diceSpin .65s cubic-bezier(.36,.07,.19,.97)}
 @keyframes diceSpin{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(360deg) scale(1.4)}100%{transform:rotate(720deg) scale(1)}}
 
-.modal-overlay{position:fixed;inset:0;background:rgba(5,5,8,0.75);z-index:300;display:none;align-items:center;justify-content:center;padding:1.5rem}
-.modal-overlay.show{display:flex}
-.modal-box{position:relative;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem;max-width:420px;width:100%;animation:modalPop .25s cubic-bezier(.34,1.56,.64,1)}
 @keyframes modalPop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
-.modal-close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--text2);font-size:16px;cursor:pointer;line-height:1}
-.modal-close:hover{color:var(--text)}
-.dice-poster{width:100%;aspect-ratio:2/3;max-width:180px;margin:0 auto 14px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative}
-.dice-poster img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
 
 /* POSTER ROW (franchise catalog pages) — horizontal scroll, 9 per row */
 .poster-row-wrap{position:relative;margin-bottom:2.5rem}
@@ -171,16 +116,6 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 .poster-grid.fade-left{--fade-l:64px}
 .poster-grid.fade-right{--fade-r:64px}
 
-.rank-row{display:flex;align-items:center;gap:1rem;padding:0.9rem 1.1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:all .2s}
-.rank-row:hover{border-color:var(--border);background:var(--surface2)}
-.rank-num{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--text3);min-width:32px;text-align:center}
-.rank-num.top3{color:var(--accent)}
-.rank-emoji{font-size:26px;width:36px;text-align:center;flex-shrink:0}
-.rank-info{flex:1;min-width:0}
-.rank-title{font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rank-meta{font-size:13px;color:var(--text3);margin-top:3px}
-.type-badge{display:inline-block;margin-left:8px;font-size:10px;font-weight:700;letter-spacing:0.5px;color:var(--blue);background:rgba(24,95,165,0.18);border-radius:4px;padding:2px 6px;vertical-align:middle}
-.rank-score{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;flex-shrink:0}
 
 /* DETAIL */
 .detail-wrap{max-width:800px;margin:0 auto}
@@ -220,12 +155,6 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 .score-input[type=number]{-moz-appearance:textfield}
 .rate-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;color:var(--text);font-size:14px;resize:vertical;min-height:80px;margin-bottom:1rem;transition:border .2s}
 .rate-textarea:focus{border-color:var(--accent)}
-.btn-submit{background:var(--accent);color:#000;font-weight:600;font-size:13px;padding:9px 20px;border-radius:var(--radius);transition:all .2s;border:none}
-.btn-submit:hover{background:var(--accent2)}
-.btn-edit{background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-size:12px;padding:5px 12px;border-radius:6px;transition:all .2s}
-.btn-edit:hover{border-color:var(--border2);color:var(--text)}
-.btn-danger{background:rgba(224,85,85,0.1);border:1px solid rgba(224,85,85,0.3);color:var(--red);font-size:12px;padding:5px 12px;border-radius:6px;transition:all .2s}
-.btn-danger:hover{background:rgba(224,85,85,0.2)}
 
 /* COMMENTS */
 .comment-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:10px}
@@ -237,30 +166,11 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 .no-comments{text-align:center;padding:2rem;color:var(--text3);font-size:14px}
 
 /* HISTORY */
-.history-wrap{max-width:700px;margin:0 auto}
-.history-row{display:flex;align-items:center;gap:1rem;padding:0.9rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:all .2s}
-.history-row:hover{border-color:var(--border2)}
-.history-emoji{font-size:28px;flex-shrink:0}
-.history-info{flex:1;min-width:0}
-.history-title{font-weight:500;font-size:14px}
-.history-comment{font-size:12px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.history-date{font-size:11px;color:var(--text3);margin-top:2px}
-.history-score{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--accent);flex-shrink:0}
-.empty-state{text-align:center;padding:4rem 2rem;color:var(--text3)}
-.empty-state .big{font-size:48px;margin-bottom:1rem}
 
 /* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 18px;font-size:13px;font-weight:500;z-index:999;transform:translateY(100px);opacity:0;transition:all .3s;pointer-events:none;max-width:280px}
 .version-badge{position:fixed;bottom:10px;right:14px;font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);opacity:.55;z-index:50;pointer-events:none;user-select:none}
-.toast.show{transform:translateY(0);opacity:1}
-.toast.success{border-color:rgba(85,192,136,0.4);color:var(--green)}
-.toast.error{border-color:rgba(224,85,85,0.4);color:var(--red)}
 
 /* PAGINATION */
-.pagination{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:2rem;flex-wrap:wrap}
-.page-btn{padding:6px 14px;border-radius:6px;font-size:13px;background:var(--surface);border:1px solid var(--border);color:var(--text2);transition:all .2s}
-.page-btn:hover,.page-btn.active{background:var(--accent);border-color:var(--accent);color:#000}
-.page-info{font-size:13px;color:var(--text3)}
 .flex-center{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
 /* ── LIFE & ATMOSPHERE ───────────────────────────────────────────────── */
@@ -281,7 +191,6 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 .glow-dcamu{background:#7e6fe0}
 .glow-starwars{background:#f4c430}
 .glow-gold{background:var(--accent)}
-.rankings-wrap,.auth-wrap,.detail-wrap,.catalog-wrap{position:relative;z-index:1}
 .catalog-wrap{max-width:1500px;margin:0 auto}
 
 @keyframes heroSheen{0%{background-position:170% 0}100%{background-position:-30% 0}}
@@ -299,19 +208,8 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 .hero-gold{--_c:var(--accent);--_glow:rgba(242,184,75,.4)}
 
 @keyframes staggerIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.rank-row{animation:staggerIn .4s ease backwards}
-.rank-poster,.nav-search-poster,.dice-poster{transition:transform .3s ease}
-.rank-row:hover .rank-poster,.rank-row:hover .card-poster{transform:scale(1.04)}
-.rank-row:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.35)}
 
-.rank-num{position:relative;font-family:'Bebas Neue',sans-serif;font-size:16px;min-width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);flex-shrink:0}
-.rank-num.top3{color:#000;background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:var(--accent);box-shadow:0 0 14px rgba(242,184,75,.5)}
 
-.auth-box{position:relative;overflow:hidden}
-.auth-box::before{content:'';position:absolute;top:-90px;right:-70px;width:260px;height:260px;border-radius:50%;background:var(--accent);filter:blur(80px);opacity:.16;pointer-events:none;z-index:0}
-.auth-box>*{position:relative;z-index:1}
-.btn-primary:hover{filter:brightness(1.08);box-shadow:0 6px 20px rgba(242,184,75,.3);transform:translateY(-1px)}
-.btn-primary:active{transform:translateY(0)}
 
 
 
@@ -320,7 +218,6 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 
 
   .page{padding-bottom:calc(1.1rem + 96px)}
-  .toast{bottom:92px}
   .version-badge{padding-bottom:0}
 
   .page{padding:1.1rem}
@@ -331,7 +228,6 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
   /* Big display headings */
   .hero-title{font-size:28px}
   .detail-title{font-size:30px}
-  .auth-title{font-size:26px}
   .section-title{font-size:20px}
 
   /* Poster grid: fewer, bigger cards per row instead of 6 */
@@ -351,12 +247,7 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
   .score-val{font-size:28px}
   .bo-amt{font-size:18px}
 
-  .auth-box{padding:1.75rem}
-  .modal-box{padding:1.25rem}
-  .admin-toolbar{flex-direction:column;align-items:flex-start}
-  .admin-wipe-btn{width:100%}
 
-  .rank-row{padding:.7rem .8rem;gap:.7rem}
 
 
   /* The fixed version badge sits on top of whatever's scrolled underneath it
@@ -365,6 +256,8 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
   .version-badge{position:static;display:block;text-align:center;padding:10px 0 4px;opacity:.4}
 }
 
+
+.rankings-wrap,.auth-wrap,.detail-wrap,.catalog-wrap{position:relative;z-index:1}
 /* ===== ORACH 7 — layout & components (solid surfaces) ===== */
 body{padding-left:228px}
 .page{padding-top:4.5rem}
@@ -479,6 +372,95 @@ body{padding-left:228px}
   .detail-poster{width:150px;height:220px;font-size:64px}
   .detail-title{font-size:44px}
 }
+
+/* ===== ORACH 7 — page components: forms, buttons, lists, modal, toast, admin ===== */
+.btn-primary,.btn-submit{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#0a0a0f;font-weight:600;font-size:14px;padding:12px 24px;border-radius:99px;border:none;transition:filter .15s,transform .15s}
+.btn-primary{width:100%}
+.btn-primary:hover,.btn-submit:hover{filter:brightness(1.08)}
+.btn-primary:active,.btn-submit:active{transform:scale(.98)}
+.btn-edit,.btn-danger{font-size:12px;font-weight:500;padding:6px 14px;border-radius:99px;border:1px solid var(--border);background:none;color:var(--text2);transition:all .15s}
+.btn-edit:hover{color:var(--text);border-color:var(--text3)}
+.btn-danger{color:var(--red);border-color:rgba(224,85,85,.35)}
+.btn-danger:hover{background:rgba(224,85,85,.12)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.form-label{display:block;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px 16px;color:var(--text);font-size:14px;margin-bottom:1.1rem;transition:border-color .2s}
+.form-input:focus{border-color:var(--accent);outline:none}
+.form-error{background:rgba(224,85,85,.1);border:1px solid rgba(224,85,85,.3);border-radius:12px;padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:1rem}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--text3)}
+.empty-state .big{font-size:44px;margin-bottom:1rem}
+
+/* sign in / register */
+.auth-wrap{min-height:calc(100vh - var(--topbar) - 9rem);display:flex;align-items:center;justify-content:center}
+.auth-box{width:400px;max-width:100%;padding:2.5rem;background:var(--surface);border:1px solid var(--border);border-radius:24px}
+.auth-title{font-family:'Bebas Neue',sans-serif;font-weight:400;letter-spacing:.04em;font-size:56px;line-height:.95;color:var(--text);margin-bottom:.35rem}
+.auth-sub{color:var(--text2);font-size:14px;margin-bottom:2rem}
+.auth-toggle{text-align:center;margin-top:1.25rem;font-size:13px;color:var(--text2)}
+.auth-toggle span{color:var(--accent);cursor:pointer;font-weight:600}
+
+/* rankings + profile: numbered editorial list */
+.rankings-wrap{max-width:960px}
+.rank-row{display:flex;align-items:center;gap:1.25rem;padding:.85rem 1.25rem .85rem 1rem;margin-bottom:10px;background:var(--surface);border:1px solid var(--border);border-radius:18px;cursor:pointer;transition:border-color .2s,transform .2s;animation:staggerIn .4s ease backwards}
+.rank-row:hover{border-color:var(--text3);transform:translateY(-2px)}
+.rank-num{min-width:48px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;color:var(--text3);flex-shrink:0}
+.rank-num.top3{color:var(--accent)}
+.rank-poster{position:relative;width:64px;height:96px;flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;border-radius:12px;border:1px solid rgba(255,255,255,.09);font-size:30px}
+.rank-poster img{width:100%;height:100%;object-fit:cover}
+.rank-info{flex:1;min-width:0}
+.rank-title{font-weight:600;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-meta{font-size:13px;color:var(--text3);margin-top:4px}
+.rank-score{color:var(--accent);flex-shrink:0;font-family:'DM Mono',monospace;font-size:15px;font-weight:500;padding:6px 14px;border-radius:99px;background:var(--bg3);border:1px solid var(--border)}
+.dice-btn{display:inline-block;margin-left:8px;font-size:14px;cursor:pointer;transition:transform .15s ease}
+.dice-btn:hover{transform:scale(1.25)}
+.dice-spin{animation:diceSpin .65s cubic-bezier(.36,.07,.19,.97)}
+
+/* dialog + toast */
+.modal-overlay{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:1.5rem;background:rgba(5,5,8,.82)}
+.modal-overlay.show{display:flex}
+.modal-box{position:relative;width:100%;max-width:420px;padding:1.75rem;background:var(--surface);border:1px solid var(--border);border-radius:24px;animation:modalPop .25s cubic-bezier(.34,1.56,.64,1)}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--text2);font-size:16px;line-height:1}
+.modal-close:hover{color:var(--text)}
+.dice-poster{position:relative;width:100%;max-width:180px;aspect-ratio:2/3;margin:0 auto 14px;border-radius:16px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:48px;border:1px solid rgba(255,255,255,.09)}
+.dice-poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.toast{position:fixed;bottom:24px;right:24px;z-index:999;max-width:300px;padding:12px 18px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;font-size:13px;font-weight:500;transform:translateY(100px);opacity:0;transition:transform .3s,opacity .3s;pointer-events:none}
+.toast.show{transform:none;opacity:1}
+.toast.success{border-color:rgba(85,192,136,.45);color:var(--green)}
+.toast.error{border-color:rgba(224,85,85,.45);color:var(--red)}
+
+/* admin */
+.admin-toolbar{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:1.25rem}
+.admin-wipe-btn{background:var(--red);color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;font-weight:600}
+.admin-wipe-btn:hover{filter:brightness(1.1)}
+.admin-table-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--border);border-radius:18px}
+.admin-table{width:100%;min-width:760px;border-collapse:collapse;font-size:13px}
+.admin-table th{text-align:left;padding:14px 16px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);white-space:nowrap}
+.admin-table td{padding:14px 16px;border-bottom:1px solid var(--border);vertical-align:middle}
+.admin-table tr:last-child td{border-bottom:none}
+.admin-table tr:hover td{background:var(--surface2)}
+.admin-mismatch{color:var(--red);font-weight:600}
+.admin-ok{color:var(--text2)}
+.admin-docid{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
+.admin-del-btn{background:none;color:var(--red);border:1px solid rgba(224,85,85,.35);padding:6px 14px;border-radius:99px;font-size:12px;font-weight:600}
+.admin-del-btn:hover{background:rgba(224,85,85,.12)}
+
+/* poster score chip + home progress */
+.poster-score{position:absolute;left:10px;bottom:10px;z-index:2;font:600 12px 'DM Mono',monospace;color:var(--accent);background:rgba(10,10,15,.72);padding:4px 10px;border-radius:99px}
+.t-prog{display:none;width:100%;margin-top:8px}
+.has-user .t-prog{display:block}
+.t-bar{display:block;height:4px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden}
+.t-bar i{display:block;height:100%;width:0;border-radius:2px;background:var(--accent);transition:width .4s ease}
+.t-count{display:block;margin-top:6px;font:500 12px 'DM Sans',sans-serif;letter-spacing:0;color:#c9c5d3}
+
+@media (max-width:680px){
+  .auth-box{padding:1.75rem}
+  .auth-title{font-size:44px}
+  .rank-row{padding:.7rem .8rem;gap:.7rem}
+  .rank-num{min-width:34px;font-size:28px}
+  .rank-poster{width:52px;height:78px}
+  .modal-box{padding:1.25rem}
+  .admin-toolbar{flex-direction:column;align-items:flex-start}
+  .admin-wipe-btn{width:100%}
+}
 </style>
 </head>
 <body>
@@ -516,7 +498,7 @@ body{padding-left:228px}
   <button class="mtab" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
 </div>
 <div class="toast" id="toast"></div>
-<div class="version-badge">v7.0.0-beta.4</div>
+<div class="version-badge">v7.0.0-beta.5</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -525,10 +507,10 @@ body{padding-left:228px}
   <div class="home-wrap">
     <h1 class="home-title">Pick your <span>universe</span></h1>
     <div class="franchise-select-box" id="franchiseSelectBox">
-      <button class="franchise-select-item" data-franchise="marvel" onclick="selectFranchiseIntro('marvel',event)">MARVEL<span class="t-sub">Phase 1 to Doomsday</span></button>
-      <button class="franchise-select-item" data-franchise="dc" onclick="selectFranchiseIntro('dc',event)">DC<span class="t-sub">The DCEU, in order</span></button>
-      <button class="franchise-select-item" data-franchise="dcamu" onclick="showPage('dcamu')">DCAMU<span class="t-sub">Animated films, by arc</span></button>
-      <button class="franchise-select-item" data-franchise="starwars" onclick="selectFranchiseIntro('starwars',event)">STAR WARS<span class="t-sub">The saga, in order</span></button>
+      <button class="franchise-select-item" data-franchise="marvel" onclick="selectFranchiseIntro('marvel',event)">MARVEL<span class="t-sub">Phase 1 to Doomsday</span><span class="t-prog" data-genre="Marvel"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
+      <button class="franchise-select-item" data-franchise="dc" onclick="selectFranchiseIntro('dc',event)">DC<span class="t-sub">The DCEU, in order</span><span class="t-prog" data-genre="DC"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
+      <button class="franchise-select-item" data-franchise="dcamu" onclick="showPage('dcamu')">DCAMU<span class="t-sub">Animated films, by arc</span><span class="t-prog" data-genre="DCAMU"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
+      <button class="franchise-select-item" data-franchise="starwars" onclick="selectFranchiseIntro('starwars',event)">STAR WARS<span class="t-sub">The saga, in order</span><span class="t-prog" data-genre="Star Wars"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
     </div>
     <p class="home-hint">Pick a universe to begin</p>
   </div>
@@ -546,7 +528,7 @@ body{padding-left:228px}
   <div class="page-glow glow-marvel" style="top:auto;bottom:-160px;right:-140px;opacity:.1"></div>
   <div class="auth-wrap">
     <div class="auth-box">
-      <h1 class="auth-title hero-title hero-gold" style="font-size:32px">Orach</h1>
+      <h1 class="auth-title">Orach</h1>
       <p class="auth-sub" id="authSub">Watch order for Marvel, DC, Star Wars and more.</p>
       <div id="authError" class="form-error" style="display:none"></div>
       <div id="authFormRegister" style="display:none">
@@ -591,7 +573,7 @@ body{padding-left:228px}
   <div class="modal-box" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeDiceModal(event)">✕</button>
     <div id="diceModalContent"></div>
-    <button class="admin-wipe-btn" style="background:var(--accent);color:#000;width:100%;margin-top:14px" onclick="rollDice(event)">🎲 Pick another</button>
+    <button class="btn-primary" style="margin-top:14px" onclick="rollDice(event)">🎲 Pick another</button>
   </div>
 </div>
 
@@ -642,7 +624,7 @@ body{padding-left:228px}
     <div style="margin-bottom:1.5rem">
       <h2 class="hero-title hero-marvel">MARVEL</h2>
       <p style="color:var(--text2);font-size:14px">The full MCU, in the order you should watch it</p>
-      <div class="cat-chips" id="chips-marvel"><button class="cat-chip active" data-f="all" onclick="setCatalogFilter('Marvel','marvel','all')">All</button><button class="cat-chip" data-f="movies" onclick="setCatalogFilter('Marvel','marvel','movies')">Movies</button><button class="cat-chip" data-f="series" onclick="setCatalogFilter('Marvel','marvel','series')">Series</button></div>
+      <div class="cat-chips" id="chips-marvel"><button class="cat-chip active" data-f="all" onclick="setCatalogFilter('Marvel','marvel','all')">All</button><button class="cat-chip" data-f="movies" onclick="setCatalogFilter('Marvel','marvel','movies')">Movies</button><button class="cat-chip" data-f="series" onclick="setCatalogFilter('Marvel','marvel','series')">Series</button><button class="cat-chip" data-f="unrated" onclick="setCatalogFilter('Marvel','marvel','unrated')">Unrated</button></div>
     </div>
     <div id="marvelList"></div>
   </div>
@@ -655,7 +637,7 @@ body{padding-left:228px}
     <div style="margin-bottom:1.5rem">
       <h2 class="hero-title hero-dc">DC</h2>
       <p style="color:var(--text2);font-size:14px">The DCEU, in the order you should watch it</p>
-      <div class="cat-chips" id="chips-dc"><button class="cat-chip active" data-f="all" onclick="setCatalogFilter('DC','dc','all')">All</button><button class="cat-chip" data-f="movies" onclick="setCatalogFilter('DC','dc','movies')">Movies</button><button class="cat-chip" data-f="series" onclick="setCatalogFilter('DC','dc','series')">Series</button></div>
+      <div class="cat-chips" id="chips-dc"><button class="cat-chip active" data-f="all" onclick="setCatalogFilter('DC','dc','all')">All</button><button class="cat-chip" data-f="movies" onclick="setCatalogFilter('DC','dc','movies')">Movies</button><button class="cat-chip" data-f="series" onclick="setCatalogFilter('DC','dc','series')">Series</button><button class="cat-chip" data-f="unrated" onclick="setCatalogFilter('DC','dc','unrated')">Unrated</button></div>
     </div>
     <div id="dcList"></div>
   </div>
@@ -668,7 +650,7 @@ body{padding-left:228px}
     <div style="margin-bottom:1.5rem">
       <h2 class="hero-title hero-dcamu">DCAMU</h2>
       <p style="color:var(--text2);font-size:14px">The DC Animated Movie Universe, in the order you should watch it</p>
-      <div class="cat-chips" id="chips-dcamu"><button class="cat-chip active" data-f="all" onclick="setCatalogFilter('DCAMU','dcamu','all')">All</button><button class="cat-chip" data-f="movies" onclick="setCatalogFilter('DCAMU','dcamu','movies')">Movies</button><button class="cat-chip" data-f="series" onclick="setCatalogFilter('DCAMU','dcamu','series')">Series</button></div>
+      <div class="cat-chips" id="chips-dcamu"><button class="cat-chip active" data-f="all" onclick="setCatalogFilter('DCAMU','dcamu','all')">All</button><button class="cat-chip" data-f="movies" onclick="setCatalogFilter('DCAMU','dcamu','movies')">Movies</button><button class="cat-chip" data-f="series" onclick="setCatalogFilter('DCAMU','dcamu','series')">Series</button><button class="cat-chip" data-f="unrated" onclick="setCatalogFilter('DCAMU','dcamu','unrated')">Unrated</button></div>
     </div>
     <div id="dcamuList"></div>
   </div>
@@ -681,7 +663,7 @@ body{padding-left:228px}
     <div style="margin-bottom:1.5rem">
       <h2 class="hero-title hero-starwars">STAR WARS</h2>
       <p style="color:var(--text2);font-size:14px">The saga, in the order you should watch it</p>
-      <div class="cat-chips" id="chips-starwars"><button class="cat-chip active" data-f="all" onclick="setCatalogFilter('Star Wars','starwars','all')">All</button><button class="cat-chip" data-f="movies" onclick="setCatalogFilter('Star Wars','starwars','movies')">Movies</button><button class="cat-chip" data-f="series" onclick="setCatalogFilter('Star Wars','starwars','series')">Series</button></div>
+      <div class="cat-chips" id="chips-starwars"><button class="cat-chip active" data-f="all" onclick="setCatalogFilter('Star Wars','starwars','all')">All</button><button class="cat-chip" data-f="movies" onclick="setCatalogFilter('Star Wars','starwars','movies')">Movies</button><button class="cat-chip" data-f="series" onclick="setCatalogFilter('Star Wars','starwars','series')">Series</button><button class="cat-chip" data-f="unrated" onclick="setCatalogFilter('Star Wars','starwars','unrated')">Unrated</button></div>
     </div>
     <div id="starwarsList"></div>
   </div>
@@ -965,6 +947,7 @@ async function loadAllRatings(){
       allRatingsCache[row.id] = {username:row.username, seriesId:row.series_id, score:row.score, comment:row.comment, date:row.date};
     });
     ratingsLoaded = true;
+    updateHomeProgress();
   }catch(e){ console.error('loadAllRatings',e); }
 }
 
@@ -1126,8 +1109,19 @@ async function ghSaveDownloadsFile(token,data,sha){
   return res.json();
 }
 
+function updateHomeProgress(){
+  document.body.classList.toggle('has-user',!!state.currentUser);
+  if(!state.currentUser)return;
+  document.querySelectorAll('.t-prog').forEach(el=>{
+    const ids=new Set(MOVIES.filter(m=>m.genre===el.dataset.genre&&!m.hidden&&!m.comingSoon).map(m=>m.detailId||m.id));
+    let rated=0;ids.forEach(id=>{if(getMyRating(id))rated++;});
+    el.querySelector('i').style.width=(ids.size?rated/ids.size*100:0)+'%';
+    el.querySelector('.t-count').textContent=`${rated} of ${ids.size} rated`;
+  });
+}
 function updateNav(){
   const u=state.currentUser;
+  updateHomeProgress();
   document.getElementById('profileTrigger').innerHTML=u
     ?`<div class="avatar">${u.slice(0,2).toUpperCase()}</div><span class="acct-name">${u}</span>`
     :`<div class="avatar-generic">👤</div><span class="acct-name">Sign in</span>`;
@@ -1173,6 +1167,7 @@ function goToDownloadsAdmin(){
 // ── NAVIGATION ────────────────────────────────────────────────────────────
 function showPage(name,push,restoreScroll){
   if(push===undefined)push=true;
+  if(name==='home')updateHomeProgress();
   if(name==='auth'&&state.currentUser){showPage('marvel',push,restoreScroll);return;}
   if(name==='profile'&&!state.currentUser){showPage('auth',push,restoreScroll);return;}
   if(name==='admin'&&state.currentUser!==ADMIN_USERNAME){showPage('marvel',push,restoreScroll);return;}
@@ -1397,9 +1392,10 @@ function renderFranchise(franchise,pageName){
   let list=MOVIES.filter(m=>m.genre===franchise&&!m.hidden).sort((a,b)=>a.order-b.order);
   if(filt==='movies')list=list.filter(m=>m.type!=='series');
   if(filt==='series')list=list.filter(m=>m.type==='series');
+  if(filt==='unrated')list=list.filter(m=>!getMyRating(m.detailId||m.id));
   const el=document.getElementById(containerId);
   if(!list.length&&filt!=='all'){
-    el.innerHTML=`<div class="empty-state"><p>No ${filt==='movies'?'movies':'series'} here yet.</p></div>`;
+    el.innerHTML=`<div class="empty-state"><p>${filt==='unrated'?(state.currentUser?"You've rated everything here.":'Nothing to show.'):'No '+(filt==='movies'?'movies':'series')+' here yet.'}</p></div>`;
     return;
   }
   if(!list.length){
@@ -1413,6 +1409,7 @@ function renderFranchise(franchise,pageName){
     const bg=posterBg(s.id);
     const img=cached&&cached!=='N/A'?`<img src="${cached}" alt="${s.title}" onerror="this.remove()"/>`:'';
     const targetId=s.detailId||s.id;
+    const avg=getSiteAvg(targetId);
     if(s.comingSoon){
       return `<div class="poster-card coming-soon" style="animation-delay:${delay}ms">
         <div class="poster-card-img" data-poster="${s.id}" style="background:${bg}">
@@ -1424,7 +1421,7 @@ function renderFranchise(franchise,pageName){
     }
     return `<div class="poster-card" style="animation-delay:${delay}ms" onclick="openDetail(${targetId},'${pageName}')">
       <div class="poster-card-img" data-poster="${s.id}" style="background:${bg}">
-        <span class="poster-emoji" style="${cached&&cached!=='N/A'?'display:none':''}">${s.emoji}</span>${img}
+        <span class="poster-emoji" style="${cached&&cached!=='N/A'?'display:none':''}">${s.emoji}</span>${img}${avg!==null?`<span class="poster-score">★ ${avg}</span>`:''}
       </div>
       <div class="poster-card-title">${s.title}</div>
     </div>`;
@@ -1463,8 +1460,8 @@ function renderFranchise(franchise,pageName){
 function rankPosterHtml(s){
   const cached=posterCache[s.id];
   const bg=posterBg(s.id);
-  const img=cached&&cached!=='N/A'?`<img src="${cached}" alt="${s.title}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onerror="this.remove()"/>`:'';
-  return `<div class="rank-poster" data-poster="${s.id}" style="width:84px;height:124px;border-radius:10px;background:${bg};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:38px;overflow:hidden;position:relative;box-shadow:0 4px 14px rgba(0,0,0,0.35);">
+  const img=cached&&cached!=='N/A'?`<img src="${cached}" alt="${s.title}" onerror="this.remove()"/>`:'';
+  return `<div class="rank-poster" data-poster="${s.id}" style="background:${bg}">
     <span class="poster-emoji" style="${cached&&cached!=='N/A'?'display:none':''}">${s.emoji}</span>${img}
   </div>`;
 }
@@ -1479,7 +1476,7 @@ function renderRankings(){
       <span class="rank-num${n<=3?' top3':''}">${n}</span>
       ${rankPosterHtml(s)}
       <div class="rank-info"><div class="rank-title">${s.title}</div><div class="rank-meta">${s.year} · ${cnt} rating${cnt!==1?'s':''}</div></div>
-      <span class="rank-score" style="color:var(--green)">👥 ${s.avg}</span>
+      <span class="rank-score">★ ${s.avg}</span>
     </div>`;
   }).join('');
   preloadPosters(top);
@@ -1503,7 +1500,7 @@ function renderImdbAnime(){
       <span class="rank-num${n<=3?' top3':''}">${n}</span>
       ${rankPosterHtml(s)}
       <div class="rank-info"><div class="rank-title">${s.title}</div><div class="rank-meta">${s.year} · dir. ${s.director}</div></div>
-      <span class="rank-score" style="color:var(--accent)">⭐ ${s.imdb}</span>
+      <span class="rank-score">★ ${s.imdb}</span>
     </div>`;
   }).join('');
   preloadPosters(sorted);
@@ -1565,7 +1562,7 @@ async function renderProfile(){
     return `<div class="rank-row" style="animation-delay:${delay}ms" onclick="openDetail(${s.id},'profile')">
       ${rankPosterHtml(s)}
       <div class="rank-info"><div class="rank-title">${s.title}</div><div class="rank-meta">${s.genre} · ${s.year||'TBA'} · rated ${formatDate(r.date)}</div></div>
-      <span class="rank-score" style="color:var(--accent)">⭐ ${r.score}</span>
+      <span class="rank-score">★ ${r.score}</span>
     </div>`;
   }).join('');
   preloadPosters(mine.map(r=>r.series));
@@ -1661,10 +1658,9 @@ function renderGhGate(){
   const saved=localStorage.getItem('gh_pat')||'';
   box.innerHTML=`
     <div class="auth-box" style="max-width:460px;margin:0 0 2rem">
-      <label style="font-size:12px;font-weight:600;color:var(--text2);letter-spacing:.04em;text-transform:uppercase">GitHub Personal Access Token</label>
-      <input type="password" id="ghTokenInput" autocomplete="off" data-lpignore="true" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" value="${saved}"
-        style="width:100%;margin:8px 0 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;box-sizing:border-box"/>
-      <button class="btn-primary" style="width:auto;padding:10px 22px" onclick="unlockGithubAdmin()">Unlock</button>
+      <label class="form-label" for="ghTokenInput">GitHub Personal Access Token</label>
+      <input type="password" id="ghTokenInput" class="form-input" autocomplete="off" data-lpignore="true" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" value="${saved}"/>
+      <button class="btn-primary" style="width:auto" onclick="unlockGithubAdmin()">Unlock</button>
       <p id="ghGateMsg" style="font-size:12px;margin-top:10px;color:var(--text3)"></p>
     </div>`;
 }

@@ -2,6 +2,11 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.5
+- Redesigned the remaining pages in the same language (solid surfaces, pill buttons, big Bebas headings): Rankings and Profile (numbered rows, larger posters, score pills), Sign in / Register, admin tables and the GitHub-token gate, dialog (random pick) and toasts. The old rules for these were replaced, not overridden.
+- Franchise pages: ★ site-average chip on each poster, and an "Unrated" filter next to All / Movies / Series (titles you haven't rated yet).
+- Home: when signed in, each universe tile shows a progress bar and "N of M rated".
+- Cleanup: removed CSS for classes that no longer exist in the page, darker-text token raised for readable contrast, global keyboard focus ring.
 ## 7.0.0-beta.4
 - Search box no longer triggers the browser's saved-password dropdown: it's now a real `type="search"` field (name `q`, read-only until focused, password-manager opt-outs), and the sign-in / register / admin-token fields declare their real `autocomplete` roles so the browser stops guessing that the search field is a username field.
 ## 7.0.0-beta.3
