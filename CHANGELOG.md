@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.7
+- Home: background image (Avengers: Doomsday artwork, `images/home-bg.jpg`, resized to 2048px / ~165 KB) behind the universe tiles, with a dark gradient so the heading and tiles stay readable. Only shown on Home.
 ## 7.0.0-beta.6
 - Home: the Marvel, DC and Star Wars logos now sit on their universe tiles (new files in `logos/`; the DCAMU tile uses the DC logo). The Star Wars file had a black backing rectangle that was removed so the lettering sits on the tile.
 ## 7.0.0-beta.5
