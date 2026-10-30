@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Orach — v7.0.0-beta.5 -->
+<!-- Orach — v7.0.0-beta.6 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="app-version" content="7.0.0-beta.5" />
+<meta name="app-version" content="7.0.0-beta.6" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -312,6 +312,12 @@ body{padding-left:228px}
 .franchise-select-item[data-franchise="dcamu"]{background:linear-gradient(165deg,#2c1d55,#0d0a14);border-color:rgba(155,123,255,.45)}
 .franchise-select-item[data-franchise="starwars"]{background:linear-gradient(165deg,#4f3f14,#14110a);border-color:rgba(232,196,104,.45)}
 
+.franchise-select-item{position:relative}
+.t-logo{position:absolute;top:22px;left:22px;height:48px;width:auto;max-width:calc(100% - 44px);pointer-events:none}
+.t-logo-marvel{height:34px;border-radius:5px}
+.t-logo-dc{height:52px}
+.t-logo-starwars{height:62px}
+
 /* poster cards */
 .poster-grid{counter-reset:ord}
 .poster-card{counter-increment:ord}
@@ -368,7 +374,9 @@ body{padding-left:228px}
   .mtab.active{background:var(--accent);color:#0a0a0f}
   .toast{bottom:92px}
   .franchise-select-box{grid-template-columns:1fr;gap:12px}
-  .franchise-select-item{height:104px;font-size:44px;justify-content:center}
+  .franchise-select-item{height:auto;min-height:104px;padding:16px 20px;font-size:40px;justify-content:center}
+  .t-logo{top:50%;left:auto;right:20px;transform:translateY(-50%);max-width:40%}
+  .t-logo-marvel{height:26px}.t-logo-dc{height:44px}.t-logo-starwars{height:48px}
   .detail-poster{width:150px;height:220px;font-size:64px}
   .detail-title{font-size:44px}
 }
@@ -498,7 +506,7 @@ body{padding-left:228px}
   <button class="mtab" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
 </div>
 <div class="toast" id="toast"></div>
-<div class="version-badge">v7.0.0-beta.5</div>
+<div class="version-badge">v7.0.0-beta.6</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -507,10 +515,10 @@ body{padding-left:228px}
   <div class="home-wrap">
     <h1 class="home-title">Pick your <span>universe</span></h1>
     <div class="franchise-select-box" id="franchiseSelectBox">
-      <button class="franchise-select-item" data-franchise="marvel" onclick="selectFranchiseIntro('marvel',event)">MARVEL<span class="t-sub">Phase 1 to Doomsday</span><span class="t-prog" data-genre="Marvel"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
-      <button class="franchise-select-item" data-franchise="dc" onclick="selectFranchiseIntro('dc',event)">DC<span class="t-sub">The DCEU, in order</span><span class="t-prog" data-genre="DC"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
-      <button class="franchise-select-item" data-franchise="dcamu" onclick="showPage('dcamu')">DCAMU<span class="t-sub">Animated films, by arc</span><span class="t-prog" data-genre="DCAMU"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
-      <button class="franchise-select-item" data-franchise="starwars" onclick="selectFranchiseIntro('starwars',event)">STAR WARS<span class="t-sub">The saga, in order</span><span class="t-prog" data-genre="Star Wars"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
+      <button class="franchise-select-item" data-franchise="marvel" onclick="selectFranchiseIntro('marvel',event)"><img class="t-logo t-logo-marvel" src="logos/marvel.svg" alt="" aria-hidden="true">MARVEL<span class="t-sub">Phase 1 to Doomsday</span><span class="t-prog" data-genre="Marvel"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
+      <button class="franchise-select-item" data-franchise="dc" onclick="selectFranchiseIntro('dc',event)"><img class="t-logo t-logo-dc" src="logos/dc.svg" alt="" aria-hidden="true">DC<span class="t-sub">The DCEU, in order</span><span class="t-prog" data-genre="DC"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
+      <button class="franchise-select-item" data-franchise="dcamu" onclick="showPage('dcamu')"><img class="t-logo t-logo-dc" src="logos/dc.svg" alt="" aria-hidden="true">DCAMU<span class="t-sub">Animated films, by arc</span><span class="t-prog" data-genre="DCAMU"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
+      <button class="franchise-select-item" data-franchise="starwars" onclick="selectFranchiseIntro('starwars',event)"><img class="t-logo t-logo-starwars" src="logos/starwars.svg" alt="" aria-hidden="true">STAR WARS<span class="t-sub">The saga, in order</span><span class="t-prog" data-genre="Star Wars"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
     </div>
     <p class="home-hint">Pick a universe to begin</p>
   </div>
