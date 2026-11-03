@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Orach — v7.0.0-beta.7 -->
+<!-- Orach — v7.0.0-beta.8 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="app-version" content="7.0.0-beta.7" />
+<meta name="app-version" content="7.0.0-beta.8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -203,7 +203,6 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 }
 .hero-marvel{--_c:#ff5c66;--_glow:rgba(224,48,61,.45)}
 .hero-dc{--_c:#e2e5f5;--_glow:rgba(180,186,220,.4)}
-.hero-dcamu{--_c:#b3a6ff;--_glow:rgba(126,111,224,.45)}
 .hero-starwars{--_c:#ffd75e;--_glow:rgba(244,196,48,.5)}
 .hero-gold{--_c:var(--accent);--_glow:rgba(242,184,75,.4)}
 
@@ -306,13 +305,12 @@ body.on-home .home-bg{opacity:1}
 .home-title{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(52px,7vw,92px);line-height:.95;letter-spacing:.02em;text-align:center}
 .home-title span{color:var(--accent)}
 .home-hint{display:none}
-.franchise-select-box{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;width:min(1120px,100%)}
+.franchise-select-box{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;width:min(980px,100%)}
 .franchise-select-item{height:300px;padding:22px;border-radius:20px;border:1px solid;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:6px;text-align:left;font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,3.9vw,52px);line-height:1;letter-spacing:.02em;min-width:0;color:var(--text);transition:transform .25s ease}
 .franchise-select-item:hover{transform:translateY(-4px)}
 .franchise-select-item .t-sub{font-family:'DM Sans',sans-serif;font-size:13px;letter-spacing:0;color:#c9c5d3}
 .franchise-select-item[data-franchise="marvel"]{background:linear-gradient(165deg,#4f1619,#12090b);border-color:rgba(226,59,59,.45)}
 .franchise-select-item[data-franchise="dc"]{background:linear-gradient(165deg,#16224f,#090b12);border-color:rgba(91,124,250,.45)}
-.franchise-select-item[data-franchise="dcamu"]{background:linear-gradient(165deg,#2c1d55,#0d0a14);border-color:rgba(155,123,255,.45)}
 .franchise-select-item[data-franchise="starwars"]{background:linear-gradient(165deg,#4f3f14,#14110a);border-color:rgba(232,196,104,.45)}
 
 .franchise-select-item{position:relative}
@@ -327,6 +325,22 @@ body.on-home .home-bg{opacity:1}
 .poster-card-img{border-radius:16px;border:1px solid rgba(255,255,255,.09)}
 .poster-card-img::after{content:counter(ord,decimal-leading-zero);position:absolute;top:10px;left:10px;z-index:2;font:600 11px 'DM Mono',monospace;color:#fff;background:rgba(10,10,15,.7);padding:3px 8px;border-radius:99px}
 .poster-card-title{text-align:left;color:var(--text);font-size:14px;margin-top:10px}
+
+.uni-tabs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:1.5rem}
+.uni-tab{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:22px 24px;border-radius:20px;border:2px solid var(--border);color:var(--text);text-align:left;opacity:.72;transition:opacity .2s,border-color .2s}
+.uni-tab[data-u="dcu"]{background:linear-gradient(160deg,#16224f,#0f0f14)}
+.uni-tab[data-u="dcamu"]{background:linear-gradient(160deg,#2c1d55,#0f0f14)}
+.uni-tab:hover{opacity:1}
+.uni-tab.active{opacity:1;border-color:var(--accent)}
+.uni-tab b{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(44px,5vw,68px);line-height:1;letter-spacing:.02em}
+.uni-viewing{visibility:hidden;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.uni-tab.active .uni-viewing{visibility:visible}
+.uni-desc{font-size:13px;color:#c9c5d3}
+.uni-bar{display:block;width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden}
+.uni-bar i{display:block;height:100%;width:0;border-radius:2px;transition:width .4s ease}
+#dcuBar{background:#5b7cfa}#dcamuBar{background:#9b7bff}
+.uni-count{font-size:12px;color:#c9c5d3}
+#page-dc.u-dcamu .glow-dc,#page-dc:not(.u-dcamu) .glow-dcamu{display:none}
 
 /* category chips */
 .cat-chips{display:flex;gap:8px;margin:1.1rem 0 .25rem;flex-wrap:wrap}
@@ -351,7 +365,7 @@ body.on-home .home-bg{opacity:1}
 .rate-section,.comment-card,.download-section{border-radius:16px}
 .download-pill{border-radius:99px}
 
-@media (max-width:900px) and (min-width:681px){.franchise-select-box{grid-template-columns:repeat(2,minmax(0,1fr))}.franchise-select-item{height:200px}}
+@media (max-width:900px) and (min-width:681px){.franchise-select-item{height:220px}}
 
 /* phones: top bar + solid bottom tab bar */
 @media (max-width:680px){
@@ -381,6 +395,10 @@ body.on-home .home-bg{opacity:1}
   .franchise-select-item{height:auto;min-height:104px;padding:16px 20px;font-size:40px;justify-content:center}
   .t-logo{top:50%;left:auto;right:20px;transform:translateY(-50%);max-width:40%}
   .t-logo-marvel{height:26px}.t-logo-dc{height:44px}.t-logo-starwars{height:48px}
+  .uni-tabs{gap:10px}
+  .uni-tab{padding:14px 16px;gap:6px}
+  .uni-tab b{font-size:38px}
+  .uni-desc{display:none}
   .detail-poster{width:150px;height:220px;font-size:64px}
   .detail-title{font-size:44px}
 }
@@ -491,7 +509,6 @@ body.on-home .home-bg{opacity:1}
     <button class="nav-item" data-page="home" style="--dot:#f3efe6" onclick="showPage('home')">Home</button>
     <button class="nav-item" data-page="marvel" style="--dot:#e23b3b" onclick="showPage('marvel')">Marvel</button>
     <button class="nav-item" data-page="dc" style="--dot:#5b7cfa" onclick="showPage('dc')">DC</button>
-    <button class="nav-item" data-page="dcamu" style="--dot:#9b7bff" onclick="showPage('dcamu')">DCAMU</button>
     <button class="nav-item" data-page="starwars" style="--dot:#e8c468" onclick="showPage('starwars')">Star Wars</button>
     <button class="nav-item" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
   </div>
@@ -506,12 +523,11 @@ body.on-home .home-bg{opacity:1}
 <div class="mobile-tabbar" id="mobileTabbar">
   <button class="mtab" data-page="marvel" onclick="showPage('marvel')">Marvel</button>
   <button class="mtab" data-page="dc" onclick="showPage('dc')">DC</button>
-  <button class="mtab" data-page="dcamu" onclick="showPage('dcamu')">DCAMU</button>
   <button class="mtab" data-page="starwars" onclick="showPage('starwars')">Star Wars</button>
   <button class="mtab" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
 </div>
 <div class="toast" id="toast"></div>
-<div class="version-badge">v7.0.0-beta.7</div>
+<div class="version-badge">v7.0.0-beta.8</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -521,8 +537,7 @@ body.on-home .home-bg{opacity:1}
     <h1 class="home-title">Pick your <span>universe</span></h1>
     <div class="franchise-select-box" id="franchiseSelectBox">
       <button class="franchise-select-item" data-franchise="marvel" onclick="selectFranchiseIntro('marvel',event)"><img class="t-logo t-logo-marvel" src="logos/marvel.svg" alt="" aria-hidden="true">MARVEL<span class="t-sub">Phase 1 to Doomsday</span><span class="t-prog" data-genre="Marvel"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
-      <button class="franchise-select-item" data-franchise="dc" onclick="selectFranchiseIntro('dc',event)"><img class="t-logo t-logo-dc" src="logos/dc.svg" alt="" aria-hidden="true">DC<span class="t-sub">The DCEU, in order</span><span class="t-prog" data-genre="DC"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
-      <button class="franchise-select-item" data-franchise="dcamu" onclick="showPage('dcamu')"><img class="t-logo t-logo-dc" src="logos/dc.svg" alt="" aria-hidden="true">DCAMU<span class="t-sub">Animated films, by arc</span><span class="t-prog" data-genre="DCAMU"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
+      <button class="franchise-select-item" data-franchise="dc" onclick="selectFranchiseIntro('dc',event)"><img class="t-logo t-logo-dc" src="logos/dc.svg" alt="" aria-hidden="true">DC<span class="t-sub">DCU and DCAMU</span><span class="t-prog" data-genre="DC,DCAMU"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
       <button class="franchise-select-item" data-franchise="starwars" onclick="selectFranchiseIntro('starwars',event)"><img class="t-logo t-logo-starwars" src="logos/starwars.svg" alt="" aria-hidden="true">STAR WARS<span class="t-sub">The saga, in order</span><span class="t-prog" data-genre="Star Wars"><span class="t-bar"><i></i></span><span class="t-count"></span></span></button>
     </div>
     <p class="home-hint">Pick a universe to begin</p>
@@ -646,26 +661,18 @@ body.on-home .home-bg{opacity:1}
 <!-- DC -->
 <div class="page" id="page-dc">
   <div class="page-glow glow-dc"></div>
-  <div class="catalog-wrap">
-    <div style="margin-bottom:1.5rem">
-      <h2 class="hero-title hero-dc">DC</h2>
-      <p style="color:var(--text2);font-size:14px">The DCEU, in the order you should watch it</p>
-      <div class="cat-chips" id="chips-dc"><button class="cat-chip active" data-f="all" onclick="setCatalogFilter('DC','dc','all')">All</button><button class="cat-chip" data-f="movies" onclick="setCatalogFilter('DC','dc','movies')">Movies</button><button class="cat-chip" data-f="series" onclick="setCatalogFilter('DC','dc','series')">Series</button><button class="cat-chip" data-f="unrated" onclick="setCatalogFilter('DC','dc','unrated')">Unrated</button></div>
-    </div>
-    <div id="dcList"></div>
-  </div>
-</div>
-
-<!-- DCAMU -->
-<div class="page" id="page-dcamu">
   <div class="page-glow glow-dcamu"></div>
   <div class="catalog-wrap">
     <div style="margin-bottom:1.5rem">
-      <h2 class="hero-title hero-dcamu">DCAMU</h2>
-      <p style="color:var(--text2);font-size:14px">The DC Animated Movie Universe, in the order you should watch it</p>
-      <div class="cat-chips" id="chips-dcamu"><button class="cat-chip active" data-f="all" onclick="setCatalogFilter('DCAMU','dcamu','all')">All</button><button class="cat-chip" data-f="movies" onclick="setCatalogFilter('DCAMU','dcamu','movies')">Movies</button><button class="cat-chip" data-f="series" onclick="setCatalogFilter('DCAMU','dcamu','series')">Series</button><button class="cat-chip" data-f="unrated" onclick="setCatalogFilter('DCAMU','dcamu','unrated')">Unrated</button></div>
+      <h2 class="hero-title hero-dc">DC</h2>
+      <p style="color:var(--text2);font-size:14px">Two universes, one place. Pick one below.</p>
+      <div class="uni-tabs" id="dcTabs">
+        <button class="uni-tab active" data-u="dcu" onclick="setDcUniverse('dcu')"><span class="uni-viewing">Viewing</span><b>DCU</b><span class="uni-desc">Live action: films and series, in watch order</span><span class="uni-bar"><i id="dcuBar"></i></span><span class="uni-count" id="dcuCount"></span></button>
+        <button class="uni-tab" data-u="dcamu" onclick="setDcUniverse('dcamu')"><span class="uni-viewing">Viewing</span><b>DCAMU</b><span class="uni-desc">Animated movies, by arc</span><span class="uni-bar"><i id="dcamuBar"></i></span><span class="uni-count" id="dcamuCount"></span></button>
+      </div>
+      <div class="cat-chips" id="chips-dc"><button class="cat-chip active" data-f="all" onclick="setCatalogFilter(null,'dc','all')">All</button><button class="cat-chip" data-f="movies" onclick="setCatalogFilter(null,'dc','movies')">Movies</button><button class="cat-chip" data-f="series" onclick="setCatalogFilter(null,'dc','series')">Series</button><button class="cat-chip" data-f="unrated" onclick="setCatalogFilter(null,'dc','unrated')">Unrated</button></div>
     </div>
-    <div id="dcamuList"></div>
+    <div id="dcList"></div>
   </div>
 </div>
 
@@ -961,6 +968,8 @@ async function loadAllRatings(){
     });
     ratingsLoaded = true;
     updateHomeProgress();
+    updateDcTabs();
+    if(document.getElementById('page-dc'))updateDcTabs();
   }catch(e){ console.error('loadAllRatings',e); }
 }
 
@@ -1126,7 +1135,8 @@ function updateHomeProgress(){
   document.body.classList.toggle('has-user',!!state.currentUser);
   if(!state.currentUser)return;
   document.querySelectorAll('.t-prog').forEach(el=>{
-    const ids=new Set(MOVIES.filter(m=>m.genre===el.dataset.genre&&!m.hidden&&!m.comingSoon).map(m=>m.detailId||m.id));
+    const genres=el.dataset.genre.split(',');
+    const ids=new Set(MOVIES.filter(m=>genres.includes(m.genre)&&!m.hidden&&!m.comingSoon).map(m=>m.detailId||m.id));
     let rated=0;ids.forEach(id=>{if(getMyRating(id))rated++;});
     el.querySelector('i').style.width=(ids.size?rated/ids.size*100:0)+'%';
     el.querySelector('.t-count').textContent=`${rated} of ${ids.size} rated`;
@@ -1135,6 +1145,7 @@ function updateHomeProgress(){
 function updateNav(){
   const u=state.currentUser;
   updateHomeProgress();
+  updateDcTabs();
   document.getElementById('profileTrigger').innerHTML=u
     ?`<div class="avatar">${u.slice(0,2).toUpperCase()}</div><span class="acct-name">${u}</span>`
     :`<div class="avatar-generic">👤</div><span class="acct-name">Sign in</span>`;
@@ -1180,6 +1191,7 @@ function goToDownloadsAdmin(){
 // ── NAVIGATION ────────────────────────────────────────────────────────────
 function showPage(name,push,restoreScroll){
   if(push===undefined)push=true;
+  if(name==='dcamu'){state.dcUniverse='dcamu';name='dc';}   // DCAMU now lives inside the DC page
   if(name==='home')updateHomeProgress();
   document.body.classList.toggle('on-home',name==='home');
   if(name==='auth'&&state.currentUser){showPage('marvel',push,restoreScroll);return;}
@@ -1192,8 +1204,7 @@ function showPage(name,push,restoreScroll){
   collapseNavSearch();
   closeProfileMenu();
   if(name==='marvel'){renderFranchise('Marvel','marvel');}
-  if(name==='dc'){renderFranchise('DC','dc');}
-  if(name==='dcamu'){renderFranchise('DCAMU','dcamu');}
+  if(name==='dc'){updateDcTabs();renderFranchise(dcGenre(),'dc');}
   if(name==='starwars'){renderFranchise('Star Wars','starwars');}
   if(name==='rankings'){renderRankings();switchRankingsTab('site');}
   if(name==='profile'){renderProfile();}
@@ -1394,8 +1405,27 @@ window.addEventListener('resize',()=>{
   document.querySelectorAll('.poster-grid[id^="row-"]').forEach(g=>updateRowArrows(g.id));
 });
 
+state.dcUniverse='dcu';
+function dcGenre(){return state.dcUniverse==='dcamu'?'DCAMU':'DC';}
+function updateDcTabs(){
+  [['dcu','DC'],['dcamu','DCAMU']].forEach(([u,g])=>{
+    const ids=new Set(MOVIES.filter(m=>m.genre===g&&!m.hidden&&!m.comingSoon).map(m=>m.detailId||m.id));
+    let rated=0;if(state.currentUser)ids.forEach(id=>{if(getMyRating(id))rated++;});
+    const b=document.getElementById(u+'Bar'),c=document.getElementById(u+'Count');
+    if(b)b.style.width=(state.currentUser&&ids.size?rated/ids.size*100:0)+'%';
+    if(c)c.textContent=state.currentUser?`${rated} of ${ids.size} rated`:`${ids.size} ${u==='dcamu'?'films':'titles'}`;
+  });
+  document.querySelectorAll('#dcTabs .uni-tab').forEach(t=>t.classList.toggle('active',t.dataset.u===state.dcUniverse));
+  document.getElementById('page-dc').classList.toggle('u-dcamu',state.dcUniverse==='dcamu');
+}
+function setDcUniverse(u){
+  state.dcUniverse=u;
+  updateDcTabs();
+  renderFranchise(dcGenre(),'dc');
+}
 const catFilter={};
 function setCatalogFilter(franchise,pageName,f){
+  if(pageName==='dc')franchise=dcGenre();
   catFilter[pageName]=f;
   document.querySelectorAll('#chips-'+pageName+' .cat-chip').forEach(b=>b.classList.toggle('active',b.dataset.f===f));
   renderFranchise(franchise,pageName);

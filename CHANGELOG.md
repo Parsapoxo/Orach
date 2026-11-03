@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.8
+- DCAMU now lives inside DC: the DC page has two big tabs, DCU (live action) and DCAMU (animated, by arc), each with its own progress bar and rated count; the filter chips (All / Movies / Series / Unrated) and rows follow the selected universe, and the page glow tints blue or purple. Removed the separate DCAMU page, its sidebar item, its phone tab and its Home tile (Home now has three tiles; the DC tile's progress counts DCU + DCAMU). Old `#dcamu` links and search results still work and open DC on the DCAMU tab.
 ## 7.0.0-beta.7
 - Home: background image (Avengers: Doomsday artwork, `images/home-bg.jpg`, resized to 2048px / ~165 KB) behind the universe tiles, with a dark gradient so the heading and tiles stay readable. Only shown on Home.
 ## 7.0.0-beta.6
