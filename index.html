@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Orach — v7.0.0-beta.9 -->
+<!-- Orach — v7.0.0-beta.10 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="app-version" content="7.0.0-beta.9" />
+<meta name="app-version" content="7.0.0-beta.10" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -86,9 +86,7 @@ input,textarea,select{font-family:'DM Sans',sans-serif;outline:none}
 .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:18px;pointer-events:none}
 
 /* RANKINGS */
-@keyframes diceSpin{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(360deg) scale(1.4)}100%{transform:rotate(720deg) scale(1)}}
 
-@keyframes modalPop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
 
 /* POSTER ROW (franchise catalog pages) — horizontal scroll, 9 per row */
 .poster-row-wrap{position:relative;margin-bottom:2.5rem}
@@ -293,10 +291,6 @@ body{padding-left:228px}
 
 .mobile-tabbar{display:none}
 
-/* rankings sub-tabs */
-.rankings-tabs{display:flex;gap:4px;margin-bottom:2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:4px;width:fit-content}
-.tab-btn{padding:8px 20px;border-radius:7px;font-size:13px;font-weight:500;background:none;color:var(--text2);transition:background .2s,color .2s}
-.tab-btn.active{background:var(--accent);color:#0a0a0f}
 
 .home-bg{position:fixed;top:0;right:0;bottom:0;left:228px;z-index:-1;pointer-events:none;opacity:0;transition:opacity .4s ease;background:linear-gradient(180deg,rgba(10,10,15,.7) 0%,rgba(10,10,15,.42) 40%,rgba(10,10,15,.8) 100%),url(images/home-bg.jpg) 50% 62%/cover no-repeat}
 body.on-home .home-bg{opacity:1}
@@ -440,18 +434,8 @@ body.on-home .home-bg{opacity:1}
 .rank-title{font-weight:600;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rank-meta{font-size:13px;color:var(--text3);margin-top:4px}
 .rank-score{color:var(--accent);flex-shrink:0;font-family:'DM Mono',monospace;font-size:15px;font-weight:500;padding:6px 14px;border-radius:99px;background:var(--bg3);border:1px solid var(--border)}
-.dice-btn{display:inline-block;margin-left:8px;font-size:14px;cursor:pointer;transition:transform .15s ease}
-.dice-btn:hover{transform:scale(1.25)}
-.dice-spin{animation:diceSpin .65s cubic-bezier(.36,.07,.19,.97)}
 
-/* dialog + toast */
-.modal-overlay{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:1.5rem;background:rgba(5,5,8,.82)}
-.modal-overlay.show{display:flex}
-.modal-box{position:relative;width:100%;max-width:420px;padding:1.75rem;background:var(--surface);border:1px solid var(--border);border-radius:24px;animation:modalPop .25s cubic-bezier(.34,1.56,.64,1)}
-.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--text2);font-size:16px;line-height:1}
-.modal-close:hover{color:var(--text)}
-.dice-poster{position:relative;width:100%;max-width:180px;aspect-ratio:2/3;margin:0 auto 14px;border-radius:16px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:48px;border:1px solid rgba(255,255,255,.09)}
-.dice-poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* toast */
 .toast{position:fixed;bottom:24px;right:24px;z-index:999;max-width:300px;padding:12px 18px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;font-size:13px;font-weight:500;transform:translateY(100px);opacity:0;transition:transform .3s,opacity .3s;pointer-events:none}
 .toast.show{transform:none;opacity:1}
 .toast.success{border-color:rgba(85,192,136,.45);color:var(--green)}
@@ -487,7 +471,6 @@ body.on-home .home-bg{opacity:1}
   .rank-row{padding:.7rem .8rem;gap:.7rem}
   .rank-num{min-width:34px;font-size:28px}
   .rank-poster{width:52px;height:78px}
-  .modal-box{padding:1.25rem}
   .admin-toolbar{flex-direction:column;align-items:flex-start}
   .admin-wipe-btn{width:100%}
 }
@@ -527,7 +510,7 @@ body.on-home .home-bg{opacity:1}
   <button class="mtab" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
 </div>
 <div class="toast" id="toast"></div>
-<div class="version-badge">v7.0.0-beta.9</div>
+<div class="version-badge">v7.0.0-beta.10</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -585,23 +568,9 @@ body.on-home .home-bg{opacity:1}
   <div class="rankings-wrap">
     <div style="margin-bottom:1.5rem">
       <h2 class="hero-title hero-gold">RANKINGS</h2>
-      <p style="color:var(--text2);font-size:14px" id="rankingsSub">The best — ranked by your community</p>
-    </div>
-    <div class="rankings-tabs" id="rankingsTabsWrap">
-      <button class="tab-btn active" id="tab-site" onclick="switchRankingsTab('site')">Orach Top 50</button>
-      <button class="tab-btn" id="tab-imdb" onclick="switchRankingsTab('imdb')">IMDb Animations Top 50<span class="dice-btn" id="diceBtn" onclick="rollDice(event)" title="Random pick">🎲</span></button>
+      <p style="color:var(--text2);font-size:14px">The best — ranked by your community</p>
     </div>
     <div id="rankingsList"></div>
-    <div id="imdbAnimeList" style="display:none"></div>
-  </div>
-</div>
-
-<!-- DICE MODAL -->
-<div class="modal-overlay" id="diceModal" onclick="closeDiceModal(event)">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeDiceModal(event)">✕</button>
-    <div id="diceModalContent"></div>
-    <button class="btn-primary" style="margin-top:14px" onclick="rollDice(event)">🎲 Pick another</button>
   </div>
 </div>
 
@@ -871,60 +840,6 @@ const MOVIES = [
   {id:73,title:"Star Wars Episode VII: The Force Awakens",year:2015,genre:"Star Wars",order:73,director:"J.J. Abrams",desc:"A new generation rises as Rey, Finn, and Poe confront the First Order's growing power.",emoji:"⚔️",imdb:7.8},
   {id:74,title:"Star Wars Episode VIII: The Last Jedi",year:2017,genre:"Star Wars",order:74,director:"Rian Johnson",desc:"Rey seeks out Luke Skywalker for training as the Resistance faces its darkest hour.",emoji:"⚔️",imdb:6.9},
   {id:75,title:"Star Wars Episode IX: The Rise of Skywalker",year:2019,genre:"Star Wars",order:75,director:"J.J. Abrams",desc:"The surviving Resistance faces the First Order once more in a final battle for the galaxy's fate.",emoji:"⚔️",imdb:6.5},
-];
-
-// ── IMDB TOP 50 ANIMATED MOVIES (view-only, not rateable) ──────────────────
-const ANIME_TOP50 = [
-  {id:9001,title:"Spirited Away",year:2001,director:"Hayao Miyazaki",desc:"A young girl wanders into a spirit world and must work in a bathhouse of gods to save her parents.",emoji:"🐉",imdb:8.6},
-  {id:9002,title:"Spider-Man: Across the Spider-Verse",year:2023,director:"Joaquim Dos Santos, Kemp Powers & Justin K. Thompson",desc:"Miles Morales journeys across the multiverse and clashes with a society of Spider-People over what it means to be a hero.",emoji:"🕷️",imdb:8.6},
-  {id:9003,title:"Grave of the Fireflies",year:1988,director:"Isao Takahata",desc:"Two siblings struggle to survive in Japan during the final months of World War II.",emoji:"🕯️",imdb:8.5},
-  {id:9004,title:"The Lion King",year:1994,director:"Roger Allers & Rob Minkoff",desc:"A young lion prince flees his kingdom after his father's death, only to learn the true meaning of responsibility.",emoji:"🦁",imdb:8.5},
-  {id:9005,title:"Spider-Man: Into the Spider-Verse",year:2018,director:"Bob Persichetti, Peter Ramsey & Rodney Rothman",desc:"Teenager Miles Morales becomes Spider-Man and teams up with variants of the hero from other dimensions.",emoji:"🕸️",imdb:8.4},
-  {id:9006,title:"Your Name",year:2016,director:"Makoto Shinkai",desc:"Two teenagers in different cities begin mysteriously swapping bodies, forging a bond that transcends time.",emoji:"🌠",imdb:8.4},
-  {id:9007,title:"Coco",year:2017,director:"Lee Unkrich & Adrian Molina",desc:"A boy with a hidden passion for music travels to the Land of the Dead to uncover his family's true history.",emoji:"💀",imdb:8.4},
-  {id:9008,title:"Princess Mononoke",year:1997,director:"Hayao Miyazaki",desc:"A young warrior gets caught in the middle of a war between the gods of a forest and the humans who consume its resources.",emoji:"🐺",imdb:8.4},
-  {id:9009,title:"WALL-E",year:2008,director:"Andrew Stanton",desc:"A lonely waste-collecting robot on a ruined Earth falls for a sleek probe sent to find signs of life.",emoji:"🤖",imdb:8.4},
-  {id:9010,title:"Klaus",year:2019,director:"Sergio Pablos",desc:"A postman posted to a frozen town forms an unlikely friendship with a reclusive toymaker, giving birth to a legend.",emoji:"🎅",imdb:8.2},
-  {id:9011,title:"Howl's Moving Castle",year:2004,director:"Hayao Miyazaki",desc:"A young woman cursed with old age seeks refuge in the walking castle of a mysterious wizard.",emoji:"🏰",imdb:8.2},
-  {id:9012,title:"Up",year:2009,director:"Pete Docter",desc:"An elderly widower ties thousands of balloons to his house and sets off on the adventure he always promised his late wife.",emoji:"🎈",imdb:8.3},
-  {id:9013,title:"Toy Story",year:1995,director:"John Lasseter",desc:"A cowboy doll's world is turned upside down when a flashy new spaceman toy arrives and steals his owner's affection.",emoji:"🤠",imdb:8.3},
-  {id:9014,title:"Toy Story 3",year:2010,director:"Lee Unkrich",desc:"As their owner heads off to college, Woody, Buzz, and the gang face life in daycare and a fight for survival.",emoji:"🤠",imdb:8.3},
-  {id:9015,title:"Inside Out",year:2015,director:"Pete Docter",desc:"Five emotions inside a young girl's mind fight to guide her through a difficult family move.",emoji:"🧠",imdb:8.1},
-  {id:9016,title:"Ratatouille",year:2007,director:"Brad Bird & Jan Pinkava",desc:"A rat with a gift for cooking forms an unlikely partnership with a young kitchen worker in Paris.",emoji:"🐀",imdb:8.1},
-  {id:9017,title:"My Neighbor Totoro",year:1988,director:"Hayao Miyazaki",desc:"Two young sisters befriend gentle forest spirits after moving to the countryside to be near their ailing mother.",emoji:"🌳",imdb:8.1},
-  {id:9018,title:"The Incredibles",year:2004,director:"Brad Bird",desc:"A family of retired superheroes is forced back into action to save the world and rediscover each other.",emoji:"🦸",imdb:8.0},
-  {id:9019,title:"Finding Nemo",year:2003,director:"Andrew Stanton",desc:"An overprotective clownfish crosses the ocean to find his son after he's swept away by divers.",emoji:"🐠",imdb:8.2},
-  {id:9020,title:"How to Train Your Dragon",year:2010,director:"Dean DeBlois & Chris Sanders",desc:"A young Viking befriends the dragon he was raised to hate, challenging everything his village believes.",emoji:"🐲",imdb:8.1},
-  {id:9021,title:"A Silent Voice",year:2016,director:"Naoko Yamada",desc:"A former bully seeks redemption by reconnecting with the deaf classmate he once tormented.",emoji:"🤟",imdb:8.1},
-  {id:9022,title:"Toy Story 2",year:1999,director:"John Lasseter",desc:"Woody is stolen by a toy collector, sending Buzz and friends on a rescue mission that tests his sense of purpose.",emoji:"🤠",imdb:7.9},
-  {id:9023,title:"Zootopia",year:2016,director:"Byron Howard & Rich Moore",desc:"A rookie rabbit police officer and a cynical con-artist fox uncover a conspiracy in a city of anthropomorphic animals.",emoji:"🐰",imdb:8.0},
-  {id:9024,title:"Wolf Children",year:2012,director:"Mamoru Hosoda",desc:"A young mother raises her two half-wolf children alone, navigating the challenges of a life lived in secret.",emoji:"🐺",imdb:8.0},
-  {id:9025,title:"Castle in the Sky",year:1986,director:"Hayao Miyazaki",desc:"A young boy and girl race sky pirates and government agents to find a legendary floating city.",emoji:"☁️",imdb:7.9},
-  {id:9026,title:"The Wind Rises",year:2013,director:"Hayao Miyazaki",desc:"A fictionalized account of the man who designed Japan's WWII fighter planes, torn between dreams and their consequences.",emoji:"✈️",imdb:7.8},
-  {id:9027,title:"Persepolis",year:2007,director:"Marjane Satrapi & Vincent Paronnaud",desc:"An Iranian girl comes of age against the backdrop of the Islamic Revolution and its aftermath.",emoji:"✏️",imdb:8.0},
-  {id:9028,title:"The Nightmare Before Christmas",year:1993,director:"Henry Selick",desc:"The king of Halloween Town discovers Christmas and decides to take it over, with chaotic results.",emoji:"🎃",imdb:8.0},
-  {id:9029,title:"The Iron Giant",year:1999,director:"Brad Bird",desc:"A young boy befriends a giant robot from outer space and tries to protect it from a paranoid government agent.",emoji:"🤖",imdb:8.1},
-  {id:9030,title:"Weathering with You",year:2019,director:"Makoto Shinkai",desc:"A runaway teen meets a girl with the power to control the weather in a rain-soaked Tokyo.",emoji:"🌧️",imdb:7.5},
-  {id:9031,title:"Shrek",year:2001,director:"Andrew Adamson & Vicky Jenson",desc:"A grumpy ogre sets out to rescue a princess in order to reclaim his swamp from a horde of exiled fairy-tale creatures.",emoji:"👹",imdb:7.9},
-  {id:9032,title:"Kung Fu Panda",year:2008,director:"Mark Osborne & John Stevenson",desc:"An overweight, clumsy panda is unexpectedly chosen to fulfill an ancient prophecy as a kung fu master.",emoji:"🐼",imdb:7.6},
-  {id:9033,title:"Big Hero 6",year:2014,director:"Don Hall & Chris Williams",desc:"A young robotics prodigy and his inflatable robot companion form a team of high-tech heroes.",emoji:"🎈",imdb:7.8},
-  {id:9034,title:"Soul",year:2020,director:"Pete Docter",desc:"A jazz musician's soul is separated from his body and must find his way back before it's too late.",emoji:"🎷",imdb:8.0},
-  {id:9035,title:"Puss in Boots: The Last Wish",year:2022,director:"Joel Crawford",desc:"Down to his last life, a swashbuckling cat sets out on one final quest to restore his nine lives.",emoji:"🐱",imdb:7.9},
-  {id:9036,title:"The LEGO Movie",year:2014,director:"Phil Lord & Christopher Miller",desc:"An ordinary LEGO figure mistaken for a chosen hero is recruited to stop a tyrant from gluing the universe together forever.",emoji:"🧱",imdb:7.7},
-  {id:9037,title:"Aladdin",year:1992,director:"Ron Clements & John Musker",desc:"A street urchin uses a genie's magic to pose as a prince and win the heart of a sultan's daughter.",emoji:"🧞",imdb:8.0},
-  {id:9038,title:"Beauty and the Beast",year:1991,director:"Gary Trousdale & Kirk Wise",desc:"A young woman is held captive in an enchanted castle by a cursed prince transformed into a beast.",emoji:"🌹",imdb:8.0},
-  {id:9039,title:"Wallace & Gromit: The Curse of the Were-Rabbit",year:2005,director:"Nick Park & Steve Box",desc:"An inventor and his loyal dog investigate a monstrous rabbit terrorizing their town's vegetable competition.",emoji:"🐇",imdb:7.3},
-  {id:9040,title:"Corpse Bride",year:2005,director:"Tim Burton & Mike Johnson",desc:"A nervous groom is accidentally married to a deceased bride who whisks him away to the land of the dead.",emoji:"💀",imdb:7.3},
-  {id:9041,title:"Kubo and the Two Strings",year:2016,director:"Travis Knight",desc:"A young boy with magical storytelling powers sets out on a quest to save his family from vengeful spirits.",emoji:"🎸",imdb:7.6},
-  {id:9042,title:"Ponyo",year:2008,director:"Hayao Miyazaki",desc:"A goldfish princess longs to become human after befriending a young boy on the coast of Japan.",emoji:"🐠",imdb:7.7},
-  {id:9043,title:"Moana",year:2016,director:"Ron Clements & John Musker",desc:"A headstrong island girl sets sail across the Pacific to save her people, guided by the ocean itself.",emoji:"🌊",imdb:7.6},
-  {id:9044,title:"Encanto",year:2021,director:"Byron Howard & Jared Bush",desc:"The only ordinary member of a magical Colombian family discovers the truth threatening her family's gift.",emoji:"🦋",imdb:7.2},
-  {id:9045,title:"Luca",year:2021,director:"Enrico Casarosa",desc:"A young sea monster disguised as a human spends a summer of freedom in a seaside Italian town.",emoji:"🐟",imdb:7.4},
-  {id:9046,title:"Turning Red",year:2022,director:"Domee Shi",desc:"A thirteen-year-old discovers she transforms into a giant red panda whenever she gets too excited.",emoji:"🐼",imdb:7.0},
-  {id:9047,title:"The Mitchells vs. the Machines",year:2021,director:"Mike Rianda",desc:"A quirky family's road trip becomes humanity's last hope during a robot uprising.",emoji:"🤖",imdb:7.6},
-  {id:9048,title:"Flow",year:2024,director:"Gints Zilbalodis",desc:"A solitary cat joins a group of animals on a boat, navigating a flooded world without a single word of dialogue.",emoji:"🐱",imdb:7.9},
-  {id:9049,title:"The Boy and the Heron",year:2023,director:"Hayao Miyazaki",desc:"A grieving boy follows a mysterious heron into a fantastical world tied to his family's past and future.",emoji:"🐦",imdb:7.7},
-  {id:9050,title:"Shrek 2",year:2004,director:"Andrew Adamson, Kelly Asbury & Conrad Vernon",desc:"Shrek and Fiona visit her parents' kingdom, where a fairy godmother schemes to break up their marriage.",emoji:"👹",imdb:7.3},
 ];
 
 // ── SECTION META (descriptions + required-before-watching notes) ──────────
@@ -1206,7 +1121,7 @@ function showPage(name,push,restoreScroll){
   if(name==='marvel'){renderFranchise('Marvel','marvel');}
   if(name==='dc'){updateDcTabs();renderFranchise(dcGenre(),'dc');}
   if(name==='starwars'){renderFranchise('Star Wars','starwars');}
-  if(name==='rankings'){renderRankings();switchRankingsTab('site');}
+  if(name==='rankings'){renderRankings();}
   if(name==='profile'){renderProfile();}
   if(name==='admin'){renderAdmin();}
   if(name==='downloads-admin'){renderDownloadsAdminPage();}
@@ -1524,64 +1439,6 @@ function renderRankings(){
     </div>`;
   }).join('');
   preloadPosters(top);
-}
-function switchRankingsTab(tab){
-  document.getElementById('tab-site').classList.toggle('active',tab==='site');
-  document.getElementById('tab-imdb').classList.toggle('active',tab==='imdb');
-  document.getElementById('rankingsList').style.display=tab==='site'?'':'none';
-  document.getElementById('imdbAnimeList').style.display=tab==='imdb'?'':'none';
-  document.getElementById('rankingsSub').textContent=tab==='site'
-    ?"The best — ranked by your community"
-    :"IMDb's highest-rated animated features — for browsing only, no ratings here";
-  if(tab==='imdb')renderImdbAnime();
-}
-function renderImdbAnime(){
-  const list=document.getElementById('imdbAnimeList');
-  const sorted=[...ANIME_TOP50].sort((a,b)=>b.imdb-a.imdb);
-  list.innerHTML=sorted.map((s,i)=>{
-    const n=i+1,delay=(i%10)*30;
-    return `<div class="rank-row" style="cursor:default;animation-delay:${delay}ms">
-      <span class="rank-num${n<=3?' top3':''}">${n}</span>
-      ${rankPosterHtml(s)}
-      <div class="rank-info"><div class="rank-title">${s.title}</div><div class="rank-meta">${s.year} · dir. ${s.director}</div></div>
-      <span class="rank-score">★ ${s.imdb}</span>
-    </div>`;
-  }).join('');
-  preloadPosters(sorted);
-}
-async function rollDice(e){
-  if(e)e.stopPropagation();
-  switchRankingsTab('imdb');
-  const dice=document.getElementById('diceBtn');
-  dice.classList.remove('dice-spin');
-  void dice.offsetWidth;
-  dice.classList.add('dice-spin');
-  await new Promise(res=>setTimeout(res,650));
-  const pick=ANIME_TOP50[Math.floor(Math.random()*ANIME_TOP50.length)];
-  const content=document.getElementById('diceModalContent');
-  const cached=posterCache[pick.id];
-  const bg=posterBg(pick.id);
-  const img=cached&&cached!=='N/A'?`<img src="${cached}" alt="${pick.title}" onerror="this.remove()"/>`:'';
-  content.innerHTML=`
-    <div class="dice-poster" data-poster="dice-${pick.id}" style="background:${bg}">
-      <span class="poster-emoji" style="${cached&&cached!=='N/A'?'display:none':''}">${pick.emoji}</span>${img}
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:19px;font-weight:700;color:var(--text)">${pick.title}</div>
-      <div style="font-size:13px;color:var(--text2);margin:4px 0 10px">${pick.year} · dir. ${pick.director} · ⭐ ${pick.imdb}</div>
-      <p style="font-size:13px;color:var(--text2);line-height:1.5">${pick.desc}</p>
-    </div>`;
-  document.getElementById('diceModal').classList.add('show');
-  const el=document.querySelector(`[data-poster="dice-${pick.id}"]`);
-  if(el&&(!cached||cached==='N/A')){
-    const url=await fetchPoster(pick);
-    const emoji=el.querySelector('.poster-emoji');
-    injectPoster(el,url,emoji);
-  }
-}
-function closeDiceModal(e){
-  if(e)e.stopPropagation();
-  document.getElementById('diceModal').classList.remove('show');
 }
 
 // ── PROFILE ───────────────────────────────────────────────────────────────

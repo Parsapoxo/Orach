@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.10
+- Removed the "IMDb Animations Top 50" section completely: its tab, the list, the random-pick dice button and dialog, the `ANIME_TOP50` data, all related JS functions and CSS (including the now-unused tab and dialog styles and keyframes). Rankings now shows only the Orach Top 50 (ranked by your friends' ratings).
 ## 7.0.0-beta.9
 - VisionQuest is out (all 8 episodes aired, finale Nov 10, 2026): removed the "coming soon" flag so it is a normal rateable card with its own title page, set the year to 2026, removed "Coming soon —" from the description and added an IMDb score (7.8, approximate — to be confirmed). It now counts in the Marvel "N of M rated" progress.
 ## 7.0.0-beta.8
