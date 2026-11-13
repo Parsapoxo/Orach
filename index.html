@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Orach — v7.0.0-beta.10 -->
+<!-- Orach — v7.0.0-beta.11 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="app-version" content="7.0.0-beta.10" />
+<meta name="app-version" content="7.0.0-beta.11" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -422,18 +422,32 @@ body.on-home .home-bg{opacity:1}
 .auth-toggle{text-align:center;margin-top:1.25rem;font-size:13px;color:var(--text2)}
 .auth-toggle span{color:var(--accent);cursor:pointer;font-weight:600}
 
-/* rankings + profile: numbered editorial list */
+/* rankings: podium + numbered poster grid · profile: list rows (.rank-*) */
 .rankings-wrap{max-width:960px}
 .rank-row{display:flex;align-items:center;gap:1.25rem;padding:.85rem 1.25rem .85rem 1rem;margin-bottom:10px;background:var(--surface);border:1px solid var(--border);border-radius:18px;cursor:pointer;transition:border-color .2s,transform .2s;animation:staggerIn .4s ease backwards}
 .rank-row:hover{border-color:var(--text3);transform:translateY(-2px)}
-.rank-num{min-width:48px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;color:var(--text3);flex-shrink:0}
-.rank-num.top3{color:var(--accent)}
 .rank-poster{position:relative;width:64px;height:96px;flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;border-radius:12px;border:1px solid rgba(255,255,255,.09);font-size:30px}
 .rank-poster img{width:100%;height:100%;object-fit:cover}
 .rank-info{flex:1;min-width:0}
 .rank-title{font-weight:600;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rank-meta{font-size:13px;color:var(--text3);margin-top:4px}
 .rank-score{color:var(--accent);flex-shrink:0;font-family:'DM Mono',monospace;font-size:15px;font-weight:500;padding:6px 14px;border-radius:99px;background:var(--bg3);border:1px solid var(--border)}
+.rk-podium{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin:1.8rem 0 2.2rem}
+.rk-top{cursor:pointer;animation:gridIn .4s ease backwards}
+.rk-pimg{position:relative;aspect-ratio:2/3;border-radius:16px;border:1px solid rgba(255,255,255,.09);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:72px;box-shadow:0 6px 18px rgba(0,0,0,.4);transition:transform .25s ease,box-shadow .25s ease}
+.rk-pimg img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.rk-pimg::after{content:"";position:absolute;inset:auto 0 0 0;height:55%;background:linear-gradient(transparent,rgba(10,10,15,.92));z-index:1}
+.rk-top:hover .rk-pimg{transform:translateY(-5px);box-shadow:0 14px 30px rgba(0,0,0,.55)}
+.rk-top.first .rk-pimg{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 12px 40px rgba(242,184,75,.18)}
+.rk-big{position:absolute;left:16px;bottom:6px;z-index:2;font-family:'Bebas Neue',sans-serif;font-size:96px;line-height:1}
+.rk-top.first .rk-big{color:var(--accent)}
+.rk-chip{position:absolute;top:10px;right:10px;z-index:2;font:600 12px 'DM Mono',monospace;color:var(--accent);background:rgba(10,10,15,.72);padding:4px 10px;border-radius:99px}
+.rk-ttl{font-size:15px;font-weight:600;margin-top:10px}
+.rk-meta{font-size:13px;color:var(--text3);margin-top:3px}
+.rk-sc{display:none;font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--accent);margin-top:6px}
+.rk-grid{counter-reset:ord 3;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1.4rem 1.1rem}
+.rk-grid .poster-card{flex:none}
+.rk-grid .poster-card-title{font-weight:600}
 
 /* toast */
 .toast{position:fixed;bottom:24px;right:24px;z-index:999;max-width:300px;padding:12px 18px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;font-size:13px;font-weight:500;transform:translateY(100px);opacity:0;transition:transform .3s,opacity .3s;pointer-events:none}
@@ -469,8 +483,16 @@ body.on-home .home-bg{opacity:1}
   .auth-box{padding:1.75rem}
   .auth-title{font-size:44px}
   .rank-row{padding:.7rem .8rem;gap:.7rem}
-  .rank-num{min-width:34px;font-size:28px}
   .rank-poster{width:52px;height:78px}
+  .rk-podium{grid-template-columns:1fr;gap:10px;margin:1.4rem 0 1.8rem}
+  .rk-top{display:flex;align-items:center;gap:14px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:18px}
+  .rk-top.first{border-color:var(--accent)}
+  .rk-pimg{width:84px;flex:none;font-size:34px;border-radius:12px}
+  .rk-top.first .rk-pimg{box-shadow:none}
+  .rk-big{left:8px;bottom:2px;font-size:40px}
+  .rk-chip{display:none}
+  .rk-tx{flex:1;min-width:0}.rk-ttl{margin-top:0}.rk-sc{display:block}
+  .rk-grid{grid-template-columns:repeat(2,1fr)}
   .admin-toolbar{flex-direction:column;align-items:flex-start}
   .admin-wipe-btn{width:100%}
 }
@@ -510,7 +532,7 @@ body.on-home .home-bg{opacity:1}
   <button class="mtab" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
 </div>
 <div class="toast" id="toast"></div>
-<div class="version-badge">v7.0.0-beta.10</div>
+<div class="version-badge">v7.0.0-beta.11</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -1429,15 +1451,17 @@ function renderRankings(){
   const list=document.getElementById('rankingsList');
   const top=MOVIES.map(s=>({...s,avg:getSiteAvg(s.id)})).filter(s=>s.avg!==null).sort((a,b)=>b.avg-a.avg).slice(0,50);
   if(!top.length){list.innerHTML='<div class="empty-state"><div class="big">🎬</div><p>No ratings yet. Be the first to rate a movie!</p></div>';return;}
-  list.innerHTML=top.map((s,i)=>{
-    const n=i+1,cnt=getAllRatings(s.id).length,delay=(i%10)*30;
-    return `<div class="rank-row" style="animation-delay:${delay}ms" onclick="openDetail(${s.id},'rankings')">
-      <span class="rank-num${n<=3?' top3':''}">${n}</span>
-      ${rankPosterHtml(s)}
-      <div class="rank-info"><div class="rank-title">${s.title}</div><div class="rank-meta">${s.year} · ${cnt} rating${cnt!==1?'s':''}</div></div>
-      <span class="rank-score">★ ${s.avg}</span>
-    </div>`;
-  }).join('');
+  const art=s=>{const c=posterCache[s.id],ok=c&&c!=='N/A';return `<span class="poster-emoji" style="${ok?'display:none':''}">${s.emoji}</span>${ok?`<img src="${c}" alt="${s.title}" onerror="this.remove()"/>`:''}`;};
+  const meta=s=>{const n=getAllRatings(s.id).length;return `${s.year} · ${n} rating${n!==1?'s':''}`;};
+  const podium=top.slice(0,3).map((s,i)=>`<div class="rk-top${i===0?' first':''}" style="animation-delay:${i*60}ms" onclick="openDetail(${s.id},'rankings')">
+      <div class="rk-pimg" data-poster="${s.id}" style="background:${posterBg(s.id)}">${art(s)}<span class="rk-big">${i+1}</span><span class="rk-chip">★ ${s.avg}</span></div>
+      <div class="rk-tx"><div class="rk-ttl">${s.title}</div><div class="rk-meta">${meta(s)}</div><div class="rk-sc">★ ${s.avg}</div></div>
+    </div>`).join('');
+  const rest=top.slice(3).map((s,i)=>`<div class="poster-card" style="animation-delay:${(i%12)*30}ms" onclick="openDetail(${s.id},'rankings')">
+      <div class="poster-card-img" data-poster="${s.id}" style="background:${posterBg(s.id)}">${art(s)}<span class="poster-score">★ ${s.avg}</span></div>
+      <div class="poster-card-title">${s.title}</div><div class="rk-meta">${meta(s)}</div>
+    </div>`).join('');
+  list.innerHTML=`<div class="rk-podium">${podium}</div>`+(rest?`<div class="rk-grid">${rest}</div>`:'');
   preloadPosters(top);
 }
 

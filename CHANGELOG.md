@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.11
+- Rankings redesigned to match the rest of the site: top 3 as big poster cards with a large rank number (gold frame for #1) and a ★ chip, ranks 4–50 as a numbered poster grid (same cards, number badge and ★ score as the franchise pages). On phones the top 3 become compact rows and the grid is 2 columns. Replaced the old list-row markup/CSS of Rankings (the `.rank-*` rows stay only for Profile).
 ## 7.0.0-beta.10
 - Removed the "IMDb Animations Top 50" section completely: its tab, the list, the random-pick dice button and dialog, the `ANIME_TOP50` data, all related JS functions and CSS (including the now-unused tab and dialog styles and keyframes). Rankings now shows only the Orach Top 50 (ranked by your friends' ratings).
 ## 7.0.0-beta.9
