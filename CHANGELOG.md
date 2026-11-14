@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.18
+- The Defenders Saga: every season card now has its own poster (Daredevil S1–S3, Jessica Jones S1–S3, Luke Cage S1–S2, Iron Fist S1–S2, The Punisher S1–S2, Daredevil: Born Again S1–S2). Posters are stored in `images/posters/` (500px WebP). Catalog entries can have an optional `poster` path; when present OMDb is not queried for that card. The title page of a multi-season show still uses the series poster.
 ## 7.0.0-beta.17
 - Page headings now sit the same distance from the sidebar on every page except Rankings: Profile, Fix Ratings and Manage Downloads use the same centred 1500px wrap as Marvel / DC / Star Wars (their lists and toolbars keep the old 960px width), and the title page (back button, poster) uses it too (its content keeps the 1080px width). Sign in and Home stay centred; Rankings unchanged.
 ## 7.0.0-beta.16
