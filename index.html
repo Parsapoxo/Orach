@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Orach — v7.0.0-beta.11 -->
+<!-- Orach — v7.0.0-beta.12 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="app-version" content="7.0.0-beta.11" />
+<meta name="app-version" content="7.0.0-beta.12" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -448,6 +448,18 @@ body.on-home .home-bg{opacity:1}
 .rk-grid{counter-reset:ord 3;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1.4rem 1.1rem}
 .rk-grid .poster-card{flex:none}
 .rk-grid .poster-card-title{font-weight:600}
+.rk-views{margin:0 0 1.2rem}
+.rk-num{min-width:48px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;color:var(--text3);flex:none}
+.rk-bar{height:3px;border-radius:2px;background:rgba(255,255,255,.1);margin-top:9px;overflow:hidden}
+.rk-bar i{display:block;height:100%;background:var(--accent);border-radius:2px}
+.rk-table{border:1px solid var(--border);border-radius:18px;background:var(--surface);overflow:hidden}
+.rk-tr{display:grid;grid-template-columns:48px 10px minmax(0,1fr) 56px 140px 80px;gap:14px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s}
+.rk-tr:last-child{border:0}.rk-tr:hover{background:var(--surface2)}
+.rk-tr .rk-num{font-size:26px;min-width:0}.rk-tr .rk-bar{margin:0}
+.rk-dot{width:8px;height:8px;border-radius:50%}
+.rk-tt{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk-yr{font-size:12px;color:var(--text3)}
+.rk-score{text-align:center;font:500 14px 'DM Mono',monospace;color:var(--accent);padding:6px 12px;border-radius:99px;background:var(--bg3);border:1px solid var(--border)}
 
 /* toast */
 .toast{position:fixed;bottom:24px;right:24px;z-index:999;max-width:300px;padding:12px 18px;background:var(--surface2);border:1px solid var(--border);border-radius:14px;font-size:13px;font-weight:500;transform:translateY(100px);opacity:0;transition:transform .3s,opacity .3s;pointer-events:none}
@@ -493,6 +505,9 @@ body.on-home .home-bg{opacity:1}
   .rk-chip{display:none}
   .rk-tx{flex:1;min-width:0}.rk-ttl{margin-top:0}.rk-sc{display:block}
   .rk-grid{grid-template-columns:repeat(2,1fr)}
+  .rk-num{min-width:34px;font-size:28px}
+  .rk-tr{grid-template-columns:36px minmax(0,1fr) 76px;padding:12px 14px}
+  .rk-tr .rk-num{font-size:22px;min-width:0}.rk-dot,.rk-yr,.rk-tr .rk-bar{display:none}
   .admin-toolbar{flex-direction:column;align-items:flex-start}
   .admin-wipe-btn{width:100%}
 }
@@ -532,7 +547,7 @@ body.on-home .home-bg{opacity:1}
   <button class="mtab" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
 </div>
 <div class="toast" id="toast"></div>
-<div class="version-badge">v7.0.0-beta.11</div>
+<div class="version-badge">v7.0.0-beta.12</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -1447,6 +1462,9 @@ function rankPosterHtml(s){
   </div>`;
 }
 
+let rkView='grid';try{const v=localStorage.getItem('orach_rk_view');if(v==='grid'||v==='wide'||v==='table')rkView=v;}catch(e){}
+const RK_DOT={Marvel:'#e23b3b',DC:'#5b7cfa',DCAMU:'#5b7cfa','Star Wars':'#e8c468'};
+function setRkView(v){rkView=v;try{localStorage.setItem('orach_rk_view',v);}catch(e){}renderRankings();}
 function renderRankings(){
   const list=document.getElementById('rankingsList');
   const top=MOVIES.map(s=>({...s,avg:getSiteAvg(s.id)})).filter(s=>s.avg!==null).sort((a,b)=>b.avg-a.avg).slice(0,50);
@@ -1457,11 +1475,26 @@ function renderRankings(){
       <div class="rk-pimg" data-poster="${s.id}" style="background:${posterBg(s.id)}">${art(s)}<span class="rk-big">${i+1}</span><span class="rk-chip">★ ${s.avg}</span></div>
       <div class="rk-tx"><div class="rk-ttl">${s.title}</div><div class="rk-meta">${meta(s)}</div><div class="rk-sc">★ ${s.avg}</div></div>
     </div>`).join('');
-  const rest=top.slice(3).map((s,i)=>`<div class="poster-card" style="animation-delay:${(i%12)*30}ms" onclick="openDetail(${s.id},'rankings')">
+  const open=s=>`onclick="openDetail(${s.id},'rankings')"`;
+  const row={
+    grid:(s,i)=>`<div class="poster-card" style="animation-delay:${(i%12)*30}ms" ${open(s)}>
       <div class="poster-card-img" data-poster="${s.id}" style="background:${posterBg(s.id)}">${art(s)}<span class="poster-score">★ ${s.avg}</span></div>
       <div class="poster-card-title">${s.title}</div><div class="rk-meta">${meta(s)}</div>
-    </div>`).join('');
-  list.innerHTML=`<div class="rk-podium">${podium}</div>`+(rest?`<div class="rk-grid">${rest}</div>`:'');
+    </div>`,
+    wide:(s,i)=>`<div class="rank-row" style="animation-delay:${(i%10)*30}ms" ${open(s)}>
+      <span class="rk-num">${i+4}</span>${rankPosterHtml(s)}
+      <div class="rank-info"><div class="rank-title">${s.title}</div><div class="rank-meta">${meta(s)}</div><div class="rk-bar"><i style="width:${s.avg*10}%"></i></div></div>
+      <span class="rank-score">★ ${s.avg}</span>
+    </div>`,
+    table:(s,i)=>`<div class="rk-tr" ${open(s)}>
+      <span class="rk-num">${i+4}</span><i class="rk-dot" style="background:${RK_DOT[s.genre]||'var(--text3)'}"></i><span class="rk-tt">${s.title}</span><span class="rk-yr">${s.year}</span>
+      <div class="rk-bar"><i style="width:${s.avg*10}%"></i></div><span class="rk-score">★ ${s.avg}</span>
+    </div>`
+  };
+  const rest=top.slice(3).map(row[rkView]).join('');
+  const views=[['grid','Grid'],['wide','Wide'],['table','Table']].map(([v,l])=>`<button class="cat-chip${rkView===v?' active':''}" onclick="setRkView('${v}')">${l}</button>`).join('');
+  const wrapCls={grid:'rk-grid',wide:'rk-wide',table:'rk-table'}[rkView];
+  list.innerHTML=`<div class="rk-podium">${podium}</div>`+(rest?`<div class="cat-chips rk-views">${views}</div><div class="${wrapCls}">${rest}</div>`:'');
   preloadPosters(top);
 }
 

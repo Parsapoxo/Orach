@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.12
+- Rankings: added a Grid / Wide / Table switch (same chip style as the franchise pages) for ranks 4–50. Grid = numbered poster cards (default), Wide = large rows with poster and score bar, Table = compact rows without posters. The choice is remembered per browser.
 ## 7.0.0-beta.11
 - Rankings redesigned to match the rest of the site: top 3 as big poster cards with a large rank number (gold frame for #1) and a ★ chip, ranks 4–50 as a numbered poster grid (same cards, number badge and ★ score as the franchise pages). On phones the top 3 become compact rows and the grid is 2 columns. Replaced the old list-row markup/CSS of Rankings (the `.rank-*` rows stay only for Profile).
 ## 7.0.0-beta.10
