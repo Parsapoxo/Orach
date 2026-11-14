@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Orach — v7.0.0-beta.15 -->
+<!-- Orach — v7.0.0-beta.16 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="app-version" content="7.0.0-beta.15" />
+<meta name="app-version" content="7.0.0-beta.16" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -551,7 +551,7 @@ body.on-home .home-bg{opacity:1}
   <button class="mtab" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
 </div>
 <div class="toast" id="toast"></div>
-<div class="version-badge">v7.0.0-beta.15</div>
+<div class="version-badge">v7.0.0-beta.16</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -936,7 +936,9 @@ async function saveRatingToDb(username, seriesId, score, comment){
   }
   const key = `${username}_${seriesId}`;
   const date = new Date().toISOString();
-  const { error } = await sb.from('ratings').upsert({id:key, username, series_id:seriesId, score:s, comment, date});
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) throw new Error('Your session has expired. Please sign in again.');
+  const { error } = await sb.from('ratings').upsert({id:key, username, user_id:session.user.id, series_id:seriesId, score:s, comment, date});
   if(error) throw error;
   allRatingsCache[key] = {username, seriesId, score:s, comment, date};
 }
@@ -948,15 +950,20 @@ async function deleteRatingFromDb(username, seriesId){
   delete allRatingsCache[key];
 }
 
-async function saveUserToDb(username, password){
-  const { error } = await sb.from('users').insert({username, password});
-  if(error) throw error;
+// Accounts live in Supabase Auth (passwords are hashed by Supabase, never stored by this site).
+// A username is mapped to an e-mail of the form <hex(username)>@orach.local; the database
+// derives the public profile name from that e-mail.
+const AUTH_EMAIL_DOMAIN='orach.local';
+function usernameToEmail(username){
+  const hex=Array.from(new TextEncoder().encode(username),b=>b.toString(16).padStart(2,'0')).join('');
+  return hex+'@'+AUTH_EMAIL_DOMAIN;
 }
-
-async function getUserFromDb(username){
-  const { data, error } = await sb.from('users').select('*').eq('username', username).maybeSingle();
-  if(error) throw error;
-  return data;
+async function getSessionUsername(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session) return null;
+  const { data, error } = await sb.from('profiles').select('username').eq('user_id', session.user.id).maybeSingle();
+  if(error||!data) return null;
+  return data.username;
 }
 
 // ── STATE ─────────────────────────────────────────────────────────────────
@@ -968,13 +975,6 @@ let state = {
   editingRating: false,
   scrollPos: {},
 };
-
-function saveCurrentUser(u){
-  try{ localStorage.setItem('screenlog_user', u||''); }catch(e){}
-}
-function loadCurrentUser(){
-  try{ return localStorage.getItem('screenlog_user')||null; }catch(e){ return null; }
-}
 
 // ── AUTH ──────────────────────────────────────────────────────────────────
 function toggleAuth(mode){
@@ -990,14 +990,17 @@ async function doRegister(){
   const u=document.getElementById('regUsername').value.trim().toLowerCase();
   const p=document.getElementById('regPassword').value;
   if(!u||u.length<2){showAuthError('Username must be at least 2 characters.');return;}
-  if(!p||p.length<4){showAuthError('Password must be at least 4 characters.');return;}
+  if(!p||p.length<6){showAuthError('Password must be at least 6 characters.');return;}
   showAuthError('⏳ Creating account...');
   try{
-    const existing = await getUserFromDb(u);
-    if(existing){showAuthError('That username is already taken.');return;}
-    await saveUserToDb(u,p);
+    const { data, error } = await sb.auth.signUp({ email: usernameToEmail(u), password: p });
+    if(error){
+      if(/already|registered|exists/i.test(error.message)){showAuthError('That username is already taken.');return;}
+      if(/password/i.test(error.message)){showAuthError(error.message);return;}
+      showAuthError('Could not create the account. Please try again.');return;
+    }
+    if(!data.session){showAuthError('Account created, but signing in failed. Try signing in.');return;}
     state.currentUser=u;
-    saveCurrentUser(u);
     await loadAllRatings();
     onLogin();
   }catch(e){showAuthError('Connection error. Please try again.');}
@@ -1009,19 +1012,22 @@ async function doLogin(){
   if(!u||!p){showAuthError('Please enter your username and password.');return;}
   showAuthError('⏳ Signing in...');
   try{
-    const user = await getUserFromDb(u);
-    if(!user||user.password!==p){showAuthError('Incorrect username or password.');return;}
-    state.currentUser=u;
-    saveCurrentUser(u);
+    const { error } = await sb.auth.signInWithPassword({ email: usernameToEmail(u), password: p });
+    if(error){
+      if(/invalid|credentials/i.test(error.message)){showAuthError('Incorrect username or password.');return;}
+      showAuthError('Could not sign in. Please try again.');return;
+    }
+    const name = await getSessionUsername();
+    state.currentUser = name || u;
     await loadAllRatings();
     onLogin();
   }catch(e){showAuthError('Connection error. Please try again.');}
 }
 
 function onLogin(){updateNav();showPage('marvel');showToast('Welcome, '+state.currentUser+'! 👋','success');}
-function doLogout(){
+async function doLogout(){
   state.currentUser=null;
-  saveCurrentUser('');
+  try{ await sb.auth.signOut(); }catch(e){}
   allRatingsCache={};
   ratingsLoaded=false;
   updateNav();
@@ -2049,7 +2055,8 @@ function restoreFromLocation(){
 }
 async function init(){
   await initSupabase();
-  const savedUser = loadCurrentUser();
+  let savedUser = null;
+  try{ savedUser = await getSessionUsername(); }catch(e){}
   updateNav();
   toggleAuth('login');
   if(savedUser){

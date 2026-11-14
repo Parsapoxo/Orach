@@ -2,6 +2,9 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.16
+- Accounts now use Supabase Auth: passwords are hashed by Supabase (bcrypt) and the site no longer reads or writes passwords in the `users` table. A username is mapped to an e-mail of the form `<hex(username)>@orach.local`; sign-in uses a real session (`signInWithPassword`) instead of the username kept in `localStorage`. Existing users were migrated with their current passwords. New passwords must be at least 6 characters.
+- Ratings are saved with the signed-in user's `user_id` (needed for the row-level security rules that come with the 7.0.0 release). Row Level Security itself is NOT enabled yet.
 ## 7.0.0-beta.15
 - Search: removed the rectangular focus outline inside the pill (the pill's gold border is the only focus indicator now). The search input now lives in its own `<form>` with a non-credential name and `type="text"`, so Chrome no longer groups it with the login fields and should stop offering saved passwords on it. Removed the old readonly-until-focus trick.
 ## 7.0.0-beta.14
