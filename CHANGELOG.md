@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.17
+- Page headings now sit the same distance from the sidebar on every page except Rankings: Profile, Fix Ratings and Manage Downloads use the same centred 1500px wrap as Marvel / DC / Star Wars (their lists and toolbars keep the old 960px width), and the title page (back button, poster) uses it too (its content keeps the 1080px width). Sign in and Home stay centred; Rankings unchanged.
 ## 7.0.0-beta.16
 - Accounts now use Supabase Auth: passwords are hashed by Supabase (bcrypt) and the site no longer reads or writes passwords in the `users` table. A username is mapped to an e-mail of the form `<hex(username)>@orach.local`; sign-in uses a real session (`signInWithPassword`) instead of the username kept in `localStorage`. Existing users were migrated with their current passwords. New passwords must be at least 6 characters.
 - Ratings are saved with the signed-in user's `user_id` (needed for the row-level security rules that come with the 7.0.0 release). Row Level Security itself is NOT enabled yet.
