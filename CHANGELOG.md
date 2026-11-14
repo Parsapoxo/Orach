@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.15
+- Search: removed the rectangular focus outline inside the pill (the pill's gold border is the only focus indicator now). The search input now lives in its own `<form>` with a non-credential name and `type="text"`, so Chrome no longer groups it with the login fields and should stop offering saved passwords on it. Removed the old readonly-until-focus trick.
 ## 7.0.0-beta.14
 - Rankings: switching Grid / Wide / Table no longer rebuilds the whole page. Only the list below the switch is redrawn; the top 3 stay untouched, so they no longer blink.
 ## 7.0.0-beta.13

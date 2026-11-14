@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Orach — v7.0.0-beta.14 -->
+<!-- Orach — v7.0.0-beta.15 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="app-version" content="7.0.0-beta.14" />
+<meta name="app-version" content="7.0.0-beta.15" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -284,7 +284,8 @@ body{padding-left:228px}
 .nav-search{position:fixed;top:22px;right:32px;width:260px;height:40px;z-index:120;display:flex;align-items:center;border-radius:99px;background:var(--surface);border:1px solid var(--border);transition:border-color .2s}
 .nav-search:focus-within{border-color:var(--accent)}
 .nav-search-icon-btn{width:40px;height:40px;flex:none;background:none;color:var(--text2);font-size:15px;display:flex;align-items:center;justify-content:center}
-.nav-search-input::-webkit-search-cancel-button{display:none}
+.nav-search-form{flex:1;min-width:0;margin:0;display:flex;align-items:center}
+.nav-search-input:focus,.nav-search-input:focus-visible{outline:none;box-shadow:none}
 .nav-search-input{-webkit-appearance:none;appearance:none;flex:1;min-width:0;background:none;border:none;color:var(--text);font-size:13px;padding:0 14px 0 0}
 .nav-search-results{position:fixed;top:70px;right:32px;width:340px;max-height:380px;overflow-y:auto;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);z-index:200;display:none}
 .nav-search-results.show{display:block}
@@ -523,7 +524,9 @@ body.on-home .home-bg{opacity:1}
   <div class="nav-logo" onclick="goHome()">Orach</div>
   <div class="nav-search" id="navSearch">
     <button class="nav-search-icon-btn" id="navSearchToggle" onclick="toggleNavSearch(event)" aria-label="Search">🔍</button>
-    <input class="nav-search-input" id="navSearchInput" type="search" name="q" role="searchbox" placeholder="Search titles" oninput="onNavSearch()" onfocus="this.removeAttribute('readonly')" onblur="this.setAttribute('readonly','')" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore data-bwignore data-form-type="other" />
+    <form class="nav-search-form" role="search" autocomplete="off" onsubmit="return false">
+      <input class="nav-search-input" id="navSearchInput" type="text" inputmode="search" enterkeyhint="search" name="orach-title-filter" placeholder="Search titles" oninput="onNavSearch()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore data-bwignore data-form-type="other" />
+    </form>
   </div>
   <div class="nav-search-results" id="navSearchResults"></div>
   <div class="nav-list">
@@ -548,7 +551,7 @@ body.on-home .home-bg{opacity:1}
   <button class="mtab" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
 </div>
 <div class="toast" id="toast"></div>
-<div class="version-badge">v7.0.0-beta.14</div>
+<div class="version-badge">v7.0.0-beta.15</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
