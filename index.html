@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Orach — v7.0.0-beta.13 -->
+<!-- Orach — v7.0.0-beta.14 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="app-version" content="7.0.0-beta.13" />
+<meta name="app-version" content="7.0.0-beta.14" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -548,7 +548,7 @@ body.on-home .home-bg{opacity:1}
   <button class="mtab" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
 </div>
 <div class="toast" id="toast"></div>
-<div class="version-badge">v7.0.0-beta.13</div>
+<div class="version-badge">v7.0.0-beta.14</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -1465,7 +1465,8 @@ function rankPosterHtml(s){
 
 let rkView='grid';try{const v=localStorage.getItem('orach_rk_view');if(v==='grid'||v==='wide'||v==='table')rkView=v;}catch(e){}
 const RK_DOT={Marvel:'#e23b3b',DC:'#5b7cfa',DCAMU:'#5b7cfa','Star Wars':'#e8c468'};
-function setRkView(v){rkView=v;try{localStorage.setItem('orach_rk_view',v);}catch(e){}renderRankings();}
+function setRkView(v){rkView=v;try{localStorage.setItem('orach_rk_view',v);}catch(e){}document.querySelectorAll('.rk-views .cat-chip').forEach(b=>b.classList.toggle('active',b.dataset.v===v));renderRkRest();if(rkCtx)preloadPosters(rkCtx.top.slice(3));}
+let rkCtx=null;
 function renderRankings(){
   const list=document.getElementById('rankingsList');
   const top=MOVIES.map(s=>({...s,avg:getSiteAvg(s.id)})).filter(s=>s.avg!==null).sort((a,b)=>b.avg-a.avg).slice(0,50);
@@ -1476,6 +1477,15 @@ function renderRankings(){
       <div class="rk-pimg" data-poster="${s.id}" style="background:${posterBg(s.id)}">${art(s)}<span class="rk-big">${i+1}</span><span class="rk-chip">★ ${s.avg}</span></div>
       <div class="rk-tx"><div class="rk-ttl">${s.title}</div><div class="rk-meta">${meta(s)}</div><div class="rk-sc">★ ${s.avg}</div></div>
     </div>`).join('');
+  rkCtx={top,art,meta};
+  const views=[['grid','Grid'],['wide','Wide'],['table','Table']].map(([v,l])=>`<button class="cat-chip${rkView===v?' active':''}" data-v="${v}" onclick="setRkView('${v}')">${l}</button>`).join('');
+  list.innerHTML=`<div class="rk-podium">${podium}</div>`+(top.length>3?`<div class="cat-chips rk-views">${views}</div><div id="rkRest"></div>`:'');
+  renderRkRest();
+  preloadPosters(top);
+}
+function renderRkRest(){
+  const el=document.getElementById('rkRest');if(!el||!rkCtx)return;
+  const {top,art,meta}=rkCtx;
   const open=s=>`onclick="openDetail(${s.id},'rankings')"`;
   const row={
     grid:(s,i)=>`<div class="poster-card" style="animation-delay:${(i%12)*30}ms" ${open(s)}>
@@ -1492,11 +1502,8 @@ function renderRankings(){
       <div class="rk-bar"><i style="width:${s.avg*10}%"></i></div><span class="rk-score">★ ${s.avg}</span>
     </div>`
   };
-  const rest=top.slice(3).map(row[rkView]).join('');
-  const views=[['grid','Grid'],['wide','Wide'],['table','Table']].map(([v,l])=>`<button class="cat-chip${rkView===v?' active':''}" onclick="setRkView('${v}')">${l}</button>`).join('');
-  const wrapCls={grid:'rk-grid',wide:'rk-wide',table:'rk-table'}[rkView];
-  list.innerHTML=`<div class="rk-podium">${podium}</div>`+(rest?`<div class="cat-chips rk-views">${views}</div><div class="${wrapCls}">${rest}</div>`:'');
-  preloadPosters(top);
+  el.className={grid:'rk-grid',wide:'rk-wide',table:'rk-table'}[rkView];
+  el.innerHTML=top.slice(3).map(row[rkView]).join('');
 }
 
 // ── PROFILE ───────────────────────────────────────────────────────────────

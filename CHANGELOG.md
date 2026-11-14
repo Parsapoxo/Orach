@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.14
+- Rankings: switching Grid / Wide / Table no longer rebuilds the whole page. Only the list below the switch is redrawn; the top 3 stay untouched, so they no longer blink.
 ## 7.0.0-beta.13
 - Rankings: content block is now centered in the page area instead of sticking to the left (Profile and other pages unchanged).
 ## 7.0.0-beta.12
