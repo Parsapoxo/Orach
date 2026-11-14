@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.13
+- Rankings: content block is now centered in the page area instead of sticking to the left (Profile and other pages unchanged).
 ## 7.0.0-beta.12
 - Rankings: added a Grid / Wide / Table switch (same chip style as the franchise pages) for ranks 4–50. Grid = numbered poster cards (default), Wide = large rows with poster and score bar, Table = compact rows without posters. The choice is remembered per browser.
 ## 7.0.0-beta.11

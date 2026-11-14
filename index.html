@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!-- Orach — v7.0.0-beta.12 -->
+<!-- Orach — v7.0.0-beta.13 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="app-version" content="7.0.0-beta.12" />
+<meta name="app-version" content="7.0.0-beta.13" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Orach</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -424,6 +424,7 @@ body.on-home .home-bg{opacity:1}
 
 /* rankings: podium + numbered poster grid · profile: list rows (.rank-*) */
 .rankings-wrap{max-width:960px}
+#page-rankings .rankings-wrap{margin:0 auto}
 .rank-row{display:flex;align-items:center;gap:1.25rem;padding:.85rem 1.25rem .85rem 1rem;margin-bottom:10px;background:var(--surface);border:1px solid var(--border);border-radius:18px;cursor:pointer;transition:border-color .2s,transform .2s;animation:staggerIn .4s ease backwards}
 .rank-row:hover{border-color:var(--text3);transform:translateY(-2px)}
 .rank-poster{position:relative;width:64px;height:96px;flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;border-radius:12px;border:1px solid rgba(255,255,255,.09);font-size:30px}
@@ -547,7 +548,7 @@ body.on-home .home-bg{opacity:1}
   <button class="mtab" data-page="rankings" onclick="showPage('rankings')">Rankings</button>
 </div>
 <div class="toast" id="toast"></div>
-<div class="version-badge">v7.0.0-beta.12</div>
+<div class="version-badge">v7.0.0-beta.13</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
