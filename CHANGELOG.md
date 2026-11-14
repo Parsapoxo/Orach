@@ -2,6 +2,8 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0-beta.19
+- Daredevil: Born Again – Season 2 is no longer marked "coming soon": its card is now a normal, clickable card (opens the Born Again page and shares its rating with Season 1).
 ## 7.0.0-beta.18
 - The Defenders Saga: every season card now has its own poster (Daredevil S1–S3, Jessica Jones S1–S3, Luke Cage S1–S2, Iron Fist S1–S2, The Punisher S1–S2, Daredevil: Born Again S1–S2). Posters are stored in `images/posters/` (500px WebP). Catalog entries can have an optional `poster` path; when present OMDb is not queried for that card. The title page of a multi-season show still uses the series poster.
 ## 7.0.0-beta.17
