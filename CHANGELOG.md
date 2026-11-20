@@ -2,6 +2,10 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0
+- Official release of the "cinema ledger" redesign (merged from the `redesign` branch into `main`). The previous design (6.1.3, iOS "Liquid Glass" theme) is preserved on the `old-design` branch.
+- Summary of what changed since 6.1.3 (details in the 7.0.0-beta.1 – beta.19 entries below): fixed left sidebar on desktop and solid bottom tab bar on phones; search pill at the top right; Home with three universe tiles (Marvel, DC, Star Wars) with logos, background image and rated-progress bars; numbered poster cards with a ★ site-average chip and All / Movies / Series / Unrated chips; DCAMU merged into DC as a tab; redesigned title page, Rankings (Orach Top 50 only, Grid / Wide / Table views), Profile, Sign in / Register, admin pages, dialogs and toasts; per-season posters for The Defenders Saga; Supabase Auth with hashed passwords; the whole old glass theme and old navigation code removed.
+- No functional changes compared with 7.0.0-beta.19 — this entry only drops the `-beta` suffix.
 ## 7.0.0-beta.19
 - Daredevil: Born Again – Season 2 is no longer marked "coming soon": its card is now a normal, clickable card (opens the Born Again page and shares its rating with Season 1).
 ## 7.0.0-beta.18
