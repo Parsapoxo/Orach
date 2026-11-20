@@ -2,6 +2,52 @@
 
 Versioning: Semantic Versioning (MAJOR.MINOR.PATCH). Early versions (2.x) used a simpler scheme (+0.1 small / round up for big).
 
+## 7.0.0
+- Official release of the "cinema ledger" redesign (merged from the `redesign` branch into `main`). The previous design (6.1.3, iOS "Liquid Glass" theme) is preserved on the `old-design` branch.
+- Summary of what changed since 6.1.3 (details in the 7.0.0-beta.1 – beta.19 entries below): fixed left sidebar on desktop and solid bottom tab bar on phones; search pill at the top right; Home with three universe tiles (Marvel, DC, Star Wars) with logos, background image and rated-progress bars; numbered poster cards with a ★ site-average chip and All / Movies / Series / Unrated chips; DCAMU merged into DC as a tab; redesigned title page, Rankings (Orach Top 50 only, Grid / Wide / Table views), Profile, Sign in / Register, admin pages, dialogs and toasts; per-season posters for The Defenders Saga; Supabase Auth with hashed passwords; the whole old glass theme and old navigation code removed.
+- No functional changes compared with 7.0.0-beta.19 — this entry only drops the `-beta` suffix.
+## 7.0.0-beta.19
+- Daredevil: Born Again – Season 2 is no longer marked "coming soon": its card is now a normal, clickable card (opens the Born Again page and shares its rating with Season 1).
+## 7.0.0-beta.18
+- The Defenders Saga: every season card now has its own poster (Daredevil S1–S3, Jessica Jones S1–S3, Luke Cage S1–S2, Iron Fist S1–S2, The Punisher S1–S2, Daredevil: Born Again S1–S2). Posters are stored in `images/posters/` (500px WebP). Catalog entries can have an optional `poster` path; when present OMDb is not queried for that card. The title page of a multi-season show still uses the series poster.
+## 7.0.0-beta.17
+- Page headings now sit the same distance from the sidebar on every page except Rankings: Profile, Fix Ratings and Manage Downloads use the same centred 1500px wrap as Marvel / DC / Star Wars (their lists and toolbars keep the old 960px width), and the title page (back button, poster) uses it too (its content keeps the 1080px width). Sign in and Home stay centred; Rankings unchanged.
+## 7.0.0-beta.16
+- Accounts now use Supabase Auth: passwords are hashed by Supabase (bcrypt) and the site no longer reads or writes passwords in the `users` table. A username is mapped to an e-mail of the form `<hex(username)>@orach.local`; sign-in uses a real session (`signInWithPassword`) instead of the username kept in `localStorage`. Existing users were migrated with their current passwords. New passwords must be at least 6 characters.
+- Ratings are saved with the signed-in user's `user_id` (needed for the row-level security rules that come with the 7.0.0 release). Row Level Security itself is NOT enabled yet.
+## 7.0.0-beta.15
+- Search: removed the rectangular focus outline inside the pill (the pill's gold border is the only focus indicator now). The search input now lives in its own `<form>` with a non-credential name and `type="text"`, so Chrome no longer groups it with the login fields and should stop offering saved passwords on it. Removed the old readonly-until-focus trick.
+## 7.0.0-beta.14
+- Rankings: switching Grid / Wide / Table no longer rebuilds the whole page. Only the list below the switch is redrawn; the top 3 stay untouched, so they no longer blink.
+## 7.0.0-beta.13
+- Rankings: content block is now centered in the page area instead of sticking to the left (Profile and other pages unchanged).
+## 7.0.0-beta.12
+- Rankings: added a Grid / Wide / Table switch (same chip style as the franchise pages) for ranks 4–50. Grid = numbered poster cards (default), Wide = large rows with poster and score bar, Table = compact rows without posters. The choice is remembered per browser.
+## 7.0.0-beta.11
+- Rankings redesigned to match the rest of the site: top 3 as big poster cards with a large rank number (gold frame for #1) and a ★ chip, ranks 4–50 as a numbered poster grid (same cards, number badge and ★ score as the franchise pages). On phones the top 3 become compact rows and the grid is 2 columns. Replaced the old list-row markup/CSS of Rankings (the `.rank-*` rows stay only for Profile).
+## 7.0.0-beta.10
+- Removed the "IMDb Animations Top 50" section completely: its tab, the list, the random-pick dice button and dialog, the `ANIME_TOP50` data, all related JS functions and CSS (including the now-unused tab and dialog styles and keyframes). Rankings now shows only the Orach Top 50 (ranked by your friends' ratings).
+## 7.0.0-beta.9
+- VisionQuest is out (all 8 episodes aired, finale Nov 10, 2026): removed the "coming soon" flag so it is a normal rateable card with its own title page, set the year to 2026, removed "Coming soon —" from the description and added an IMDb score (7.8, approximate — to be confirmed). It now counts in the Marvel "N of M rated" progress.
+## 7.0.0-beta.8
+- DCAMU now lives inside DC: the DC page has two big tabs, DCU (live action) and DCAMU (animated, by arc), each with its own progress bar and rated count; the filter chips (All / Movies / Series / Unrated) and rows follow the selected universe, and the page glow tints blue or purple. Removed the separate DCAMU page, its sidebar item, its phone tab and its Home tile (Home now has three tiles; the DC tile's progress counts DCU + DCAMU). Old `#dcamu` links and search results still work and open DC on the DCAMU tab.
+## 7.0.0-beta.7
+- Home: background image (Avengers: Doomsday artwork, `images/home-bg.jpg`, resized to 2048px / ~165 KB) behind the universe tiles, with a dark gradient so the heading and tiles stay readable. Only shown on Home.
+## 7.0.0-beta.6
+- Home: the Marvel, DC and Star Wars logos now sit on their universe tiles (new files in `logos/`; the DCAMU tile uses the DC logo). The Star Wars file had a black backing rectangle that was removed so the lettering sits on the tile.
+## 7.0.0-beta.5
+- Redesigned the remaining pages in the same language (solid surfaces, pill buttons, big Bebas headings): Rankings and Profile (numbered rows, larger posters, score pills), Sign in / Register, admin tables and the GitHub-token gate, dialog (random pick) and toasts. The old rules for these were replaced, not overridden.
+- Franchise pages: ★ site-average chip on each poster, and an "Unrated" filter next to All / Movies / Series (titles you haven't rated yet).
+- Home: when signed in, each universe tile shows a progress bar and "N of M rated".
+- Cleanup: removed CSS for classes that no longer exist in the page, darker-text token raised for readable contrast, global keyboard focus ring.
+## 7.0.0-beta.4
+- Search box no longer triggers the browser's saved-password dropdown: it's now a real `type="search"` field (name `q`, read-only until focused, password-manager opt-outs), and the sign-in / register / admin-token fields declare their real `autocomplete` roles so the browser stops guessing that the search field is a username field.
+## 7.0.0-beta.3
+- Cleanup: removed the whole old glass theme and the code of the previous navigation instead of layering the redesign over it. Gone: glass tokens/blur/inner highlights everywhere (panels are now solid), the sliding + draggable nav indicator, the Rankings sub-tab indicator, the floating liquid-glass mobile tab bar and its drag logic, the old collapsible search states, the old home picker styles. New: one `.nav-item` list (sidebar on desktop), search always visible top right (icon opens it on phones), solid bottom tab bar on phones, a single place that sets the active nav item (`updateFranchiseTabs`).
+## 7.0.0-beta.2
+- Redesign now matches the concept: search moved to the top right; "Home" item added to the sidebar; account card (avatar + username / "Sign in") at the bottom of the sidebar; All / Movies / Series filter chips on every franchise page; new title page (large poster, big title, breadcrumb, scores beside the poster); The Defenders Saga now always sits last (it appeared between Phase 1 and Phase 2 because of its order values).
+## 7.0.0-beta.1
+- Redesign ("cinema ledger", branch `redesign`): desktop nav is now a fixed left sidebar (logo, always-open search, Marvel / DC / DCAMU / Star Wars / Rankings with franchise-colored dots, profile at the bottom); gold accent warmed up; home is four franchise tiles (DCAMU added); poster cards get rounder corners and a watch-order number; filter chips and big headings restyled. Mobile keeps its top bar + floating tab bar. All logic unchanged except search now also opens on focus.
 ## 6.1.3
 - Fixed a stray "No titles found" box appearing under the nav on first click. The (collapsed) search input could be filled by browser autofill, which fired the search with that text and could not be dismissed. Search now ignores input while collapsed, always clears/hides on collapse, the results box is hidden via CSS unless the search is open, and the input is marked as non-autofillable.
 ## 6.1.2
